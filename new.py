@@ -66,6 +66,8 @@ def append_to_csv(input_dict, csv_file):
 def remove_tags(html_string):
     html_string = html_string.replace("'", "")
     html_string = html_string.replace('"', '')
+    html_string = html_string.lstrip("\'")
+    html_string = html_string.rstrip("\'")
     html_string = html_string.replace('<p><br /> ','')
     html_string = html_string.replace('<p> ','\n')
     html_string = html_string.replace('<br /> ','\n')
@@ -115,9 +117,19 @@ def update_podcast(input):
     id = sql.update_podcast(input)
     return id
 
+def update_episode_as_downloaded(episode):
+    id = sql.update_episode_as_downloaded_by_id(episode['episode_id']) 
+    log( 'new update downloaded ' + str( id ) )
+    return id
+
 def remove_podcast(input):
     id = sql.delete_podcast(input)
     return id
+
+def get_download_location_from_podcast_id(podcast_id):
+    podcast = sql.select_podcast_from_id(podcast_id)
+    return podcast
+
 
 
 def get_podcast_data_from_feed(url):
@@ -126,26 +138,40 @@ def get_podcast_data_from_feed(url):
     for entry in f_parser['entries']:
         episode = {}
         for sub_entry in entry:
+            # log( sub_entry )
             if(sub_entry == 'title'):
-                episode['title'] = remove_tags(entry['title']).encode('utf-8')
+                episode['title'] = remove_tags(entry['title'])#.encode('utf-8')
             elif (sub_entry == 'summary'):
-                episode['summary'] =  remove_tags(entry['summary']).encode('utf-8')
+                episode['summary'] =  remove_tags(entry['summary'])#.encode('utf-8')
             elif ( sub_entry == 'links' ):
                 # see if it has a lenght and add it or add -1
-                if entry['links'][0].has_key('length'):
-                    episode['length'] = entry['links'][0]['length']
-                else:
-                    episode['length'] = -1
+                # if entry['links'][0].has_key('length'):
+                #     episode['length'] = entry['links'][0]['length']
+                # else:
+                #     episode['length'] = -1
 
                 # add actual href    
-                episode['href'] = entry['links'][0]['href']
+                # episode['href'] = entry['links'][0]['href']
+                for link in entry['links']:
+                        if 'text' not in link['type']:
+
+                            episode['href'] = link['href']
+                            if link.has_key('length'):
+                                episode['length'] = link['length']
+                            else: 
+                                episode['length'] = -1
+                            
+                            if 'audio' in link['type']:
+                                episode['audio'] = 1
+                            else: 
+                                episode['audio'] = 0
 
                 # if it has type and that contains 'audio' in it return 1 else 0
-                if entry['links'][0].has_key('type'):
-                    if 'audio' in entry['links'][0]['type']:
-                        episode['audio'] = 1
-                    else:
-                        episode['audio'] = 0
+                # if entry['links'][0].has_key('type'):
+                #     if 'audio' in entry['links'][0]['type']:
+                #         episode['audio'] = 1
+                #     else:
+                #         episode['audio'] = 0
 
             elif ( sub_entry == 'published'):
                 episode['published'] = entry['published']
@@ -156,6 +182,9 @@ def get_podcast_data_from_feed(url):
 
 def get_podcasts_that_have_downloads_available():
     return sql.select_podcasts_that_have_downloads_available()
+
+def get_episodes_that_have_downloads_available_from_podcast_id(podcast):
+    return sql.select_episodes_that_have_downlaods_available_by_podcast_id(podcast)
 
 
 def get_episodes_by_podcast_id(id):

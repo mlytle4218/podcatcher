@@ -1,1 +1,110 @@
-2019-06-03 10:08:07 - SELECT * FROM episodes WHERE podcast_id = '3'
+2019-06-13 14:21:51 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:21:52 - 22266088
+2019-06-13 14:22:17 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:22:18 - 19066700
+2019-06-13 14:22:39 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:22:40 - 21710211
+2019-06-13 14:32:13 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:32:14 - 22266088
+2019-06-13 14:33:31 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:33:32 - 22266088
+2019-06-13 14:33:59 - 0
+2019-06-13 14:33:59 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:34:01 - 19066700
+2019-06-13 14:34:25 - 0
+2019-06-13 14:35:26 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:35:27 - 22266088
+2019-06-13 14:35:55 - new update downloaded 0
+2019-06-13 14:35:55 - 0
+2019-06-13 14:35:55 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:35:56 - 19066700
+2019-06-13 14:36:20 - new update downloaded 0
+2019-06-13 14:36:20 - 0
+2019-06-13 14:36:56 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:36:57 - 22266088
+2019-06-13 14:37:26 - UPDATE episodes SET downloaded = '274' WHERE episode_id = '1';
+2019-06-13 14:37:26 - new update downloaded 0
+2019-06-13 14:37:26 - 0
+2019-06-13 14:37:26 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:37:27 - 19066700
+2019-06-13 14:37:58 - UPDATE episodes SET downloaded = '275' WHERE episode_id = '1';
+2019-06-13 14:37:58 - new update downloaded 0
+2019-06-13 14:37:58 - 0
+2019-06-13 14:38:31 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:38:32 - 22266088
+2019-06-13 14:39:06 - UPDATE episodes SET downloaded = '1' WHERE episode_id = '274';
+2019-06-13 14:39:06 - new update downloaded 0
+2019-06-13 14:39:06 - 0
+2019-06-13 14:39:06 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:39:07 - 19066700
+2019-06-13 14:39:39 - UPDATE episodes SET downloaded = '1' WHERE episode_id = '275';
+2019-06-13 14:39:40 - new update downloaded 0
+2019-06-13 14:39:40 - 0
+2019-06-13 14:40:38 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:40:40 - 22266088
+2019-06-13 14:41:19 - UPDATE episodes SET downloaded = '1' WHERE episode_id = '274';
+2019-06-13 14:41:19 - new update downloaded 0
+2019-06-13 14:41:19 - 0
+2019-06-13 14:41:19 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:41:20 - 19066700
+2019-06-13 14:41:47 - UPDATE episodes SET downloaded = '1' WHERE episode_id = '275';
+2019-06-13 14:41:47 - new update downloaded 0
+2019-06-13 14:41:47 - 0
+2019-06-13 14:42:17 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:42:18 - 23316040
+2019-06-13 14:43:39 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:43:40 - 23316040
+2019-06-13 14:44:17 - 0
+2019-06-13 14:44:18 - new update downloaded 0
+2019-06-13 14:44:18 - 0
+2019-06-13 14:44:18 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:44:19 - 21710211
+2019-06-13 14:45:00 - 0
+2019-06-13 14:45:00 - new update downloaded 0
+2019-06-13 14:45:00 - 0
+2019-06-13 14:46:38 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:46:39 - 21860279
+2019-06-13 14:47:08 - 0
+2019-06-13 14:47:09 - new update downloaded 0
+2019-06-13 14:47:09 - 0
+2019-06-13 14:47:09 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:47:10 - 21860279
+2019-06-13 14:47:34 - 0
+2019-06-13 14:47:34 - new update downloaded 0
+2019-06-13 14:47:34 - 0
+2019-06-13 14:49:12 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:49:13 - 21504213
+2019-06-13 14:49:51 - 1
+2019-06-13 14:49:51 - new update downloaded 1
+2019-06-13 14:49:51 - 1
+2019-06-13 14:49:51 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 14:49:52 - 21572789
+2019-06-13 14:50:37 - 1
+2019-06-13 14:50:37 - new update downloaded 1
+2019-06-13 14:50:37 - 1
+2019-06-13 15:10:02 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:10:04 - 21504213
+2019-06-13 15:10:27 - 1
+2019-06-13 15:10:27 - new update downloaded 1
+2019-06-13 15:10:27 - 1
+2019-06-13 15:10:27 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:10:29 - 21572789
+2019-06-13 15:10:52 - 1
+2019-06-13 15:10:53 - new update downloaded 1
+2019-06-13 15:10:53 - 1
+2019-06-13 15:16:47 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:17:14 - new update downloaded 1
+2019-06-13 15:17:14 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:17:46 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:18:09 - new update downloaded 1
+2019-06-13 15:18:09 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:18:37 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:19:04 - new update downloaded 1
+2019-06-13 15:19:04 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:19:29 - new update downloaded 1
+2019-06-13 15:21:37 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:22:03 - new update downloaded 1
+2019-06-13 15:22:03 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:22:28 - new update downloaded 1
+2019-06-13 15:22:28 - [{'podcast_id': 6, 'name': 'starthere', 'url': 'https://feeds.castfire.com/abc-news-radio/start_here', 'audio': '/home/marc/Desktop/podcatcher/download', 'video': '/home/marc/Desktop/podcatcher/download'}]
+2019-06-13 15:22:55 - new update downloaded 1

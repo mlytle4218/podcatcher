@@ -68,13 +68,14 @@ def insert_podcast(input):
     commit_db(conn)
     return result
 
-def delete_podcast(podcast_id):
+def delete_podcast(podcast):
     conn = connect_db()
     c = conn.cursor()
-    command =  "DELETE FROM episodes WHERE podcast_id = '{id}'".format(id=podcast_id)
+    command =  "DELETE FROM episodes WHERE podcast_id = '{id}'".format(id=podcast['podcast_id'])
+    log(command)
     c.execute( command )
     conn.commit()
-    command =  "DELETE FROM podcasts WHERE podcast_id = '{id}'".format(id=podcast_id)
+    command =  "DELETE FROM podcasts WHERE podcast_id = '{id}'".format(id=podcast['podcast_id'])
     c.execute( command )
     commit_db(conn)
     return 1
@@ -100,6 +101,18 @@ def update_podcast(input):
     c.execute(command)
     commit_db(conn)
     return c.lastrowid
+
+def update_episode_as_downloaded_by_id(episode_id):
+    conn = connect_db()
+    c = conn.cursor()
+    command = """UPDATE episodes SET downloaded = '{}' WHERE episode_id = '{}';""".format(
+        1,
+        episode_id
+    )
+    temp_cursor = c.execute(command)
+    result = temp_cursor.rowcount
+    commit_db(conn)
+    return result
 
 def insert_episodes(podcast_id, episodes):
     conn = connect_db()
@@ -130,7 +143,6 @@ def insert_episodes(podcast_id, episodes):
 
                     podcast_id = podcast_id
                 )
-
         c.execute(sub_select)
     commit_db(conn)
     return podcast_id
@@ -153,8 +165,16 @@ def select_all_podcasts():
     c = conn.cursor()
     c.execute("SELECT * from podcasts")
     column_names = [col[0] for col in c.description]
-    results = [dict(itertools.izip(column_names, row))  
+    results = [dict(zip(column_names, row))  
         for row in c.fetchall()]
+    close_db(conn)
+    return results
+
+def select_podcast_from_id(id):
+    conn = connect_db()
+    c = conn.cursor()
+    c.execute("""SELECT * FROM podcasts WHERE podcast_id = '{}';""".format(id))
+    results = make_cursor_response_into_dict(c)
     close_db(conn)
     return results
 
@@ -176,9 +196,19 @@ def select_podcasts_that_have_downloads_available():
     close_db(conn)
     return results
 
+def select_episodes_that_have_downlaods_available_by_podcast_id(podcast):
+    conn = connect_db()
+    c = conn.cursor()
+    c.execute("""SELECT * FROM episodes WHERE podcast_id = '{}' and downloaded = '0';""".format(podcast['podcast_id']))
+    results = make_cursor_response_into_dict(c)
+    close_db(conn)
+    return results
+
+
+
 def make_cursor_response_into_dict(cursor):
     column_names = [col[0] for col in cursor.description]
-    results = [dict(itertools.izip(column_names, row))  
+    results = [dict(zip(column_names, row))  
         for row in cursor.fetchall()]
     
     return results
