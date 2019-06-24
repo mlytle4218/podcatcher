@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:castfire="http://www.castfire.com/dtds/rss.dtd" xmlns:media="http://search.yahoo.com/mrss/">
+<channel>
+<itunes:owner><itunes:email>abc.podcast.support@abc.com</itunes:email></itunes:owner>
+<title><![CDATA[Start Here]]></title>
+<description>A straightforward look at the day's top news in 20 minutes. Powered by ABC News. Hosted by Brad Mielke.</description>
+<lastBuildDate>Thu, 20 Jun 2019 02:38:06 +0000</lastBuildDate>
+<itunes:author>ABC News</itunes:author>
+<itunes:explicit>clean</itunes:explicit>
+<itunes:type>episodic</itunes:type>
+<language>en-us</language>
+<itunes:image href="http://dlgie0dznny76.cloudfront.net/wp-content/uploads/2015/10/27130456/START_HERE_PODCAST_ICON_3000x3000-min.jpg" />
+<link>http://abcradio.com/podcasts/start-here/</link>
+<itunes:category text="News &amp; Politics"/>
+<copyright>Copyright 2019, ABC Radio. All rights reserved.</copyright>
+<castfire:total>327</castfire:total>
+<item>
+<title><![CDATA[Joe Being...Oh.]]></title>
+<description><![CDATA[Joe Biden causes a furor in Washington with tales of working with segregationists. ABC's Tom Llamas examines how Biden's son made millions when his father was in office. And amid a raft of climate headlines, the EPA makes a big change to emissions standards. 
+<p><br> Like the show? Leave a review: http://bit.ly/ReviewStartHere <p> Follow @StartHereABC for exclusive content, show updates and more:<br> - Twitter: https://www.twitter.com/starthereabc<br> - Facebook: https://www.facebook.com/starthereabc<br> - Instagram: https://www.instagram.com/starthereabc <p> Discover more ABC News podcasts: http://www.abcnewspodcasts.com <p> Start Here is produced by ABC Radio. For more information: http://www.abcnewspodcasts.com]]></description>
+<itunes:title>Joe Being...Oh.</itunes:title>
+<itunes:episodeType>full</itunes:episodeType>
+<itunes:summary><![CDATA[Joe Biden causes a furor in Washington with tales of working with segregationists. ABC's Tom Llamas examines how Biden's son made millions when his father was in office. And amid a raft of climate headlines, the EPA makes a big change to emissions standards. 
+ Like the show? Leave a review: http://bit.ly/ReviewStartHere  Follow @StartHereABC for exclusive content, show updates and more: - Twitter: https://www.twitter.com/starthereabc - Facebook: https://www.facebook.com/starthereabc - Instagram: https://www.instagram.com/starthereabc  Discover more ABC News podcasts: http://www.abcnewspodcasts.com  Start Here is produced by ABC Radio. For more information: http://www.abcnewspodcasts.com]]></itunes:summary>
+<itunes:author>Start Here</itunes:author>
+<author>Start Here</author>
+<pubDate>Thu, 20 Jun 2019 05:30:46 -0400</pubDate>
+<guid isPermaLink="false">http://serve.castfire.com/audio/3649889/3649889_2019-06-20-020429.256k.mp3</guid>
+<castfire:sh_id>3649889</castfire:sh_id>
+<castfire:show_id>3649889</castfire:show_id>
+<castfire:network slug="abc-news-radio">ABC News Radio</castfire:network>
+<castfire:content_producer slug="start-here">Start Here</castfire:content_producer>
+<castfire:channel slug="audio">Audio</castfire:channel>
+<castfire:date date='2019-06-20 09:30:46 UTC'>Thu, 20 Jun 2019 09:30:46 UTC</castfire:date>
+<castfire:filename>3649889_2019-06-20-020429</castfire:filename>
+<castfire:categories>
+</castfire:categories>
+<media:group>
+	<media:content
+	url="https://serve.castfire.com/audio/3649889/3649889_2019-06-20-020429.256k.mp3"
+	type="audio/mp3"
+	duration="1314"
+	bitrate="128"
+	medium="audio"/>
+	<media:content
+	url="https://serve.castfire.com/audio/3649889/3649889_2019-06-20-020429.jpg"
+	type="image/jpeg"
+	medium="image"/>
+</media:group>
+<media:keywords></media:keywords>
+<media:title type="plain"><![CDATA[Joe Being...Oh.]]></media:title>
+<media:description type="plain"><![CDATA[Joe Biden causes a furor in Washington with tales of working with segregationists. ABC's Tom Llamas examines how Biden's son made millions when his father was in office. And amid a raft of climate headlines, the EPA makes a big change to emissions standards. 
+<p><br> Like the show? Leave a review: http://bit.ly/ReviewStartHere <p> Follow @StartHereABC for exclusive content, show updates and more:<br> - Twitter: https://www.twitter.com/starthereabc<br> - Facebook: https://www.facebook.com/starthereabc<br> - Instagram: https://www.instagram.com/starthereabc <p> Discover more ABC News podcasts: http://www.abcnewspodcasts.com <p> Start Here is produced by ABC Radio. For more information: http://www.abcnewspodcasts.com]]></media:description>
+<media:copyright><![CDATA[Start Here]]></media:copyright>
+<media:thumbnail url="https://serve.castfire.com/audio/3649889/3649889_2019-06-20-020429.tmb.jpg" />
+<enclosure url="https://serve.castfire.com/audio/3649889/3649889_2019-06-20-020429.256k.mp3" type="audio/mpeg" length="21037556" />
+<itunes:duration>00:21:54</itunes:duration>
+</item>
+</channel>
+</rss>

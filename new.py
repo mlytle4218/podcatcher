@@ -17,6 +17,9 @@ class LogIt:
     def __call__(self):
        log(str(self.input))
 
+def nothing(input):
+    return input
+
 
 
 def get_new_entries(entries, last, audio, video):
@@ -119,7 +122,7 @@ def update_podcast(input):
 
 def update_episode_as_downloaded(episode):
     id = sql.update_episode_as_downloaded_by_id(episode['episode_id']) 
-    log( 'new update downloaded ' + str( id ) )
+    # log( 'new update downloaded ' + str( id ) )
     return id
 
 def remove_podcast(input):
@@ -243,8 +246,6 @@ def get_podcasts():
 
 # print(find_new_podcast('starthere'))
 # sql.select_all_podcasts()
-
-
 
 
 

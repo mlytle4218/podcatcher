@@ -1,0 +1,4 @@
+[
+  "tests/test_new.py::Test_TestTrial::test_add_new_podcast",
+  "tests/test_new.py::Test_TestTrial::test_nothing"
+]

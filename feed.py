@@ -30,7 +30,6 @@ button_delay = 0.2
  
 while True:
     char = getch()
-    print('8')
  
     if (char == "p"):
         print("Stop!")
