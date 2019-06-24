@@ -2,7 +2,8 @@
 import os
 import subprocess
 import math 
-import new
+from new import Backend
+from sql import DatabaseAccessor
 import readline
 import requests
 import time
@@ -23,12 +24,12 @@ def main_menu():
             if result == 1:
                 add_new_podcast()
             elif result == 2:
-                podcasts = new.get_podcasts()
+                podcasts = backend.get_podcasts()
                 choice = print_out_menu_options(podcasts)
                 if choice != None:
                     edit_existing_podcast(choice)
             elif result == 3:
-                podcasts = new.get_podcasts()
+                podcasts = backend.get_podcasts()
                 choice = print_out_menu_options(podcasts)
                 if choice != None:
                     delete_existing_podcast(choice)
@@ -50,8 +51,8 @@ def main_menu():
             if result == 'q':
                 break
 
-def input_with_timeout(prompt, timemount=5):
-    timer = threading.Timer()
+# def input_with_timeout(prompt, timemount=5):
+#     timer = threading.Timer()
 
 
 def add_new_podcast():
@@ -61,24 +62,24 @@ def add_new_podcast():
     podcast['url'] =  input( 'podcast url ' )
     podcast['audio'] = input( 'podcast audio ' )
     podcast['video'] = input( 'podcast video ' )
-    id = new.add_new_podcast(podcast)
+    id = backend.add_new_podcast(podcast)
 
 def edit_existing_podcast(podcast):
     podcast['name'] = rlinput('name ', podcast['name'])
     podcast['url'] = rlinput('url ', podcast['url'])
     podcast['audio'] = rlinput('audio ', podcast['audio'])
     podcast['video'] = rlinput('video ', podcast['video'])
-    new.update_podcast(podcast)
+    backend.update_podcast(podcast)
 
 def delete_existing_podcast(podcast):
-    new.remove_podcast(podcast)
+    backend.remove_podcast(podcast)
 
 def choose_episodes_to_download():
-    podcasts = new.get_podcasts_that_have_downloads_available()
+    podcasts = backend.get_podcasts_that_have_downloads_available()
     print_out_menu_options(podcasts, False, list_episodes)
 
 def list_episodes(podcast):
-    episodes = new.get_episodes_that_have_downloads_available_from_podcast_id(podcast)
+    episodes = backend.get_episodes_that_have_downloads_available_from_podcast_id(podcast)
     print_out_menu_options(episodes, True, add_to_download_queue)
 
 def add_to_download_queue(episode):
@@ -90,9 +91,9 @@ def start_downloads():
     for i,each in enumerate(download_queue):
         filename =  each['url'].split('/')[-1]
         dl_location = ''
-        podcast = new.get_download_location_from_podcast_id(each['podcast_id']) 
+        podcast = backend.get_download_location_from_podcast_id(each['podcast_id']) 
         if each['audio'] == 1:
-            new.log( str( podcast ) )
+            backend.log( str( podcast ) )
             dl_location = podcast[0]['audio']
         else:
             dl_location = podcast[0]['video']
@@ -111,9 +112,9 @@ def start_downloads():
                     download_queue[i]['percent'] = done
                     # result =  "[{}{}] {} bps".format(done, 50-done, dl/(time.clock() - start))
                     # result = " {}%".format(done)
-                    # new.log( result )
+                    # backend.log( result )
         
-        new.update_episode_as_downloaded(each) 
+        backend.update_episode_as_downloaded(each) 
 
 
 
@@ -182,7 +183,7 @@ def print_out_menu_options(options, multi_choice=False, func=None):
                     page_itr -=1
             elif result =='q':
                 # if len( download_queue ) > 0:
-                #     new.log( str( download_queue ) )
+                #     backend.log( str( download_queue ) )
                 break
             elif multi_choice and result =='d':
                 return choices
@@ -192,5 +193,6 @@ width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
 download_queue = []
-
+sql = DatabaseAccessor('pc_database.db')
+backend = Backend(sql)
 main_menu()
