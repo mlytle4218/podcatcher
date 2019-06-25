@@ -25,53 +25,50 @@ class Backend:
             myfile.write(string)
             
 
-    def nothing(self,input):
-        return input
 
 
+    # def get_new_entries(self,entries, last, audio, video):
+    #     result_list = []
+    #     for entry in entries:
+    #         if calendar.timegm(entry.published_parsed) > int(last):
+    #             temp_dict = {}
+    #             temp_dict['id'] = entry.id
+    #             temp_dict['title'] = entry.title
+    #             temp_dict['published'] = entry.published
+    #             temp_dict['summary'] = entry.summary
+    #             temp_dict['audio_path'] = audio
+    #             temp_dict['video_path'] = video
+    #             temp_dict['last'] = last
+    #             for link in entry.links:
+    #                 if 'audio' in link.type or 'video' in link.type:
+    #                     temp_dict['feed'] = {}
+    #                     if 'audio' in link.type:
+    #                         temp_dict['audio'] = link['href']
+    #                     if 'video' in link.type:
+    #                         temp_dict['video'] = link['href']
+    #             result_list.append(temp_dict)
+    #     return result_list
 
-    def get_new_entries(self,entries, last, audio, video):
-        result_list = []
-        for entry in entries:
-            if calendar.timegm(entry.published_parsed) > int(last):
-                temp_dict = {}
-                temp_dict['id'] = entry.id
-                temp_dict['title'] = entry.title
-                temp_dict['published'] = entry.published
-                temp_dict['summary'] = entry.summary
-                temp_dict['audio_path'] = audio
-                temp_dict['video_path'] = video
-                temp_dict['last'] = last
-                for link in entry.links:
-                    if 'audio' in link.type or 'video' in link.type:
-                        temp_dict['feed'] = {}
-                        if 'audio' in link.type:
-                            temp_dict['audio'] = link['href']
-                        if 'video' in link.type:
-                            temp_dict['video'] = link['href']
-                result_list.append(temp_dict)
-        return result_list
+    # def get_data_from_csv(self,csv_file):
+    #     with open(csv_file, 'r') as file:
+    #         return list(csv.DictReader(file))
 
-    def get_data_from_csv(self,csv_file):
-        with open(csv_file, 'r') as file:
-            return list(csv.DictReader(file))
+    # def get_feed_data_from_csv(self,csv_file):
+    #     feed_dict={}
+    #     csv_dict = self.get_data_from_csv(csv_file)
+    #     # print csv_dict
+    #     for row in csv_dict:
+    #         NewsFeed = feedparser.parse(row['feed'])
+    #         self.log(str(row))
+    #         title = NewsFeed['feed']['title']#.replace(' ','_').lower()
+    #         feed_dict[title] = self.get_new_entries(NewsFeed['entries'],row['last'],row['audio'],row['video'])
 
-    def get_feed_data_from_csv(self,csv_file):
-        feed_dict={}
-        csv_dict = self.get_data_from_csv(csv_file)
-        # print csv_dict
-        for row in csv_dict:
-            NewsFeed = feedparser.parse(row['feed'])
-            self.log(str(row))
-            title = NewsFeed['feed']['title']#.replace(' ','_').lower()
-            feed_dict[title] = self.get_new_entries(NewsFeed['entries'],row['last'],row['audio'],row['video'])
+    #     return feed_dict
 
-        return feed_dict
-
-    def append_to_csv(self,input_dict, csv_file):
-        with open(csv_file, 'a') as file:
-            writer = csv.writer(file)
-            writer.writerow([input_dict['name'],input_dict['feed'],input_dict['audio'], input_dict['video'],input_dict['last'] ])
+    # def append_to_csv(self,input_dict, csv_file):
+    #     with open(csv_file, 'a') as file:
+    #         writer = csv.writer(file)
+    #         writer.writerow([input_dict['name'],input_dict['feed'],input_dict['audio'], input_dict['video'],input_dict['last'] ])
 
 
     def remove_tags(self,html_string):
@@ -85,37 +82,37 @@ class Backend:
         html_string = ''.join([i if ord(i) < 128 else '' for i in html_string])
         return html_string
 
-    def start_download(self,feed_file):
-        feed_dict = self.get_feed_data_from_csv(feed_file)
-        for key in feed_dict.keys():
-            audio_path=''
-            video_path=''
-            last = 0
-            with open(feed_file, 'r+') as file:
-                dictReader = csv.DictReader(file)
-                for row in dictReader:
-                    self.log( row['name'] )
-                    if row['name'] == key:
-                        audio_path = row['audio']
-                        video_path = row['video']
-                        last = row['last']
-                for feed in feed_dict[key]:
-                    if 'audio' in feed:
-                        self.log('download ' + feed['audio'] + " to " + audio_path)
-                    elif 'video' in feed:
-                        self.log('download ' + feed['video'] + " to " + video_path)
+    # def start_download(self,feed_file):
+    #     feed_dict = self.get_feed_data_from_csv(feed_file)
+    #     for key in feed_dict.keys():
+    #         audio_path=''
+    #         video_path=''
+    #         last = 0
+    #         with open(feed_file, 'r+') as file:
+    #             dictReader = csv.DictReader(file)
+    #             for row in dictReader:
+    #                 self.log( row['name'] )
+    #                 if row['name'] == key:
+    #                     audio_path = row['audio']
+    #                     video_path = row['video']
+    #                     last = row['last']
+    #             for feed in feed_dict[key]:
+    #                 if 'audio' in feed:
+    #                     self.log('download ' + feed['audio'] + " to " + audio_path)
+    #                 elif 'video' in feed:
+    #                     self.log('download ' + feed['video'] + " to " + video_path)
 
-        #     for feed in feed_dict[key]:
-        #         print(feed['id'])
-        #         print(feed['title'])
-        #         print( remove_tags(feed['summary']))
-        #         if 'audio' in feed:
-        #             print(feed['audio'])
-        #         elif 'video' in feed:
-        #             print(feed['video'])
-        #         print("")
-        #     print("")
-        return 0
+    #     #     for feed in feed_dict[key]:
+    #     #         print(feed['id'])
+    #     #         print(feed['title'])
+    #     #         print( remove_tags(feed['summary']))
+    #     #         if 'audio' in feed:
+    #     #             print(feed['audio'])
+    #     #         elif 'video' in feed:
+    #     #             print(feed['video'])
+    #     #         print("")
+    #     #     print("")
+    #     return 0
 
 
     def add_new_podcast(self,input):
@@ -141,6 +138,8 @@ class Backend:
         podcast = self.database_accessor.select_podcast_from_id(podcast_id)
         return podcast
 
+
+# https://feeds.fireside.fm/thebulwark/rss
 
 
     def get_podcast_data_from_feed(self,url):
@@ -185,9 +184,8 @@ class Backend:
                     #         episode['audio'] = 0
 
                 elif ( sub_entry == 'published'):
-                    episode['published'] = entry['published']
+                    episode['published'] = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z') 
             episode_list.append(episode)
-            # print(episode)
         return episode_list
 
 

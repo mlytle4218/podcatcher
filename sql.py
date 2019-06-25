@@ -3,6 +3,7 @@ import sqlite3
 import itertools
 import datetime
 import time
+from sqlalchemy import  create_engine, MetaData, Table, Column, Integer, String, DateTime, ForeignKey
 
     # database = 'pc_database.db'
 
@@ -10,6 +11,35 @@ import time
 class DatabaseAccessor:
     def __init__(self,database):
         self.database = database
+        self.engine = create_engine('sqlite:///%s' % database, echo = True)
+        self.meta = MetaData()
+        self.conn = self.engine.connect()
+
+        self.podcasts = Table(
+            'podcasts', self.meta,
+            Column('podcast_id',Integer, primary_key = True),
+            Column('name',String),
+            Column('url',String),
+            Column('audio',String),
+            Column('video',String),
+        )
+
+        self.episodes = Table(
+            'episodes', self.meta,
+            Column('episode_id', Integer, primary_key = True),
+            Column('title', String),
+            Column('url', String),
+            Column('published', DateTime),
+            Column('summary', String),
+            Column('length', Integer),
+            Column('audio', Integer),
+            Column('downloaded', Integer),
+            Column('podcast_id', Integer, ForeignKey('podcasts.podcast_id'))
+        )
+
+        self.meta.create_all(self.engine)
+
+
 
     # database = 'pc_database.db'
 
@@ -72,6 +102,15 @@ class DatabaseAccessor:
         result = c.lastrowid
         self.commit_db(conn)
         return result
+        
+    def insert_podcast2(self,podcast,episodes):
+        result = self.conn.execute(self.podcasts.insert(podcast))
+
+        for each in episodes:
+            each['podcast_id'] = result.inserted_primary_key[0]
+
+        self.conn.execute(self.episodes.insert(None), episodes)
+
 
     def delete_podcast(self,podcast):
         conn = self.connect_db()
@@ -218,3 +257,32 @@ class DatabaseAccessor:
         
         return results
 
+
+
+# da = DatabaseAccessor('pc_database2.db')
+
+# podcast = {}
+# podcast['name'] = 'name'
+# podcast['url'] = 'url'
+# podcast['audio'] = 'audio'
+# podcast['video'] = 'video'
+
+
+# result = da.conn.execute(da.podcasts.insert(podcast))
+
+
+# episodes = []
+# for i in range(10):
+#     episode = {}
+#     episode['title'] = 'title{}'.format(i)
+#     episode['url'] = 'url{}'.format(i)
+#     # episode['published'] = 'published{}'.format(i)
+#     episode['published'] = datetime.datetime.now()
+#     episode['summary'] = 'summary{}'.format(i)
+#     episode['length'] = i
+#     episode['audio'] = i
+#     episode['downloaded'] = i
+#     episode['podcast_id'] = result.inserted_primary_key[0]
+#     episodes.append(episode)
+
+# result2 = da.conn.execute(da.episodes.insert(None), episodes)

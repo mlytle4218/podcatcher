@@ -1,14 +1,10 @@
 from new import Backend
-import unittest
-import ast
+import unittest 
+
 
 class Test_TestTrial(unittest.TestCase):
     def setUp(self):
         pass
-
-    def test_nothing(self):
-        backend = Backend('sql')
-        self.assertEqual(backend.nothing(5), 5)
 
     def test_get_podcast_data_from_feed(self):
         backend = Backend('sql')
