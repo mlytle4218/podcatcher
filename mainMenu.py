@@ -62,7 +62,11 @@ def add_new_podcast():
     podcast['url'] =  input( 'podcast url ' )
     podcast['audio'] = input( 'podcast audio ' )
     podcast['video'] = input( 'podcast video ' )
-    id = backend.add_new_podcast(podcast)
+    if backend.check_feed(podcast['url']):
+        episodes = backend.get_podcast_data_from_feed(podcast['url'])
+        sql.insert_podcast2(podcast,episodes)
+
+    # id = backend.add_new_podcast(podcast)
 
 def edit_existing_podcast(podcast):
     podcast['name'] = rlinput('name ', podcast['name'])
@@ -193,6 +197,6 @@ width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
 download_queue = []
-sql = DatabaseAccessor('pc_database.db')
+sql = DatabaseAccessor('pc_database2.db')
 backend = Backend(sql)
 main_menu()
