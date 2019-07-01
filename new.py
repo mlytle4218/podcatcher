@@ -185,6 +185,7 @@ class Backend:
 
                 elif ( sub_entry == 'published'):
                     episode['published'] = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z') 
+                episode['downloaded'] = 0
             episode_list.append(episode)
         return episode_list
 

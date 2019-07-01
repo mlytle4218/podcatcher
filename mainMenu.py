@@ -24,21 +24,22 @@ def main_menu():
             if result == 1:
                 add_new_podcast()
             elif result == 2:
-                podcasts = backend.get_podcasts()
+                podcasts = sql.get_all_podcasts()
                 choice = print_out_menu_options(podcasts)
                 if choice != None:
                     edit_existing_podcast(choice)
             elif result == 3:
-                podcasts = backend.get_podcasts()
+                podcasts = sql.get_all_podcasts()
                 choice = print_out_menu_options(podcasts)
                 if choice != None:
-                    delete_existing_podcast(choice)
+                    sql.delete_podcast2(choice)
+                    # delete_existing_podcast(choice)
             elif result == 4:
                 choose_episodes_to_download()
             elif result == 5:
-                # start_downloads()
-                t1 = threading.Thread(target=start_downloads)
-                t1.start()
+                start_downloads()
+                # t1 = threading.Thread(target=start_downloads)
+                # t1.start()
                 # t1.join()
                 # while True:
                 #     os.system('clear')
@@ -73,17 +74,20 @@ def edit_existing_podcast(podcast):
     podcast['url'] = rlinput('url ', podcast['url'])
     podcast['audio'] = rlinput('audio ', podcast['audio'])
     podcast['video'] = rlinput('video ', podcast['video'])
-    backend.update_podcast(podcast)
+    if backend.check_feed(podcast['url']):
+        episodes = backend.get_podcast_data_from_feed(podcast['url'])
+        sql.delete_episodes_by_podcast_id(podcast)
+        sql.update_podcast2(podcast,episodes)
 
 def delete_existing_podcast(podcast):
     backend.remove_podcast(podcast)
 
 def choose_episodes_to_download():
-    podcasts = backend.get_podcasts_that_have_downloads_available()
+    podcasts  = sql.get_podcasts_with_downloads_available()
     print_out_menu_options(podcasts, False, list_episodes)
 
 def list_episodes(podcast):
-    episodes = backend.get_episodes_that_have_downloads_available_from_podcast_id(podcast)
+    episodes = sql.get_episodes_with_downloads_available(podcast)
     print_out_menu_options(episodes, True, add_to_download_queue)
 
 def add_to_download_queue(episode):
@@ -93,17 +97,18 @@ def start_downloads():
     for each in download_queue:
         each['percent'] = 0
     for i,each in enumerate(download_queue):
-        filename =  each['url'].split('/')[-1]
+        filename =  each['href'].split('/')[-1]
+        print('saving {} - {} of {}'.format(filename, i+1, len(download_queue)))
         dl_location = ''
-        podcast = backend.get_download_location_from_podcast_id(each['podcast_id']) 
+        podcast = sql.get_podcast_by_id2(each) 
         if each['audio'] == 1:
-            backend.log( str( podcast ) )
-            dl_location = podcast[0]['audio']
+            dl_location = podcast.audio #[0]['audio']
         else:
             dl_location = podcast[0]['video']
         
         with open(dl_location + '/' + filename, 'wb')as f:
-            r = requests.get(each['url'], stream=True)
+            # sql.log( str( dl_location+"/"+filename ) )
+            r = requests.get(each['href'], stream=True)
             total_length = int( r.headers.get('content-length') )
             dl = 0
             if total_length is None: # no content length header
@@ -114,11 +119,10 @@ def start_downloads():
                     f.write(chunk)
                     done = int(100 * dl / total_length)
                     download_queue[i]['percent'] = done
-                    # result =  "[{}{}] {} bps".format(done, 50-done, dl/(time.clock() - start))
-                    # result = " {}%".format(done)
-                    # backend.log( result )
-        
-        backend.update_episode_as_downloaded(each) 
+
+        sql.update_episode_as_downloaded(each) 
+    
+    download_queue.clear()
 
 
 
@@ -160,6 +164,7 @@ def print_out_menu_options(options, multi_choice=False, func=None):
     while True:
         os.system('clear')
         for each in display_control[page_itr]:
+            # sql.log( str( options[each] ) )
             if 'name' in options[each]:
                 print( 'number {} {}'.format(each, options[each]['name']) )
             elif 'title' in options[each]:
@@ -197,6 +202,6 @@ width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
 download_queue = []
-sql = DatabaseAccessor('pc_database2.db')
+sql = DatabaseAccessor('pc_database.db')
 backend = Backend(sql)
 main_menu()
