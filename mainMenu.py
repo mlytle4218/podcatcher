@@ -248,6 +248,6 @@ width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
 download_queue = []
-sql = DatabaseAccessor('pc_database.db')
+sql = DatabaseAccessor('/home/marc/Desktop/podcatcher/pc_database.db')
 backend = Backend(sql)
 main_menu()
