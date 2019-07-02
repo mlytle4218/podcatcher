@@ -55,29 +55,75 @@ def main_menu():
 # def input_with_timeout(prompt, timemount=5):
 #     timer = threading.Timer()
 
+def enter_podcast_info(podcast):
+    os.system('clear')
+    while True:
+        if 'name' not in podcast:
+            podcast['name'] = ''
+        podcast['name'] = rlinput( 'podcast name ', podcast['name'] )
+        if len(podcast['name']) > 0:
+            break
+        else:
+            print('nothing entered')
+
+    while True:
+        if 'url' not in podcast:
+            podcast['url'] = ''
+        podcast['url'] =  rlinput( 'podcast url ', podcast['url'] )
+        if backend.check_feed(podcast['url']):
+            break
+        else:
+            print('that url did not work')
+    
+    while True:
+        if 'audio' not in podcast:
+            podcast['audio'] = ''
+        podcast['audio'] = rlinput( 'podcast audio directory ', podcast['audio'] )
+        if os.path.isdir(podcast['audio']):
+            break
+        else:
+            print('that directory does not exist')
+
+    while True:
+        if 'video' not in podcast:
+            podcast['video'] = ''
+        podcast['video'] = rlinput( 'podcast video directory ', podcast['video'] )
+        if os.path.isdir(podcast['video']):
+            break
+        else:
+            print('that directory does not exist')
+
+
+
+
+
 
 def add_new_podcast():
-    os.system('clear')
     podcast = {}
-    podcast['name'] = input( 'podcast name ' )
-    podcast['url'] =  input( 'podcast url ' )
-    podcast['audio'] = input( 'podcast audio ' )
-    podcast['video'] = input( 'podcast video ' )
-    if backend.check_feed(podcast['url']):
-        episodes = backend.get_podcast_data_from_feed(podcast['url'])
-        sql.insert_podcast2(podcast,episodes)
-
-    # id = backend.add_new_podcast(podcast)
+    enter_podcast_info(podcast)
+    episodes = backend.get_podcast_data_from_feed(podcast['url'])
+    sql.insert_podcast2(podcast,episodes)
+    # podcast['name'] = input( 'podcast name ' )
+    # podcast['url'] =  input( 'podcast url ' )
+    # podcast['audio'] = input( 'podcast audio ' )
+    # podcast['video'] = input( 'podcast video ' )
+    # if backend.check_feed(podcast['url']):
+    #     episodes = backend.get_podcast_data_from_feed(podcast['url'])
+    #     sql.insert_podcast2(podcast,episodes)
 
 def edit_existing_podcast(podcast):
-    podcast['name'] = rlinput('name ', podcast['name'])
-    podcast['url'] = rlinput('url ', podcast['url'])
-    podcast['audio'] = rlinput('audio ', podcast['audio'])
-    podcast['video'] = rlinput('video ', podcast['video'])
-    if backend.check_feed(podcast['url']):
-        episodes = backend.get_podcast_data_from_feed(podcast['url'])
-        sql.delete_episodes_by_podcast_id(podcast)
-        sql.update_podcast2(podcast,episodes)
+    enter_podcast_info(podcast)
+    episodes = backend.get_podcast_data_from_feed(podcast['url'])
+    sql.delete_episodes_by_podcast_id(podcast)
+    sql.update_podcast2(podcast,episodes)
+    # podcast['name'] = rlinput('name ', podcast['name'])
+    # podcast['url'] = rlinput('url ', podcast['url'])
+    # podcast['audio'] = rlinput('audio ', podcast['audio'])
+    # podcast['video'] = rlinput('video ', podcast['video'])
+    # if backend.check_feed(podcast['url']):
+    #     episodes = backend.get_podcast_data_from_feed(podcast['url'])
+    #     sql.delete_episodes_by_podcast_id(podcast)
+    #     sql.update_podcast2(podcast,episodes)
 
 def delete_existing_podcast(podcast):
     backend.remove_podcast(podcast)

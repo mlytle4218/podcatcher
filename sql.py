@@ -33,6 +33,8 @@ class DatabaseAccessor:
         # Bind the engine to the metadata of the Base class so that the
         # declaratives can be accessed through a DBSession instance
         self.Base.metadata.bind = self.engine
+
+        self.Base.metadata.create_all(self.engine)
         
         self.DBSession = sessionmaker(bind=self.engine)
         # A DBSession() instance establishes all conversations with the database
@@ -122,7 +124,7 @@ class DatabaseAccessor:
     
     def update_episode_as_downloaded(self,episode):
         epi_temp = self.session.query(Episode).filter(Episode.episode_id == episode['episode_id']).one()
-        epi_temp.downloaded == 1
+        epi_temp.downloaded = 1
         self.session.commit()
 
 
