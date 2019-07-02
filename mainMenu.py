@@ -95,9 +95,6 @@ def enter_podcast_info(podcast):
 
 
 
-
-
-
 def add_new_podcast():
     podcast = {}
     enter_podcast_info(podcast)
@@ -112,6 +109,7 @@ def add_new_podcast():
     #     sql.insert_podcast2(podcast,episodes)
 
 def edit_existing_podcast(podcast):
+
     enter_podcast_info(podcast)
     episodes = backend.get_podcast_data_from_feed(podcast['url'])
     sql.delete_episodes_by_podcast_id(podcast)
@@ -144,15 +142,21 @@ def start_downloads():
         each['percent'] = 0
     for i,each in enumerate(download_queue):
         filename =  each['href'].split('/')[-1]
-        print('saving {} - {} of {}'.format(filename, i+1, len(download_queue)))
+        extension_start = filename.split('.')
+        extension = extension_start[len(extension_start)-1]
         dl_location = ''
         podcast = sql.get_podcast_by_id2(each) 
+        filename2 = podcast.name
         if each['audio'] == 1:
             dl_location = podcast.audio #[0]['audio']
         else:
-            dl_location = podcast[0]['video']
+            dl_location = podcast.video #[0]['video']
         
-        with open(dl_location + '/' + filename, 'wb')as f:
+        filename2 += "-" + each['title'].replace(" ", "-").lower() +"."+extension
+
+        print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
+        
+        with open(dl_location + '/' + filename2, 'wb')as f:
             # sql.log( str( dl_location+"/"+filename ) )
             r = requests.get(each['href'], stream=True)
             total_length = int( r.headers.get('content-length') )
