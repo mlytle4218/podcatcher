@@ -8,6 +8,7 @@ import readline
 import requests
 import time
 import threading
+import config
 
 
 def main_menu():
@@ -77,7 +78,7 @@ def enter_podcast_info(podcast):
     
     while True:
         if 'audio' not in podcast:
-            podcast['audio'] = ''
+            podcast['audio'] = config.audio_default_location
         podcast['audio'] = rlinput( 'podcast audio directory ', podcast['audio'] )
         if os.path.isdir(podcast['audio']):
             break
@@ -86,7 +87,7 @@ def enter_podcast_info(podcast):
 
     while True:
         if 'video' not in podcast:
-            podcast['video'] = ''
+            podcast['video'] = config.video_default_location
         podcast['video'] = rlinput( 'podcast video directory ', podcast['video'] )
         if os.path.isdir(podcast['video']):
             break
@@ -252,6 +253,6 @@ width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
 download_queue = []
-sql = DatabaseAccessor('/home/marc/Desktop/podcatcher/pc_database.db')
+sql = DatabaseAccessor(config.database_location)
 backend = Backend(sql)
 main_menu()
