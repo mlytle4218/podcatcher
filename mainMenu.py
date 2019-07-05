@@ -19,6 +19,7 @@ def main_menu():
         print('number 3 delete existing podcast')
         print('number 4 choose episodes to download')
         print('number 5 start downloads')
+        print('number 6 update episodes')
         result = input('choice ')
         try:
             result = int( result )
@@ -48,6 +49,12 @@ def main_menu():
                 #         print( "{}% {}".format(
                 #             each['percent'],each['title']
                 #         ) )
+            elif result == 6:
+                ep = sql.update_all_episodes()
+                for each in ep:
+                    sql.log( str( each.title ) )
+
+                pass
                 
         except ValueError:
             if result == 'q':

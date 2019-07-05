@@ -23,7 +23,6 @@ class Podcast(Base):
         self.audio = podcast['audio']
         self.video = podcast['video']
 
-
 class Episode(Base):
     __tablename__ = 'episodes'
     # Here we define columns for the table person
@@ -48,6 +47,15 @@ class Episode(Base):
         self.downloaded = episode['downloaded']
         self.podcast_id = episode['podcast_id']
         self.href = episode['href']
+
+    def __hash__(self):
+        return hash((self.title, self.published))
+
+    def __eq__(self,other):
+        return self.title,self.published == other.title,other.published
+
+    def __ne__(self,other):
+        return not self.__eq__(other)
  
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
