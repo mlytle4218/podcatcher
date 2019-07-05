@@ -8,7 +8,7 @@
     
     
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for /usr/lib/python3/dist-packages/urllib3/util/retry.py: 32%</title>
+    <title>Coverage for /usr/lib/python3/dist-packages/urllib3/util/retry.py: 35%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -24,15 +24,15 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>/usr/lib/python3/dist-packages/urllib3/util/retry.py</b> :
-            <span class="pc_cov">32%</span>
+            <span class="pc_cov">35%</span>
         </h1>
 
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
 
         <h2 class="stats">
             150 statements &nbsp;
-            <span class="run hide_run shortkey_r button_toggle_run">48 run</span>
-            <span class="mis shortkey_m button_toggle_mis">102 missing</span>
+            <span class="run hide_run shortkey_r button_toggle_run">53 run</span>
+            <span class="mis shortkey_m button_toggle_mis">97 missing</span>
             <span class="exc shortkey_x button_toggle_exc">0 excluded</span>
 
             
@@ -365,10 +365,10 @@
 <p id="n296" class="pln"><a href="#n296">296</a></p>
 <p id="n297" class="pln"><a href="#n297">297</a></p>
 <p id="n298" class="pln"><a href="#n298">298</a></p>
-<p id="n299" class="stm mis"><a href="#n299">299</a></p>
+<p id="n299" class="stm run hide_run"><a href="#n299">299</a></p>
 <p id="n300" class="stm mis"><a href="#n300">300</a></p>
 <p id="n301" class="pln"><a href="#n301">301</a></p>
-<p id="n302" class="stm mis"><a href="#n302">302</a></p>
+<p id="n302" class="stm run hide_run"><a href="#n302">302</a></p>
 <p id="n303" class="pln"><a href="#n303">303</a></p>
 <p id="n304" class="stm run hide_run"><a href="#n304">304</a></p>
 <p id="n305" class="pln"><a href="#n305">305</a></p>
@@ -377,13 +377,13 @@
 <p id="n308" class="pln"><a href="#n308">308</a></p>
 <p id="n309" class="pln"><a href="#n309">309</a></p>
 <p id="n310" class="pln"><a href="#n310">310</a></p>
-<p id="n311" class="stm mis"><a href="#n311">311</a></p>
+<p id="n311" class="stm run hide_run"><a href="#n311">311</a></p>
 <p id="n312" class="stm mis"><a href="#n312">312</a></p>
 <p id="n313" class="pln"><a href="#n313">313</a></p>
-<p id="n314" class="stm mis"><a href="#n314">314</a></p>
+<p id="n314" class="stm run hide_run"><a href="#n314">314</a></p>
 <p id="n315" class="stm mis"><a href="#n315">315</a></p>
 <p id="n316" class="pln"><a href="#n316">316</a></p>
-<p id="n317" class="stm mis"><a href="#n317">317</a></p>
+<p id="n317" class="stm run hide_run"><a href="#n317">317</a></p>
 <p id="n318" class="pln"><a href="#n318">318</a></p>
 <p id="n319" class="pln"><a href="#n319">319</a></p>
 <p id="n320" class="stm run hide_run"><a href="#n320">320</a></p>
@@ -779,10 +779,10 @@
 <p id="t296" class="pln">        <span class="str">""" Checks if a given HTTP method should be retried upon, depending if</span><span class="strut">&nbsp;</span></p>
 <p id="t297" class="pln"><span class="str">        it is included on the method whitelist.</span><span class="strut">&nbsp;</span></p>
 <p id="t298" class="pln"><span class="str">        """</span><span class="strut">&nbsp;</span></p>
-<p id="t299" class="stm mis">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_whitelist</span> <span class="key">and</span> <span class="nam">method</span><span class="op">.</span><span class="nam">upper</span><span class="op">(</span><span class="op">)</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_whitelist</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t299" class="stm run hide_run">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_whitelist</span> <span class="key">and</span> <span class="nam">method</span><span class="op">.</span><span class="nam">upper</span><span class="op">(</span><span class="op">)</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_whitelist</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t300" class="stm mis">            <span class="key">return</span> <span class="key">False</span><span class="strut">&nbsp;</span></p>
 <p id="t301" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t302" class="stm mis">        <span class="key">return</span> <span class="key">True</span><span class="strut">&nbsp;</span></p>
+<p id="t302" class="stm run hide_run">        <span class="key">return</span> <span class="key">True</span><span class="strut">&nbsp;</span></p>
 <p id="t303" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t304" class="stm run hide_run">    <span class="key">def</span> <span class="nam">is_retry</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">method</span><span class="op">,</span> <span class="nam">status_code</span><span class="op">,</span> <span class="nam">has_retry_after</span><span class="op">=</span><span class="key">False</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t305" class="pln">        <span class="str">""" Is this method/status code retryable? (Based on whitelists and control</span><span class="strut">&nbsp;</span></p>
@@ -791,13 +791,13 @@
 <p id="t308" class="pln"><span class="str">        whether the returned status code is on the list of status codes to</span><span class="strut">&nbsp;</span></p>
 <p id="t309" class="pln"><span class="str">        be retried upon on the presence of the aforementioned header)</span><span class="strut">&nbsp;</span></p>
 <p id="t310" class="pln"><span class="str">        """</span><span class="strut">&nbsp;</span></p>
-<p id="t311" class="stm mis">        <span class="key">if</span> <span class="key">not</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_is_method_retryable</span><span class="op">(</span><span class="nam">method</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t311" class="stm run hide_run">        <span class="key">if</span> <span class="key">not</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_is_method_retryable</span><span class="op">(</span><span class="nam">method</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t312" class="stm mis">            <span class="key">return</span> <span class="key">False</span><span class="strut">&nbsp;</span></p>
 <p id="t313" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t314" class="stm mis">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">status_forcelist</span> <span class="key">and</span> <span class="nam">status_code</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">status_forcelist</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t314" class="stm run hide_run">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">status_forcelist</span> <span class="key">and</span> <span class="nam">status_code</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">status_forcelist</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t315" class="stm mis">            <span class="key">return</span> <span class="key">True</span><span class="strut">&nbsp;</span></p>
 <p id="t316" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t317" class="stm mis">        <span class="key">return</span> <span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">total</span> <span class="key">and</span> <span class="nam">self</span><span class="op">.</span><span class="nam">respect_retry_after_header</span> <span class="key">and</span><span class="strut">&nbsp;</span></p>
+<p id="t317" class="stm run hide_run">        <span class="key">return</span> <span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">total</span> <span class="key">and</span> <span class="nam">self</span><span class="op">.</span><span class="nam">respect_retry_after_header</span> <span class="key">and</span><span class="strut">&nbsp;</span></p>
 <p id="t318" class="pln">                <span class="nam">has_retry_after</span> <span class="key">and</span> <span class="op">(</span><span class="nam">status_code</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">RETRY_AFTER_STATUS_CODES</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t319" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t320" class="stm run hide_run">    <span class="key">def</span> <span class="nam">is_exhausted</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -902,7 +902,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.3</a>,
-            created at 2019-06-24 16:30
+            created at 2019-07-03 19:45
         </p>
     </div>
 </div>

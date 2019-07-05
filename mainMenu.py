@@ -60,6 +60,7 @@ def enter_podcast_info(podcast):
     try:
         os.system('clear')
         while True:
+            # add a check for names to this section
             if 'name' not in podcast:
                 podcast['name'] = ''
             podcast['name'] = rlinput( 'podcast name ', podcast['name'] )
@@ -101,7 +102,7 @@ def enter_podcast_info(podcast):
     except:
         raise
 
-def update_episodes():
+def update_episodes(podcast):
     pass
 
 

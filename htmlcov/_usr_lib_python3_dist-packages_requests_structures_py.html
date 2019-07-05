@@ -8,7 +8,7 @@
     
     
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for /usr/lib/python3/dist-packages/requests/structures.py: 52%</title>
+    <title>Coverage for /usr/lib/python3/dist-packages/requests/structures.py: 78%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -24,15 +24,15 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>/usr/lib/python3/dist-packages/requests/structures.py</b> :
-            <span class="pc_cov">52%</span>
+            <span class="pc_cov">78%</span>
         </h1>
 
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
 
         <h2 class="stats">
             40 statements &nbsp;
-            <span class="run hide_run shortkey_r button_toggle_run">21 run</span>
-            <span class="mis shortkey_m button_toggle_mis">19 missing</span>
+            <span class="run hide_run shortkey_r button_toggle_run">31 run</span>
+            <span class="mis shortkey_m button_toggle_mis">9 missing</span>
             <span class="exc shortkey_x button_toggle_exc">0 excluded</span>
 
             
@@ -109,27 +109,27 @@
 <p id="n40" class="pln"><a href="#n40">40</a></p>
 <p id="n41" class="pln"><a href="#n41">41</a></p>
 <p id="n42" class="stm run hide_run"><a href="#n42">42</a></p>
-<p id="n43" class="stm mis"><a href="#n43">43</a></p>
-<p id="n44" class="stm mis"><a href="#n44">44</a></p>
-<p id="n45" class="stm mis"><a href="#n45">45</a></p>
-<p id="n46" class="stm mis"><a href="#n46">46</a></p>
+<p id="n43" class="stm run hide_run"><a href="#n43">43</a></p>
+<p id="n44" class="stm run hide_run"><a href="#n44">44</a></p>
+<p id="n45" class="stm run hide_run"><a href="#n45">45</a></p>
+<p id="n46" class="stm run hide_run"><a href="#n46">46</a></p>
 <p id="n47" class="pln"><a href="#n47">47</a></p>
 <p id="n48" class="stm run hide_run"><a href="#n48">48</a></p>
 <p id="n49" class="pln"><a href="#n49">49</a></p>
 <p id="n50" class="pln"><a href="#n50">50</a></p>
-<p id="n51" class="stm mis"><a href="#n51">51</a></p>
+<p id="n51" class="stm run hide_run"><a href="#n51">51</a></p>
 <p id="n52" class="pln"><a href="#n52">52</a></p>
 <p id="n53" class="stm run hide_run"><a href="#n53">53</a></p>
-<p id="n54" class="stm mis"><a href="#n54">54</a></p>
+<p id="n54" class="stm run hide_run"><a href="#n54">54</a></p>
 <p id="n55" class="pln"><a href="#n55">55</a></p>
 <p id="n56" class="stm run hide_run"><a href="#n56">56</a></p>
-<p id="n57" class="stm mis"><a href="#n57">57</a></p>
+<p id="n57" class="stm run hide_run"><a href="#n57">57</a></p>
 <p id="n58" class="pln"><a href="#n58">58</a></p>
 <p id="n59" class="stm run hide_run"><a href="#n59">59</a></p>
-<p id="n60" class="stm mis"><a href="#n60">60</a></p>
+<p id="n60" class="stm run hide_run"><a href="#n60">60</a></p>
 <p id="n61" class="pln"><a href="#n61">61</a></p>
 <p id="n62" class="stm run hide_run"><a href="#n62">62</a></p>
-<p id="n63" class="stm mis"><a href="#n63">63</a></p>
+<p id="n63" class="stm run hide_run"><a href="#n63">63</a></p>
 <p id="n64" class="pln"><a href="#n64">64</a></p>
 <p id="n65" class="stm run hide_run"><a href="#n65">65</a></p>
 <p id="n66" class="pln"><a href="#n66">66</a></p>
@@ -149,7 +149,7 @@
 <p id="n80" class="pln"><a href="#n80">80</a></p>
 <p id="n81" class="pln"><a href="#n81">81</a></p>
 <p id="n82" class="stm run hide_run"><a href="#n82">82</a></p>
-<p id="n83" class="stm mis"><a href="#n83">83</a></p>
+<p id="n83" class="stm run hide_run"><a href="#n83">83</a></p>
 <p id="n84" class="pln"><a href="#n84">84</a></p>
 <p id="n85" class="stm run hide_run"><a href="#n85">85</a></p>
 <p id="n86" class="stm mis"><a href="#n86">86</a></p>
@@ -217,27 +217,27 @@
 <p id="t40" class="pln"><span class="str">    """</span><span class="strut">&nbsp;</span></p>
 <p id="t41" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t42" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">data</span><span class="op">=</span><span class="key">None</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t43" class="stm mis">        <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span> <span class="op">=</span> <span class="nam">OrderedDict</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t44" class="stm mis">        <span class="key">if</span> <span class="nam">data</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t45" class="stm mis">            <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span><span class="op">}</span><span class="strut">&nbsp;</span></p>
-<p id="t46" class="stm mis">        <span class="nam">self</span><span class="op">.</span><span class="nam">update</span><span class="op">(</span><span class="nam">data</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t43" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span> <span class="op">=</span> <span class="nam">OrderedDict</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t44" class="stm run hide_run">        <span class="key">if</span> <span class="nam">data</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t45" class="stm run hide_run">            <span class="nam">data</span> <span class="op">=</span> <span class="op">{</span><span class="op">}</span><span class="strut">&nbsp;</span></p>
+<p id="t46" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">update</span><span class="op">(</span><span class="nam">data</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t47" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t48" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__setitem__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">key</span><span class="op">,</span> <span class="nam">value</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t49" class="pln">        <span class="com"># Use the lowercased key for lookups, but store the actual</span><span class="strut">&nbsp;</span></p>
 <p id="t50" class="pln">        <span class="com"># key alongside the value.</span><span class="strut">&nbsp;</span></p>
-<p id="t51" class="stm mis">        <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">[</span><span class="nam">key</span><span class="op">.</span><span class="nam">lower</span><span class="op">(</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span><span class="nam">key</span><span class="op">,</span> <span class="nam">value</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t51" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">[</span><span class="nam">key</span><span class="op">.</span><span class="nam">lower</span><span class="op">(</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span><span class="nam">key</span><span class="op">,</span> <span class="nam">value</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t52" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t53" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__getitem__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">key</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t54" class="stm mis">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">[</span><span class="nam">key</span><span class="op">.</span><span class="nam">lower</span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
+<p id="t54" class="stm run hide_run">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">[</span><span class="nam">key</span><span class="op">.</span><span class="nam">lower</span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="num">1</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t55" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t56" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__delitem__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">key</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t57" class="stm mis">        <span class="key">del</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">[</span><span class="nam">key</span><span class="op">.</span><span class="nam">lower</span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
+<p id="t57" class="stm run hide_run">        <span class="key">del</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">[</span><span class="nam">key</span><span class="op">.</span><span class="nam">lower</span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t58" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t59" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__iter__</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t60" class="stm mis">        <span class="key">return</span> <span class="op">(</span><span class="nam">casedkey</span> <span class="key">for</span> <span class="nam">casedkey</span><span class="op">,</span> <span class="nam">mappedvalue</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">.</span><span class="nam">values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t60" class="stm run hide_run">        <span class="key">return</span> <span class="op">(</span><span class="nam">casedkey</span> <span class="key">for</span> <span class="nam">casedkey</span><span class="op">,</span> <span class="nam">mappedvalue</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">.</span><span class="nam">values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t61" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t62" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__len__</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t63" class="stm mis">        <span class="key">return</span> <span class="nam">len</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t63" class="stm run hide_run">        <span class="key">return</span> <span class="nam">len</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t64" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t65" class="stm run hide_run">    <span class="key">def</span> <span class="nam">lower_items</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t66" class="pln">        <span class="str">"""Like iteritems(), but with all lowercase keys."""</span><span class="strut">&nbsp;</span></p>
@@ -257,7 +257,7 @@
 <p id="t80" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t81" class="pln">    <span class="com"># Copy is required</span><span class="strut">&nbsp;</span></p>
 <p id="t82" class="stm run hide_run">    <span class="key">def</span> <span class="nam">copy</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t83" class="stm mis">        <span class="key">return</span> <span class="nam">CaseInsensitiveDict</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">.</span><span class="nam">values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t83" class="stm run hide_run">        <span class="key">return</span> <span class="nam">CaseInsensitiveDict</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_store</span><span class="op">.</span><span class="nam">values</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t84" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t85" class="stm run hide_run">    <span class="key">def</span> <span class="nam">__repr__</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t86" class="stm mis">        <span class="key">return</span> <span class="nam">str</span><span class="op">(</span><span class="nam">dict</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">items</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
@@ -290,7 +290,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.3</a>,
-            created at 2019-06-24 16:30
+            created at 2019-07-03 19:45
         </p>
     </div>
 </div>
