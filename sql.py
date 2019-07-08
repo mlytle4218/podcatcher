@@ -74,6 +74,14 @@ class DatabaseAccessor:
 
         self.session.commit()
 
+    def get_first_podcast(self):
+        return self.session.query(Podcast).first()
+
+    def get_episodes_by_podcast_id(self,podcast):
+        episodes =  self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).all()
+        return self.result_proxy_to_dict(episodes)
+
+
     def update_all_episodes(self):
         episodes = self.session.query(Episode).all()
         return episodes

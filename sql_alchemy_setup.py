@@ -48,11 +48,12 @@ class Episode(Base):
         self.podcast_id = episode['podcast_id']
         self.href = episode['href']
 
-    def __hash__(self):
-        return hash((self.title, self.published))
+    # def __hash__(self):
+    #     return hash((self.title, self.published))
 
     def __eq__(self,other):
-        return self.title,self.published == other.title,other.published
+        # return self.title,self.published == other.title,other.published
+        return self['title'] == other['title'] and self['published'] == other['published']
 
     def __ne__(self,other):
         return not self.__eq__(other)

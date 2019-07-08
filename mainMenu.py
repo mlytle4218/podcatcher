@@ -50,9 +50,31 @@ def main_menu():
                 #             each['percent'],each['title']
                 #         ) )
             elif result == 6:
-                ep = sql.update_all_episodes()
-                for each in ep:
-                    sql.log( str( each.title ) )
+                first = sql.get_first_podcast()
+                ep = sql.get_episodes_by_podcast_id(first) 
+                sql.log( 'ep ' +str( len(ep) ) )
+                ep2 = backend.get_podcast_data_from_feed(first.url)
+                sql.log( 'ep2 ' +str( len(ep2) ) )
+
+                iter_list = []
+                for itr,each2 in enumerate(ep2):
+                    for each1 in ep:
+                        if each2['title'] == each1['title']: 
+                            iter_list.append(itr)
+
+                for index in sorted(iter_list, reverse=True):
+                    ep2.pop(index)
+                    sql.log( str( index ) )
+
+                
+
+
+                sql.log( str( ep2 ) )
+
+                
+
+                # for each in result:
+                #     sql.log( str( each['title'] ) )
 
                 pass
                 
