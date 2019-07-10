@@ -17,7 +17,7 @@ class Podcast(Base):
     audio = Column(String(250))
     video = Column(String(250))
 
-    def __init__(self,name,url,audio,video):
+    def __init__(self,name='',url='',audio='',video=''):
         self.name = name
         self.url = url
         self.audio = audio

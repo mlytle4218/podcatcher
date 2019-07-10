@@ -65,12 +65,11 @@ class DatabaseAccessor:
             myfile.write(string)
         
     def insert_podcast2(self,podcast,episodes):
-        new_podcast = Podcast(podcast)
-        self.session.add(new_podcast)
+        self.session.add(podcast)
         self.session.commit()
         for each in episodes:
-            each['podcast_id'] = new_podcast.podcast_id
-            self.session.add(Episode(each))
+            each.podcast_id = podcast.podcast_id
+            self.session.add(Episode(each.title, each.published, each.summary, each.length,each.audio,each.podcast_id, each.href ))
 
         self.session.commit()
 

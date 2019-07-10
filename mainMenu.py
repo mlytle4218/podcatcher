@@ -133,10 +133,10 @@ def update_episodes(podcast):
 
 
 def add_new_podcast():
-    podcast = {}
+    podcast = Podcast()
     podcast = enter_podcast_info(podcast)
     if podcast != None:
-        episodes = backend.get_podcast_data_from_feed(podcast['url'])
+        episodes = backend.get_podcast_data_from_feed(podcast.url)
         sql.insert_podcast2(podcast,episodes)
 
 def edit_existing_podcast(podcast):
