@@ -9,7 +9,7 @@ import requests
 import time
 import threading
 import config
-
+from sql_alchemy_setup import Podcast, Episode
 
 def main_menu():
     while True:
@@ -90,37 +90,33 @@ def enter_podcast_info(podcast):
         os.system('clear')
         while True:
             # add a check for names to this section
-            if 'name' not in podcast:
-                podcast['name'] = ''
-            podcast['name'] = rlinput( 'podcast name ', podcast['name'] )
-            if len(podcast['name']) > 0:
+            podcast.name = rlinput( 'podcast name ', podcast.name )
+            if len(podcast.name) > 0:
                 break
             else:
                 print('nothing entered')
 
         while True:
-            if 'url' not in podcast:
-                podcast['url'] = ''
-            podcast['url'] =  rlinput( 'podcast url ', podcast['url'] )
-            if backend.check_feed(podcast['url']):
+            podcast.url =  rlinput( 'podcast url ', podcast.url )
+            if backend.check_feed(podcast.url):
                 break
             else:
                 print('that url did not work')
         
         while True:
-            if 'audio' not in podcast:
-                podcast['audio'] = config.audio_default_location
-            podcast['audio'] = rlinput( 'podcast audio directory ', podcast['audio'] )
-            if os.path.isdir(podcast['audio']):
+            if len(podcast.audio) == 0:
+                podcast.audio = config.audio_default_location
+            podcast.audio = rlinput( 'podcast audio directory ', podcast.audio )
+            if os.path.isdir(podcast.audio):
                 break
             else:
                 print('that directory does not exist')
 
         while True:
-            if 'video' not in podcast:
-                podcast['video'] = config.video_default_location
-            podcast['video'] = rlinput( 'podcast video directory ', podcast['video'] )
-            if os.path.isdir(podcast['video']):
+            if len(podcast.video) == 0:
+                podcast.video = config.video_default_location
+            podcast.video = rlinput( 'podcast video directory ', podcast.video )
+            if os.path.isdir(podcast.video):
                 break
             else:
                 print('that directory does not exist')
@@ -150,8 +146,8 @@ def edit_existing_podcast(podcast):
         sql.delete_episodes_by_podcast_id(podcast)
         sql.update_podcast2(podcast,episodes)
 
-def delete_existing_podcast(podcast):
-    backend.remove_podcast(podcast)
+# def delete_existing_podcast(podcast):
+#     backend.remove_podcast(podcast)
 
 def choose_episodes_to_download():
     podcasts  = sql.get_podcasts_with_downloads_available()

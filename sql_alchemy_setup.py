@@ -17,11 +17,11 @@ class Podcast(Base):
     audio = Column(String(250))
     video = Column(String(250))
 
-    def __init__(self,podcast):
-        self.name = podcast['name']
-        self.url = podcast['url']
-        self.audio = podcast['audio']
-        self.video = podcast['video']
+    def __init__(self,name,url,audio,video):
+        self.name = name
+        self.url = url
+        self.audio = audio
+        self.video = video
 
 class Episode(Base):
     __tablename__ = 'episodes'
@@ -38,22 +38,22 @@ class Episode(Base):
     podcast_id = Column(Integer, ForeignKey('podcasts.podcast_id'))
     podcast = relationship(Podcast)
 
-    def __init__(self,episode):
-        self.title = episode['title']
-        self.published = episode['published']
-        self.summary = episode['summary']
-        self.length = episode['length']
-        self.audio = episode['audio']
-        self.downloaded = episode['downloaded']
-        self.podcast_id = episode['podcast_id']
-        self.href = episode['href']
+    def __init__(self,title, published, summary,length,audio,podcast_id,href):
+        self.title = title
+        self.published = published
+        self.summary = summary
+        self.length = length
+        self.audio = audio
+        self.downloaded = 0
+        self.podcast_id = podcast_id
+        self.href = href
 
-    # def __hash__(self):
-    #     return hash((self.title, self.published))
+    def __hash__(self):
+        return hash((self.title, self.published))
 
     def __eq__(self,other):
-        # return self.title,self.published == other.title,other.published
-        return self['title'] == other['title'] and self['published'] == other['published']
+        return self.title,self.published == other.title,other.published
+        # return self['title'] == other['title'] and self['published'] == other['published']
 
     def __ne__(self,other):
         return not self.__eq__(other)
