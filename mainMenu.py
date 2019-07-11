@@ -142,7 +142,7 @@ def add_new_podcast():
 def edit_existing_podcast(podcast):
     enter_podcast_info(podcast)
     if podcast != None:
-        episodes = backend.get_podcast_data_from_feed(podcast['url'])
+        episodes = backend.get_podcast_data_from_feed(podcast.url)
         sql.delete_episodes_by_podcast_id(podcast)
         sql.update_podcast2(podcast,episodes)
 
@@ -238,10 +238,15 @@ def print_out_menu_options(options, multi_choice=False, func=None):
         os.system('clear')
         for each in display_control[page_itr]:
             # sql.log( str( options[each] ) )
-            if 'name' in options[each]:
-                print( 'number {} {}'.format(each, options[each]['name']) )
-            elif 'title' in options[each]:
-                print( 'number {} {}'.format(each, options[each]['title']) )
+            if options[each].name:
+                print( 'number {} {}'.format(each, options[each].name) )
+            elif options[each].title:
+                print( 'number {} {}'.format(each, options[each].title) )
+
+            # if 'name' in options[each]:
+            #     print( 'number {} {}'.format(each, options[each]['name']) )
+            # elif 'title' in options[each]:
+            #     print( 'number {} {}'.format(each, options[each]['title']) )
 
         result = input('choice ')        
         try:
