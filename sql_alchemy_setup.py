@@ -4,6 +4,8 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+import datetime
+import time
  
 Base = declarative_base()
  
@@ -38,6 +40,12 @@ class Episode(Base):
     podcast_id = Column(Integer, ForeignKey('podcasts.podcast_id'))
     podcast = relationship(Podcast)
 
+    def log(self,input):
+        with open("test.txt", "a") as myfile:
+            string=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+            string=string+ ' - ' +input + '\n'
+            myfile.write(string)
+
     def __init__(self,title='', published='', summary='',length='',audio='',podcast_id='',href=''):
         self.title = title
         self.published = published
@@ -47,16 +55,20 @@ class Episode(Base):
         self.downloaded = 0
         self.podcast_id = podcast_id
         self.href = href
+    
+    def __str__(self):
+        return self.title
 
     def __hash__(self):
         return hash((self.title, self.published))
 
     def __eq__(self,other):
-        return self.title,self.published == other.title,other.published
-        # return self['title'] == other['title'] and self['published'] == other['published']
+        if not isinstance(other, Episode):
+            return NotImplemented
+        return self.title == other.title and self.published.replace(tzinfo=None) == other.published.replace(tzinfo=None)
 
     def __ne__(self,other):
-        return not self.__eq__(other)
+        return self.title != other.title or self.published != other.published
  
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.

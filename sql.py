@@ -63,6 +63,21 @@ class DatabaseAccessor:
             string=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
             string=string+ ' - ' +input + '\n'
             myfile.write(string)
+
+    def insert_episodes(self, episodes):
+        for each in episodes:
+            self.session.add(
+                Episode(
+                    each.title,
+                    each.published,
+                    each.summary,
+                    each.length,
+                    each.audio,
+                    each.podcast_id,
+                    each.href
+                )
+            )
+        self.session.commit()
         
     def insert_podcast2(self,podcast,episodes):
         self.session.add(podcast)
@@ -103,7 +118,7 @@ class DatabaseAccessor:
         self.session.query(Podcast).filter(Podcast.podcast_id == podcast.podcast_id).delete()
         self.session.commit()
 
-    def  delete_episodes_by_podcast_id(self, podcast):
+    def delete_episodes_by_podcast_id(self, podcast):
         self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
         self.session.commit()
 

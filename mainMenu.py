@@ -10,6 +10,7 @@ import time
 import threading
 import config
 from sql_alchemy_setup import Podcast, Episode
+import operator
 
 def main_menu():
     while True:
@@ -50,37 +51,35 @@ def main_menu():
                 #             each['percent'],each['title']
                 #         ) )
             elif result == 6:
-                first = sql.get_first_podcast()
-                ep = sql.get_episodes_by_podcast_id(first) 
-                sql.log( 'ep ' +str( len(ep) ) )
-                ep2 = backend.get_podcast_data_from_feed(first.url)
-                sql.log( 'ep2 ' +str( len(ep2) ) )
+                podcasts = sql.get_all_podcasts()
+                itx = 1
+                for each in podcasts:
+                    print('updating {} of {}'.format(itx, len(podcasts)))
+                    itx += 1
+                    update_episodes(each)
 
-                iter_list = []
-                for itr,each2 in enumerate(ep2):
-                    for each1 in ep:
-                        if each2['title'] == each1['title']: 
-                            iter_list.append(itr)
-
-                for index in sorted(iter_list, reverse=True):
-                    ep2.pop(index)
-                    sql.log( str( index ) )
-
-                
-
-
-                sql.log( str( ep2 ) )
-
-                
-
-                # for each in result:
-                #     sql.log( str( each['title'] ) )
-
-                pass
                 
         except ValueError:
             if result == 'q':
                 break
+
+def update_episodes(podcast):
+    ep = sql.get_episodes_by_podcast_id(podcast) 
+    ep2 = backend.get_podcast_data_from_feed(podcast.url)
+
+    
+    for each in ep:
+        ep2.remove(each)
+
+    for each in ep2:
+        each.podcast_id = podcast.podcast_id
+
+    for each in ep2:
+        sql.log( str( each ))
+
+    sql.insert_episodes(ep2)
+
+
 
 # def input_with_timeout(prompt, timemount=5):
 #     timer = threading.Timer()
@@ -127,8 +126,6 @@ def enter_podcast_info(podcast):
     except:
         raise
 
-def update_episodes(podcast):
-    pass
 
 
 
@@ -162,26 +159,26 @@ def add_to_download_queue(episode):
 
 def start_downloads():
     for each in download_queue:
-        each['percent'] = 0
+        each.percent = 0
     for i,each in enumerate(download_queue):
-        filename =  each['href'].split('/')[-1]
+        filename =  each.href.split('/')[-1]
         extension_start = filename.split('.')
         extension = extension_start[len(extension_start)-1]
         dl_location = ''
         podcast = sql.get_podcast_by_id2(each) 
         filename2 = podcast.name
-        if each['audio'] == 1:
+        if each.audio == 1:
             dl_location = podcast.audio #[0]['audio']
         else:
             dl_location = podcast.video #[0]['video']
         
-        filename2 += "-" + each['title'].replace(" ", "-").lower() +"."+extension
+        filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
         print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
         
         with open(dl_location + '/' + filename2, 'wb')as f:
             # sql.log( str( dl_location+"/"+filename ) )
-            r = requests.get(each['href'], stream=True)
+            r = requests.get(each.href, stream=True)
             total_length = int( r.headers.get('content-length') )
             dl = 0
             if total_length is None: # no content length header
@@ -191,7 +188,7 @@ def start_downloads():
                     dl += len(chunk)
                     f.write(chunk)
                     done = int(100 * dl / total_length)
-                    download_queue[i]['percent'] = done
+                    download_queue[i].percent = done
 
         sql.update_episode_as_downloaded(each) 
     
