@@ -98,24 +98,16 @@ class DatabaseAccessor:
 
 
     def delete_podcast2(self,podcast):
-        self.session.query(Episode).filter(Episode.podcast_id == podcast['podcast_id'] ).delete()
+        self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
         self.session.commit()
-        self.session.query(Podcast).filter(Podcast.podcast_id == podcast['podcast_id']).delete()
+        self.session.query(Podcast).filter(Podcast.podcast_id == podcast.podcast_id).delete()
         self.session.commit()
-        pass
 
     def  delete_episodes_by_podcast_id(self, podcast):
         self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
         self.session.commit()
 
     def update_podcast2(self,podcast,episodes):
-        # pod_temp = self.session.query(Podcast).filter(Podcast.podcast_id == podcast.podcast_id).one()
-        # pod_temp.name = podcast.name
-        # pod_temp.url = podcast.url
-        # pod_temp.audio = podcast.audio
-        # pod_temp.video = podcast.video
-        
-        # self.session.commit()
         for each in episodes:
             each.podcast_id = podcast.podcast_id
             self.session.add(each)
