@@ -119,15 +119,15 @@ class DatabaseAccessor:
         return self.result_proxy_to_dict( podcasts)
 
     def get_episodes_with_downloads_available(self, podcast):
-        episodes = self.session.query(Episode).filter(Episode.podcast_id == podcast['podcast_id']).filter(Episode.downloaded ==0).all()
+        episodes = self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).filter(Episode.downloaded ==0).all()
         return self.result_proxy_to_dict( episodes )
 
     def get_podcast_by_id2(self,episode):
-        podcast = self.session.query(Podcast).filter(Podcast.podcast_id == episode['podcast_id']).one()
+        podcast = self.session.query(Podcast).filter(Podcast.podcast_id == episode.podcast_id).one()
         return podcast
         # return self.result_proxy_to_dict( podcast )
     
     def update_episode_as_downloaded(self,episode):
-        epi_temp = self.session.query(Episode).filter(Episode.episode_id == episode['episode_id']).one()
+        epi_temp = self.session.query(Episode).filter(Episode.episode_id == episode.episode_id).one()
         epi_temp.downloaded = 1
         self.session.commit()
