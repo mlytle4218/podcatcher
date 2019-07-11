@@ -38,7 +38,7 @@ class Episode(Base):
     podcast_id = Column(Integer, ForeignKey('podcasts.podcast_id'))
     podcast = relationship(Podcast)
 
-    def __init__(self,title, published, summary,length,audio,podcast_id,href):
+    def __init__(self,title='', published='', summary='',length='',audio='',podcast_id='',href=''):
         self.title = title
         self.published = published
         self.summary = summary

@@ -3,6 +3,7 @@ import feedparser
 import calendar
 import csv
 import datetime,time
+from sql_alchemy_setup import Episode, Podcast
 
 
 class Backend:
@@ -34,31 +35,30 @@ class Backend:
         f_parser = feedparser.parse(url)
         episode_list = []
         for entry in f_parser['entries']:
-            episode = {}
+            episode = Episode()
             for sub_entry in entry:
                 # log( sub_entry )
                 if(sub_entry == 'title'):
-                    episode['title'] = self.remove_tags(entry['title'])#.encode('utf-8')
+                    episode.title = self.remove_tags(entry['title'])#.encode('utf-8')
                 elif (sub_entry == 'summary'):
-                    episode['summary'] =  self.remove_tags(entry['summary'])#.encode('utf-8')
+                    episode.summary =  self.remove_tags(entry['summary'])#.encode('utf-8')
                 elif ( sub_entry == 'links' ):
                     for link in entry['links']:
                             if 'text' not in link['type']:
 
-                                episode['href'] = link['href']
+                                episode.href = link['href']
                                 if link.has_key('length'):
-                                    episode['length'] = link['length']
+                                    episode.length = link['length']
                                 else: 
-                                    episode['length'] = -1
+                                    episode.length = -1
                                 
                                 if 'audio' in link['type']:
-                                    episode['audio'] = 1
+                                    episode.audio = 1
                                 else: 
-                                    episode['audio'] = 0
+                                    episode.audio = 0
 
                 elif ( sub_entry == 'published'):
-                    episode['published'] = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z') 
-                episode['downloaded'] = 0
+                    episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z') 
             episode_list.append(episode)
         return episode_list
 
