@@ -20,7 +20,6 @@ def main_menu():
         print('number 3 delete existing podcast')
         print('number 4 choose episodes to download')
         print('number 5 start downloads')
-        print('number 6 update episodes')
         result = input('choice ')
         try:
             result = int( result )
@@ -50,13 +49,6 @@ def main_menu():
                 #         print( "{}% {}".format(
                 #             each['percent'],each['title']
                 #         ) )
-            elif result == 6:
-                podcasts = sql.get_all_podcasts()
-                itx = 1
-                for each in podcasts:
-                    print('updating {} of {}'.format(itx, len(podcasts)))
-                    itx += 1
-                    update_episodes(each)
 
                 
         except ValueError:
@@ -69,13 +61,13 @@ def update_episodes(podcast):
 
     
     for each in ep:
-        ep2.remove(each)
+        try:
+            ep2.remove(each)
+        except Exception:
+            pass
 
     for each in ep2:
         each.podcast_id = podcast.podcast_id
-
-    for each in ep2:
-        sql.log( str( each ))
 
     sql.insert_episodes(ep2)
 
@@ -279,4 +271,12 @@ height = int( subprocess.check_output(['tput','lines']) ) -1
 download_queue = []
 sql = DatabaseAccessor(config.database_location)
 backend = Backend(sql)
+#update podcasts
+podcasts = sql.get_all_podcasts()
+itx = 1
+for each in podcasts:
+    print('updating {} of {}'.format(itx, len(podcasts)))
+    itx += 1
+    update_episodes(each)
+
 main_menu()
