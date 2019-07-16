@@ -22,6 +22,7 @@ def main_menu():
         print('number 4 choose episodes to download')
         print('number 5 start downloads')
         print('number 6 search for podcasts')
+        print('number 7 list podcasts')
         result = input('choice ')
         try:
             result = int( result )
@@ -53,11 +54,17 @@ def main_menu():
                 #         ) )
             elif result == 6:
                 search()
+            elif result == 7:
+                list_podcasts()
 
                 
         except ValueError:
             if result == 'q':
                 break
+
+def list_podcasts():
+    podcasts = sql.get_all_podcasts()
+    print_out_menu_options(podcasts)
 
 def search():
     os.system('clear')
@@ -72,8 +79,9 @@ def search():
             results.append(podcast)
 
     choices = print_out_menu_options(results,True)
-    for each in choices:
-        add_new_podcast(each)
+    if choices is not None:
+        for each in choices:
+            add_new_podcast(each)
 
 def update_episodes(podcast):
     ep = sql.get_episodes_by_podcast_id(podcast) 
