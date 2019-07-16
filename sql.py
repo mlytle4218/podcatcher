@@ -23,7 +23,10 @@ from sql_alchemy_setup import Podcast, Episode, Base
 class DatabaseAccessor:
     def __init__(self,database):
         # self.database = database
-        self.engine = create_engine('sqlite:///%s' % database)
+        data_base = "sqlite:///{}".format(database)
+        # self.log( str( data_base ) )
+        self.engine = create_engine(data_base)
+        # self.engine = create_engine('sqlite:///%s' % database)
         # self.meta = MetaData()
         # self.conn = self.engine.connect()
         
@@ -82,6 +85,7 @@ class DatabaseAccessor:
     def insert_podcast2(self,podcast,episodes):
         self.session.add(podcast)
         self.session.commit()
+        self.log('got here')
         for each in episodes:
             each.podcast_id = podcast.podcast_id
             self.session.add(Episode(each.title, each.published, each.summary, each.length,each.audio,each.podcast_id, each.href ))

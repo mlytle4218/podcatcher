@@ -11,6 +11,7 @@ import threading
 import config
 from sql_alchemy_setup import Podcast, Episode
 import operator
+import json
 
 def main_menu():
     while True:
@@ -20,11 +21,12 @@ def main_menu():
         print('number 3 delete existing podcast')
         print('number 4 choose episodes to download')
         print('number 5 start downloads')
+        print('number 6 search for podcasts')
         result = input('choice ')
         try:
             result = int( result )
             if result == 1:
-                add_new_podcast()
+                add_new_podcast(Podcast())
             elif result == 2:
                 podcasts = sql.get_all_podcasts()
                 choice = print_out_menu_options(podcasts)
@@ -49,11 +51,29 @@ def main_menu():
                 #         print( "{}% {}".format(
                 #             each['percent'],each['title']
                 #         ) )
+            elif result == 6:
+                search()
 
                 
         except ValueError:
             if result == 'q':
                 break
+
+def search():
+    os.system('clear')
+    terms = input('Enter search terms: ')
+    url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
+    response = requests.get(url)
+    data = json.loads(response.content)
+    results = []
+    for each in data['results']:
+        if 'feedUrl' in each:
+            podcast = Podcast(each['artistName'] + " - " +each['collectionName'],each['feedUrl'],config.audio_default_location, config.video_default_location)
+            results.append(podcast)
+
+    choices = print_out_menu_options(results,True)
+    for each in choices:
+        add_new_podcast(each)
 
 def update_episodes(podcast):
     ep = sql.get_episodes_by_podcast_id(podcast) 
@@ -121,8 +141,7 @@ def enter_podcast_info(podcast):
 
 
 
-def add_new_podcast():
-    podcast = Podcast()
+def add_new_podcast(podcast):
     podcast = enter_podcast_info(podcast)
     if podcast != None:
         episodes = backend.get_podcast_data_from_feed(podcast.url)
