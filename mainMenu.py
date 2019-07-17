@@ -111,7 +111,7 @@ def enter_podcast_info(podcast):
         os.system('clear')
         while True:
             # add a check for names to this section
-            podcast.name = re.sub(r'(\s)+', '-', podcast.name)
+            # podcast.name = re.sub(r'(\s)+', '-', podcast.name)
             podcast.name = rlinput( 'podcast name ', podcast.name )
             if len(podcast.name) > 0:
                 break
