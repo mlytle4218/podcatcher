@@ -12,6 +12,7 @@ import config
 from sql_alchemy_setup import Podcast, Episode
 import operator
 import json
+import re
 
 def main_menu():
     while True:
@@ -75,7 +76,8 @@ def search():
     results = []
     for each in data['results']:
         if 'feedUrl' in each:
-            podcast = Podcast(each['artistName'] + " - " +each['collectionName'],each['feedUrl'],config.audio_default_location, config.video_default_location)
+            podcast = Podcast(each['artistName'].lower() + "-" +each['collectionName'].lower() ,each['feedUrl'],config.audio_default_location, config.video_default_location)
+            
             results.append(podcast)
 
     choices = print_out_menu_options(results,True)
@@ -109,6 +111,7 @@ def enter_podcast_info(podcast):
         os.system('clear')
         while True:
             # add a check for names to this section
+            podcast.name = re.sub(r'(\s)+', '-', podcast.name)
             podcast.name = rlinput( 'podcast name ', podcast.name )
             if len(podcast.name) > 0:
                 break
