@@ -196,7 +196,6 @@ def start_downloads():
         print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
         
         with open(dl_location + '/' + filename2, 'wb')as f:
-            # sql.log( str( dl_location+"/"+filename ) )
             r = requests.get(each.href, stream=True)
             total_length = int( r.headers.get('content-length') )
             dl = 0
@@ -227,6 +226,16 @@ def rlinput(prompt, prefill=''):
 
 
 def print_out_menu_options(options, multi_choice=False, func=None):
+    try:
+        options.sort(key=lambda x: x.name)
+    except AttributeError:
+        pass
+
+    try:
+        options.sort(key=lambda x: x.title)
+    except AttributeError:
+        pass 
+
     choices = []
     full = int( math.floor(len(options) / height ) )
     remainder = len(options) - (full * height)
@@ -253,11 +262,21 @@ def print_out_menu_options(options, multi_choice=False, func=None):
     while True:
         os.system('clear')
         for each in display_control[page_itr]:
-            # sql.log( str( options[each] ) )
-            if hasattr(options[each], 'name'):
-                print( 'number {} {}'.format(each, options[each].name) )
-            elif hasattr(options[each], 'title'):
-                print( 'number {} {}'.format(each, options[each].title) )
+            try:
+                print( 'number {} {}'.format(each + 1, options[each].name) )
+            except AttributeError:
+                pass
+
+            try:
+                print( 'number {} {}'.format(each + 1, options[each].title) )
+            except AttributeError:
+                pass
+            # if hasattr(options[each], 'name'):
+            # if 'name' in options[each]:
+            #     print( 'number {} {}'.format(each + 1, options[each].name) )
+            # elif 'title' in options[each]:
+            # # elif hasattr(options[each], 'title'):
+            #     print( 'number {} {}'.format(each + 1, options[each].title) )
 
             # if 'name' in options[each]:
             #     print( 'number {} {}'.format(each, options[each]['name']) )
@@ -269,13 +288,13 @@ def print_out_menu_options(options, multi_choice=False, func=None):
             result = int(result)
             if result <= len(options):
                 if multi_choice and func:
-                    func( options[result] ) 
+                    func( options[result-1] ) 
                 elif multi_choice:
-                    choices.append(options[result])
+                    choices.append(options[result-1])
                 elif func:
-                    func( options[result] )
+                    func( options[result-1] )
                 else: 
-                    return options[result]
+                    return options[result-1]
             
         except ValueError:
             if result == 'n':
