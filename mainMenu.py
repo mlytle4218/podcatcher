@@ -31,12 +31,12 @@ def main_menu():
                 add_new_podcast(Podcast())
             elif result == 2:
                 podcasts = sql.get_all_podcasts()
-                choice = print_out_menu_options(podcasts)
+                choice = print_out_menu_options(podcasts, 'name')
                 if choice != None:
                     edit_existing_podcast(choice)
             elif result == 3:
                 podcasts = sql.get_all_podcasts()
-                choice = print_out_menu_options(podcasts)
+                choice = print_out_menu_options(podcasts, 'name')
                 if choice != None:
                     sql.delete_podcast2(choice)
                     # delete_existing_podcast(choice)
@@ -65,7 +65,7 @@ def main_menu():
 
 def list_podcasts():
     podcasts = sql.get_all_podcasts()
-    print_out_menu_options(podcasts)
+    print_out_menu_options(podcasts, 'name')
 
 def search():
     os.system('clear')
@@ -80,7 +80,7 @@ def search():
             
             results.append(podcast)
 
-    choices = print_out_menu_options(results,True)
+    choices = print_out_menu_options(results, 'name', True)
     if choices is not None:
         for each in choices:
             add_new_podcast(each)
@@ -170,50 +170,51 @@ def edit_existing_podcast(podcast):
 
 def choose_episodes_to_download():
     podcasts  = sql.get_podcasts_with_downloads_available()
-    print_out_menu_options(podcasts, False, list_episodes)
+    print_out_menu_options(podcasts, 'name', False, list_episodes)
 
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
-    print_out_menu_options(episodes, True, add_to_download_queue)
+    print_out_menu_options(episodes, 'title', True, add_to_download_queue)
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
 
 def start_downloads():
-    for each in download_queue:
-        each.percent = 0
-    for i,each in enumerate(download_queue):
-        filename =  each.href.split('/')[-1]
-        extension_start = filename.split('.')
-        extension = extension_start[len(extension_start)-1]
-        dl_location = ''
-        podcast = sql.get_podcast_by_id2(each) 
-        filename2 = podcast.name
-        if each.audio == 1:
-            dl_location = podcast.audio #[0]['audio']
-        else:
-            dl_location = podcast.video #[0]['video']
+    sql.log( str( download_queue ) )
+    # for each in download_queue:
+    #     each.percent = 0
+    # for i,each in enumerate(download_queue):
+    #     filename =  each.href.split('/')[-1]
+    #     extension_start = filename.split('.')
+    #     extension = extension_start[len(extension_start)-1]
+    #     dl_location = ''
+    #     podcast = sql.get_podcast_by_id2(each) 
+    #     filename2 = podcast.name
+    #     if each.audio == 1:
+    #         dl_location = podcast.audio #[0]['audio']
+    #     else:
+    #         dl_location = podcast.video #[0]['video']
         
-        filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
+    #     filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
-        print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
+    #     print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
         
-        with open(dl_location + '/' + filename2, 'wb')as f:
-            r = requests.get(each.href, stream=True)
-            total_length = int( r.headers.get('content-length') )
-            dl = 0
-            if total_length is None: # no content length header
-                f.write(r.content)
-            else:
-                for chunk in r.iter_content(1024):
-                    dl += len(chunk)
-                    f.write(chunk)
-                    done = int(100 * dl / total_length)
-                    download_queue[i].percent = done
+    #     with open(dl_location + '/' + filename2, 'wb')as f:
+    #         r = requests.get(each.href, stream=True)
+    #         total_length = int( r.headers.get('content-length') )
+    #         dl = 0
+    #         if total_length is None: # no content length header
+    #             f.write(r.content)
+    #         else:
+    #             for chunk in r.iter_content(1024):
+    #                 dl += len(chunk)
+    #                 f.write(chunk)
+    #                 done = int(100 * dl / total_length)
+    #                 download_queue[i].percent = done
 
-        sql.update_episode_as_downloaded(each) 
+    #     sql.update_episode_as_downloaded(each) 
     
-    download_queue.clear()
+    # download_queue.clear()
 
 
 
@@ -228,16 +229,17 @@ def rlinput(prompt, prefill=''):
     
 
 
-def print_out_menu_options(options, multi_choice=False, func=None):
-    try:
-        options.sort(key=lambda x: x.name)
-    except AttributeError:
-        pass
+def print_out_menu_options(options, attribute, multi_choice=False, func=None):
+    # options.sort(key=lambda x: getattr(x, attribute))
+    # try:
+    #     options.sort(key=lambda x: x.name)
+    # except AttributeError:
+    #     pass
 
-    try:
-        options.sort(key=lambda x: x.title)
-    except AttributeError:
-        pass 
+    # try:
+    #     options.sort(key=lambda x: x.title)
+    # except AttributeError:
+    #     pass 
 
     choices = []
     full = int( math.floor(len(options) / height ) )
@@ -265,15 +267,17 @@ def print_out_menu_options(options, multi_choice=False, func=None):
     while True:
         os.system('clear')
         for each in display_control[page_itr]:
-            try:
-                print( 'number {} {}'.format(each + 1, options[each].name) )
-            except AttributeError:
-                pass
+            # sql.log( str( getattr(options[ each ], attribute) ) )
+            print( 'number {} {}'.format( each + 1, getattr(options[ each ], attribute) ))
+            # try:
+            #     print( 'number {} {}'.format(each + 1, options[each].name) )
+            # except AttributeError:
+            #     pass
 
-            try:
-                print( 'number {} {}'.format(each + 1, options[each].title) )
-            except AttributeError:
-                pass
+            # try:
+            #     print( 'number {} {}'.format(each + 1, options[each].title) )
+            # except AttributeError:
+            #     pass
             # if hasattr(options[each], 'name'):
             # if 'name' in options[each]:
             #     print( 'number {} {}'.format(each + 1, options[each].name) )
@@ -286,32 +290,61 @@ def print_out_menu_options(options, multi_choice=False, func=None):
             # elif 'title' in options[each]:
             #     print( 'number {} {}'.format(each, options[each]['title']) )
 
-        result = input('choice ')        
-        try:
-            result = int(result)
-            if result <= len(options):
-                if multi_choice and func:
-                    func( options[result-1] ) 
-                elif multi_choice:
-                    choices.append(options[result-1])
-                elif func:
-                    func( options[result-1] )
-                else: 
-                    return options[result-1]
+        result = input('choice ')     
+        if result == 'n':
+            if page_itr < len(display_control) -1:
+                page_itr +=1
+        elif result =='p':
+            if page_itr > 0:
+                page_itr -=1
+        elif result =='q':
+            break
+        # elif multi_choice and result =='d':
+        #     return choices
+        else: 
+            result_list = result.split(' ')
+            for item in result_list:
+                try:
+                    item = int(item)
+                    if item <= len(options):
+                        if multi_choice and func:
+                            func( options[ item - 1 ] )
+                        elif multi_choice:
+                            choices.append(options[item-1])
+                        elif func:
+                            func( options[ item-1 ] )
+                        else:
+                            return options[item-1]
+                except ValueError:
+                    pass
+        # try:
+        #     result = int(result)
+        #     if result <= len(options):
+        #         if multi_choice and func:
+        #             func( options[result-1] ) 
+        #         elif multi_choice:
+        #             choices.append(options[result-1])
+        #         elif func:
+        #             func( options[result-1] )
+        #         else: 
+        #             return options[result-1]
             
-        except ValueError:
-            if result == 'n':
-                if page_itr < len(display_control) -1:
-                    page_itr +=1
-            elif result =='p':
-                if page_itr > 0:
-                    page_itr -=1
-            elif result =='q':
-                # if len( download_queue ) > 0:
-                #     backend.log( str( download_queue ) )
-                break
-            elif multi_choice and result =='d':
-                return choices
+        # except ValueError:
+            # if result == 'n':
+            #     if page_itr < len(display_control) -1:
+            #         page_itr +=1
+            # elif result =='p':
+            #     if page_itr > 0:
+            #         page_itr -=1
+            # elif result =='q':
+            #     # if len( download_queue ) > 0:
+            #     #     backend.log( str( download_queue ) )
+            #     break
+            # elif multi_choice and result =='d':
+            #     return choices
+            # else:
+            #     result_list = result.split(' ')
+            #     sql.log( str( result_list ) )
 
 
 width = int( subprocess.check_output(['tput','cols']) )
@@ -326,6 +359,6 @@ itx = 1
 for each in podcasts:
     print('updating {} of {}'.format(itx, len(podcasts)))
     itx += 1
-    update_episodes(each)
+    # update_episodes(each)
 
 main_menu()
