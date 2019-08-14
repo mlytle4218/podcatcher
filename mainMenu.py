@@ -155,13 +155,7 @@ def enter_podcast_info(podcast):
 def add_new_podcast(podcast):
     podcast = enter_podcast_info(podcast)
     if podcast != None:
-        sql.log( "if podcast != None" )
-        sql.log("before episodes = backend.get_podcast_data_from_feed(podcast.url)")
         episodes = backend.get_podcast_data_from_feed(podcast.url)
-        sql.log("after episodes = backend.get_podcast_data_from_feed(podcast.url)")
-        # sql.log( str( episodes ) )
-        # for each in episodes:
-        #     sql.log( str( each ) )
         sql.insert_podcast2(podcast,episodes)
 
 def edit_existing_podcast(podcast):

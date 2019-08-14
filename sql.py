@@ -85,7 +85,6 @@ class DatabaseAccessor:
     def insert_podcast2(self,podcast,episodes):
         self.session.add(podcast)
         self.session.commit()
-        self.log('got here')
         for each in episodes:
             each.podcast_id = podcast.podcast_id
             self.session.add(Episode(each.title, each.published, each.summary, each.length,each.audio,each.podcast_id, each.href ))
