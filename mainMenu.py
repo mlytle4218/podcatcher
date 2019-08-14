@@ -155,7 +155,13 @@ def enter_podcast_info(podcast):
 def add_new_podcast(podcast):
     podcast = enter_podcast_info(podcast)
     if podcast != None:
+        sql.log( "if podcast != None" )
+        sql.log("before episodes = backend.get_podcast_data_from_feed(podcast.url)")
         episodes = backend.get_podcast_data_from_feed(podcast.url)
+        sql.log("after episodes = backend.get_podcast_data_from_feed(podcast.url)")
+        # sql.log( str( episodes ) )
+        # for each in episodes:
+        #     sql.log( str( each ) )
         sql.insert_podcast2(podcast,episodes)
 
 def edit_existing_podcast(podcast):
@@ -299,6 +305,8 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
             if page_itr > 0:
                 page_itr -=1
         elif result =='q':
+            if len(choices) > 0:
+                return choices
             break
         # elif multi_choice and result =='d':
         #     return choices

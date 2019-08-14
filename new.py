@@ -4,6 +4,8 @@ import calendar
 import csv
 import datetime,time
 from sql_alchemy_setup import Episode, Podcast
+import re
+import config
 
 
 class Backend:
@@ -37,7 +39,6 @@ class Backend:
         for entry in f_parser['entries']:
             episode = Episode()
             for sub_entry in entry:
-                # log( sub_entry )
                 if(sub_entry == 'title'):
                     episode.title = self.remove_tags(entry['title'])#.encode('utf-8')
                 elif (sub_entry == 'summary'):
@@ -58,7 +59,14 @@ class Backend:
                                     episode.audio = 0
 
                 elif ( sub_entry == 'published'):
-                    episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z') 
+                    try: 
+                        if 'CDT'  in entry['published']:
+                            entry['published'] = re.sub('CDT', '', entry['published']).strip()
+                            episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S')
+                        else:
+                            episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z')
+                    except Exception as e:
+                        self.log( str( e ) )
             episode_list.append(episode)
         return episode_list
 
@@ -73,6 +81,10 @@ class Backend:
 
 
 
+# bk = Backend(config.database_location)
+# results = bk.get_podcast_data_from_feed('http://feeds.feedburner.com/IowaPress')
+# for each in results:
+#     print( each )
 
 
 
