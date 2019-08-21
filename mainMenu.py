@@ -81,9 +81,12 @@ def search():
             results.append(podcast)
 
     choices = print_out_menu_options(results, 'name', True, None, True)
-    if choices is not None:
+    if choices is not None and isinstance(choices, Podcast):
+        add_new_podcast(choices)
+    elif choices is not None:
         for each in choices:
             add_new_podcast(each)
+    
 
 def update_episodes(podcast):
     ep = sql.get_episodes_by_podcast_id(podcast) 
@@ -232,6 +235,8 @@ def rlinput(prompt, prefill=''):
 def print_out_menu_options(options, attribute, multi_choice, func, sort):
     if sort:
         options.sort(key=lambda x: getattr(x, attribute))
+    if len(options) < 2:
+        multi_choice = False
     # try:
     #     options.sort(key=lambda x: x.name)
     # except AttributeError:
