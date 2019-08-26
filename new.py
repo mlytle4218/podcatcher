@@ -6,6 +6,7 @@ import datetime,time
 from sql_alchemy_setup import Episode, Podcast
 import re
 import config
+import sys
 
 
 class Backend:
@@ -59,12 +60,26 @@ class Backend:
                                     episode.audio = 0
 
                 elif ( sub_entry == 'published'):
+                    # print(entry['published'])
                     try: 
                         if 'CDT'  in entry['published']:
                             entry['published'] = re.sub('CDT', '', entry['published']).strip()
                             episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S')
+                        elif 'GMT' in entry['published']:
+                            entry['published'] = re.sub('GMT', '', entry['published']).strip()
+                            episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S')
+
                         else:
                             episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z')
+                    except Exception as e:
+                        self.log( str( e ) )
+                elif ( sub_entry == 'pubDate'):
+                    try: 
+                        if 'CDT'  in entry['pubDate']:
+                            entry['pubDate'] = re.sub('CDT', '', entry['pubDate']).strip()
+                            episode.published = datetime.datetime.strptime(entry['pubDate'], '%a, %W %b %Y %H:%M:%S')
+                        else:
+                            episode.published = datetime.datetime.strptime(entry['pubDate'], '%a, %W %b %Y %H:%M:%S %z')
                     except Exception as e:
                         self.log( str( e ) )
             episode_list.append(episode)
@@ -82,7 +97,7 @@ class Backend:
 
 
 # bk = Backend(config.database_location)
-# results = bk.get_podcast_data_from_feed('http://feeds.feedburner.com/IowaPress')
+# results = bk.get_podcast_data_from_feed(sys.argv[1])
 # for each in results:
 #     print( each )
 

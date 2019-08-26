@@ -87,7 +87,16 @@ class DatabaseAccessor:
         self.session.commit()
         for each in episodes:
             each.podcast_id = podcast.podcast_id
-            self.session.add(Episode(each.title, each.published, each.summary, each.length,each.audio,each.podcast_id, each.href ))
+            self.session.add(
+                Episode(
+                    each.title, 
+                    each.published, 
+                    each.summary, 
+                    each.length,
+                    each.audio,
+                    each.podcast_id, 
+                    each.href )
+                )
 
         self.session.commit()
 

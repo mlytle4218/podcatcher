@@ -122,7 +122,7 @@ def enter_podcast_info(podcast):
                 print('nothing entered')
 
         while True:
-            podcast.url =  rlinput( 'podcast url ', podcast.url )
+            podcast.url =  rlinput( 'podcast url ', podcast.url ).strip()
             if backend.check_feed(podcast.url):
                 break
             else:
