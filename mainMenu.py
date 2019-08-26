@@ -310,8 +310,35 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
         # elif multi_choice and result =='d':
         #     return choices
         else: 
+            # this is looking for entries that are in the form 1-4 to represent 
+            # choices 1,2,3,4 - requested option
+            # first separate out the 1-4 options whether they have spaces in betweeen
+            # the numbers and dashes or not
+            dashed_option_choices = re.findall(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', result)
+            result = re.sub(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}','', result)
             result_list = result.split(' ')
+
+            for each in dashed_option_choices:
+                each_list = each.split('-')
+                try:
+                    for i in range(int(each_list[0]), int(each_list[1])+1):
+                        result_list.append(i)
+                except ValueError:
+                    pass
+
+            result_list2 = []
+            
+            for each in result_list:
+                if isinstance(each, str):
+                    if len(each) > 0:
+                        result_list2.append(each)
+                else:
+                    result_list2.append(each)
+
+            # sql.log( str( result_list2 ) )
             for item in result_list:
+                # if '-' in item:
+                #     sql.log('has dash')
                 try:
                     item = int(item)
                     if item <= len(options):
