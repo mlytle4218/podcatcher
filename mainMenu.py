@@ -9,7 +9,7 @@ import requests
 import time
 import threading
 import config
-from sql_alchemy_setup import Podcast, Episode
+from sql_alchemy_setup import Podcast, Episode, Category
 import operator
 import json
 import re
@@ -24,6 +24,7 @@ def main_menu():
         print('number 5 start downloads')
         print('number 6 search for podcasts')
         print('number 7 list podcasts')
+        print('number 8 add category')
         result = input('choice ')
         try:
             result = int( result )
@@ -57,11 +58,29 @@ def main_menu():
                 search()
             elif result == 7:
                 list_podcasts()
+            elif result == 8:
+                add_category()
 
                 
         except ValueError:
             if result == 'q':
                 break
+
+def add_category():
+    try:
+        os.system('clear')
+        while True:
+            category_name = input('Enter category name: ')
+            category = Category(category_name)
+            result = sql.add_new_category(category)
+            if not result:
+                print('{} could not be added as a category'.format(category_name))
+            else:
+                break
+    except KeyboardInterrupt:
+        pass
+
+
 
 def list_podcasts():
     podcasts = sql.get_all_podcasts()

@@ -6,8 +6,20 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 import datetime
 import time
+import config
  
 Base = declarative_base()
+
+class Category(Base):
+    __tablename__ = 'categories'
+    category_id = Column(Integer, primary_key = True)
+    category = Column(String(250))
+
+    def __str__(self):
+        return self.category
+
+    def __init__(self, category=''):
+        self.category = category
  
 class Podcast(Base):
     __tablename__ = 'podcasts'
@@ -75,7 +87,8 @@ class Episode(Base):
  
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
-engine = create_engine('sqlite:///sqlalchemy_example2.db')
+# engine = create_engine('sqlite:///sqlalchemy_example2.db')
+engine = create_engine('sqlite:///{}'.format(config.database_name))
  
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.

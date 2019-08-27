@@ -67,6 +67,14 @@ class DatabaseAccessor:
             string=string+ ' - ' +input + '\n'
             myfile.write(string)
 
+    def add_new_category(self, category):
+        try:
+            self.session.add(category)
+            self.session.commit()
+            return True
+        except Exception:
+            return False
+
     def insert_episodes(self, episodes):
         for each in episodes:
             self.session.add(

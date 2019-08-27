@@ -1,0 +1,4 @@
+[run]
+omit =
+    */python3.6/*
+    */python3/*
