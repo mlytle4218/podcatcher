@@ -84,6 +84,10 @@ class DatabaseAccessor:
         categories = self.session.query(Category).all()
         return categories
 
+    def get_all_podcasts_with_category(self, category):
+        podcasts = self.session.query(Podcast).filter(Podcast.category == category.category).all()
+        return podcasts
+
 
     def insert_episodes(self, episodes):
         for each in episodes:

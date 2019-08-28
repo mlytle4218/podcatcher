@@ -25,6 +25,7 @@ def main_menu():
         print('number 6 search for podcasts')
         print('number 7 list podcasts')
         print('number 8 add category')
+        print('number 9 search by category')
         result = input('choice ')
         try:
             result = int( result )
@@ -40,7 +41,6 @@ def main_menu():
                 choice = print_out_menu_options(podcasts, 'name', False, None, True)
                 if choice != None:
                     sql.delete_podcast2(choice)
-                    # delete_existing_podcast(choice)
             elif result == 4:
                 choose_episodes_to_download()
             elif result == 5:
@@ -60,11 +60,20 @@ def main_menu():
                 list_podcasts()
             elif result == 8:
                 add_category()
+            elif result == 9:
+                search_by_category()
 
                 
         except ValueError:
             if result == 'q':
                 break
+
+def search_by_category():
+    categories = sql.get_all_categories()
+    choice = print_out_menu_options(categories, 'category', False, False, False)
+    sql.log( str( type( choice ) ) )
+    results = sql.get_all_podcasts_with_category(choice)
+    print_out_menu_options(results, 'name', False, list_episodes, True)
 
 def add_category():
     try:
@@ -123,23 +132,18 @@ def update_episodes(podcast):
 
     sql.insert_episodes(ep2)
 
-
-
-# def input_with_timeout(prompt, timemount=5):
-#     timer = threading.Timer()
-
 def enter_podcast_info(podcast):
     try:
         os.system('clear')
+        # add a check for names to this section
+        # podcast.name = re.sub(r'(\s)+', '-', podcast.name)
         while True:
-            # add a check for names to this section
-            # podcast.name = re.sub(r'(\s)+', '-', podcast.name)
             podcast.name = rlinput( 'podcast name ', podcast.name )
             if len(podcast.name) > 0:
                 break
             else:
                 print('nothing entered')
-
+        # check the url works 
         while True:
             podcast.url =  rlinput( 'podcast url ', podcast.url ).strip()
             if backend.check_feed(podcast.url):
@@ -147,6 +151,7 @@ def enter_podcast_info(podcast):
             else:
                 print('that url did not work')
         
+        # check the audio path
         while True:
             if len(podcast.audio) == 0:
                 podcast.audio = config.audio_default_location
@@ -156,6 +161,7 @@ def enter_podcast_info(podcast):
             else:
                 print('that directory does not exist')
 
+        # check the video path
         while True:
             if len(podcast.video) == 0:
                 podcast.video = config.video_default_location
@@ -165,16 +171,22 @@ def enter_podcast_info(podcast):
             else:
                 print('that directory does not exist')
 
+        # check categories
         while True:
+            # check if the category is set - print it if it is
             if podcast.category:# and  len(podcast.category) != 0:
                 print("category: {}".format(podcast.category))
+            # retrieve all the categories
             categories = sql.get_all_categories()
+            # if there are categories - show them - if not ask for a category
             if len(categories) > 0:
                 for i,cat in enumerate(categories):
                     print("number {} for {}".format(i+1, cat))
                 result = input('choice: ')
             else:
                 result = input('enter new category: ')
+            # see if the result is a number and thusly a choice from the menu
+            # else assume either no entry, q for quit, or the new category
             try:
                 result = int(result)
                 podcast.category = categories[result-1].category
@@ -184,6 +196,7 @@ def enter_podcast_info(podcast):
                     break
                 if result == 'q':
                     break
+                # add new category
                 added = sql.add_new_category(result)
                 if added:
                     podcast.category = result
@@ -215,9 +228,6 @@ def edit_existing_podcast(podcast):
         sql.delete_episodes_by_podcast_id(podcast)
         sql.update_podcast2(podcast,episodes)
 
-# def delete_existing_podcast(podcast):
-#     backend.remove_podcast(podcast)
-
 def choose_episodes_to_download():
     podcasts  = sql.get_podcasts_with_downloads_available()
     print_out_menu_options(podcasts, 'name', False, list_episodes, True)
@@ -230,7 +240,6 @@ def add_to_download_queue(episode):
     download_queue.append(episode)
 
 def start_downloads():
-    # sql.log( str( download_queue ) )
     for each in download_queue:
         each.percent = 0
     for i,each in enumerate(download_queue):
@@ -284,15 +293,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
         options.sort(key=lambda x: getattr(x, attribute))
     if len(options) < 2:
         multi_choice = False
-    # try:
-    #     options.sort(key=lambda x: x.name)
-    # except AttributeError:
-    #     pass
-
-    # try:
-    #     options.sort(key=lambda x: x.title)
-    # except AttributeError:
-    #     pass 
 
     choices = []
     full = int( math.floor(len(options) / height ) )
@@ -320,28 +320,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
     while True:
         os.system('clear')
         for each in display_control[page_itr]:
-            # sql.log( str( getattr(options[ each ], attribute) ) )
             print( 'number {} {}'.format( each + 1, getattr(options[ each ], attribute) ))
-            # try:
-            #     print( 'number {} {}'.format(each + 1, options[each].name) )
-            # except AttributeError:
-            #     pass
-
-            # try:
-            #     print( 'number {} {}'.format(each + 1, options[each].title) )
-            # except AttributeError:
-            #     pass
-            # if hasattr(options[each], 'name'):
-            # if 'name' in options[each]:
-            #     print( 'number {} {}'.format(each + 1, options[each].name) )
-            # elif 'title' in options[each]:
-            # # elif hasattr(options[each], 'title'):
-            #     print( 'number {} {}'.format(each + 1, options[each].title) )
-
-            # if 'name' in options[each]:
-            #     print( 'number {} {}'.format(each, options[each]['name']) )
-            # elif 'title' in options[each]:
-            #     print( 'number {} {}'.format(each, options[each]['title']) )
 
         result = input('choice ')     
         if result == 'n':
@@ -354,8 +333,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
             if len(choices) > 0:
                 return choices
             break
-        # elif multi_choice and result =='d':
-        #     return choices
         else: 
             # this is looking for entries that are in the form 1-4 to represent 
             # choices 1,2,3,4 - requested option
@@ -382,10 +359,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
                 else:
                     result_list2.append(each)
 
-            # sql.log( str( result_list2 ) )
             for item in result_list:
-                # if '-' in item:
-                #     sql.log('has dash')
                 try:
                     item = int(item)
                     if item <= len(options):
@@ -399,34 +373,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
                             return options[item-1]
                 except ValueError:
                     pass
-        # try:
-        #     result = int(result)
-        #     if result <= len(options):
-        #         if multi_choice and func:
-        #             func( options[result-1] ) 
-        #         elif multi_choice:
-        #             choices.append(options[result-1])
-        #         elif func:
-        #             func( options[result-1] )
-        #         else: 
-        #             return options[result-1]
-            
-        # except ValueError:
-            # if result == 'n':
-            #     if page_itr < len(display_control) -1:
-            #         page_itr +=1
-            # elif result =='p':
-            #     if page_itr > 0:
-            #         page_itr -=1
-            # elif result =='q':
-            #     # if len( download_queue ) > 0:
-            #     #     backend.log( str( download_queue ) )
-            #     break
-            # elif multi_choice and result =='d':
-            #     return choices
-            # else:
-            #     result_list = result.split(' ')
-            #     sql.log( str( result_list ) )
 
 
 width = int( subprocess.check_output(['tput','cols']) )
@@ -435,7 +381,7 @@ height = int( subprocess.check_output(['tput','lines']) ) -1
 download_queue = []
 sql = DatabaseAccessor(config.database_location)
 backend = Backend(sql)
-#update podcasts
+# update podcasts
 podcasts = sql.get_all_podcasts()
 itx = 1
 for each in podcasts:

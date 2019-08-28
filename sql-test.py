@@ -21,3 +21,7 @@ cats = sql.get_all_categories()
 for each in cats:
     print(each)
 
+results = sql.get_all_podcasts_with_category(Category(category))
+
+for each in results:
+    print(each)
