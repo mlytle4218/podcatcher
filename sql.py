@@ -152,9 +152,21 @@ class DatabaseAccessor:
         self.session.query(Podcast).filter(Podcast.podcast_id == podcast.podcast_id).delete()
         self.session.commit()
 
+    def delete_episode(self, episode):
+        try:
+            self.session.query(Episode).filter(Episode.episode_id == episode.episode_id).delete()
+            self.session.commit()
+            return True
+        except Exception:
+            return False
+
     def delete_episodes_by_podcast_id(self, podcast):
-        self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
-        self.session.commit()
+        try:
+            self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
+            self.session.commit()
+            return True
+        except Exception:
+            return False
 
     def update_podcast2(self,podcast,episodes):
         for each in episodes:

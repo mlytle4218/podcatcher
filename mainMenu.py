@@ -71,9 +71,8 @@ def main_menu():
 def search_by_category():
     categories = sql.get_all_categories()
     choice = print_out_menu_options(categories, 'category', False, False, False)
-    sql.log( str( type( choice ) ) )
-    results = sql.get_all_podcasts_with_category(choice)
-    print_out_menu_options(results, 'name', False, list_episodes, True)
+    podcasts = sql.get_all_podcasts_with_category(choice)
+    print_out_menu_options(podcasts, 'name', False, list_episodes, True)
 
 def add_category():
     try:
@@ -116,7 +115,7 @@ def search():
             add_new_podcast(each)
     
 
-def update_episodes(podcast):
+def update_episodes_old(podcast):
     ep = sql.get_episodes_by_podcast_id(podcast) 
     ep2 = backend.get_podcast_data_from_feed(podcast.url)
 
@@ -131,6 +130,33 @@ def update_episodes(podcast):
         each.podcast_id = podcast.podcast_id
 
     sql.insert_episodes(ep2)
+
+def update_episodes(podcast):
+    try:
+        delete_result = sql.delete_episodes_by_podcast_id(podcast)
+        if delete_result:
+            episodes = backend.get_podcast_data_from_feed(podcast.url)
+            for episode in episodes:
+                episode.podcast_id = podcast.podcast_id
+            sql.insert_episodes(episodes)
+        return True
+    except Exception:
+        return False
+
+    # ep = sql.get_episodes_by_podcast_id(podcast) 
+    # ep2 = backend.get_podcast_data_from_feed(podcast.url)
+
+    
+    # for each in ep:
+    #     try:
+    #         ep2.remove(each)
+    #     except Exception:
+    #         pass
+
+    # for each in ep2:
+    #     each.podcast_id = podcast.podcast_id
+
+    # sql.insert_episodes(ep2)
 
 def enter_podcast_info(podcast):
     try:
@@ -385,8 +411,12 @@ backend = Backend(sql)
 podcasts = sql.get_all_podcasts()
 itx = 1
 for each in podcasts:
-    print('updating {} of {}'.format(itx, len(podcasts)))
-    itx += 1
-    update_episodes(each)
+    result = update_episodes(each)
+    if result:
+        print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
+        itx += 1
+    else:
+        print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
+time.sleep(1)
 
 main_menu()
