@@ -30,15 +30,17 @@ class Podcast(Base):
     url  = Column(String(250))
     audio = Column(String(250))
     video = Column(String(250))
+    category = Column(String(250))
 
     def __str__(self):
         return self.name + ":" + self.url
 
-    def __init__(self,name='',url='',audio='',video=''):
+    def __init__(self,name='',url='',audio='',video='',category=''):
         self.name = name
         self.url = url
         self.audio = audio
         self.video = video
+        self.category = category
 
 class Episode(Base):
     __tablename__ = 'episodes'

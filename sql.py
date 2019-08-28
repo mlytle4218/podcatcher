@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from sql_alchemy_setup import Podcast, Episode, Base
+from sql_alchemy_setup import Podcast, Episode, Category, Base
 
     # database = 'pc_database.db'
 
@@ -68,12 +68,22 @@ class DatabaseAccessor:
             myfile.write(string)
 
     def add_new_category(self, category):
-        try:
-            self.session.add(category)
-            self.session.commit()
-            return True
-        except Exception:
-            return False
+        existing_cat =  self.session.query(Category).filter(Category.category == category).all()
+        if (len(existing_cat)) == 0:
+            try:
+                temp_cat = Category(category)
+                self.session.add(temp_cat)
+                self.session.commit()
+                return True
+            except Exception:
+                return False
+        # this is not good - find a better way
+        return True
+    
+    def get_all_categories(self):
+        categories = self.session.query(Category).all()
+        return categories
+
 
     def insert_episodes(self, episodes):
         for each in episodes:

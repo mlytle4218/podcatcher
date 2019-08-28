@@ -164,6 +164,34 @@ def enter_podcast_info(podcast):
                 break
             else:
                 print('that directory does not exist')
+
+        while True:
+            if podcast.category:# and  len(podcast.category) != 0:
+                print("category: {}".format(podcast.category))
+            categories = sql.get_all_categories()
+            if len(categories) > 0:
+                for i,cat in enumerate(categories):
+                    print("number {} for {}".format(i+1, cat))
+                result = input('choice: ')
+            else:
+                result = input('enter new category: ')
+            try:
+                result = int(result)
+                podcast.category = categories[result-1].category
+                break
+            except  ValueError:
+                if len(result) == 0:
+                    break
+                if result == 'q':
+                    break
+                added = sql.add_new_category(result)
+                if added:
+                    podcast.category = result
+                    break
+                else:
+                    print("could not add that category")
+
+        
         return podcast
     except KeyboardInterrupt:
         podcast = None
