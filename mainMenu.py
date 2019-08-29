@@ -133,30 +133,35 @@ def update_episodes_old(podcast):
 
 def update_episodes(podcast):
     try:
-        delete_result = sql.delete_episodes_by_podcast_id(podcast)
-        if delete_result:
-            episodes = backend.get_podcast_data_from_feed(podcast.url)
-            for episode in episodes:
-                episode.podcast_id = podcast.podcast_id
-            sql.insert_episodes(episodes)
+        existing_episodes = sql.get_episodes_by_podcast_id(podcast)
+        temp_existing_episodes = existing_episodes[:]
+        retreived_episodes = backend.get_podcast_data_from_feed(podcast.url)
+
+        # this take each retrieved episode and tries to remove it from the 
+        # local data. If it fails, then the local data doesn't have it and it
+        # needs to added
+        for each in retreived_episodes:
+            try:
+                existing_episodes.remove(each)
+            except Exception:
+                each.podcast_id = podcast.podcast_id
+                result = sql.add_episode(each)
+
+
+        # this takes each existing episode and tries to remove it from the 
+        # retrieved episodes. If it fails, then the retrieved data doesn't have it
+        # which means it is no longer available. I therefore has to be removed from the
+        # local data.
+        for each in temp_existing_episodes:
+            try:
+                retreived_episodes.remove(each)
+            except Exception:
+                result = sql.delete_episode(each)
+
         return True
-    except Exception:
+    except Exception as e:
+        sql.log( str( e ) )
         return False
-
-    # ep = sql.get_episodes_by_podcast_id(podcast) 
-    # ep2 = backend.get_podcast_data_from_feed(podcast.url)
-
-    
-    # for each in ep:
-    #     try:
-    #         ep2.remove(each)
-    #     except Exception:
-    #         pass
-
-    # for each in ep2:
-    #     each.podcast_id = podcast.podcast_id
-
-    # sql.insert_episodes(ep2)
 
 def enter_podcast_info(podcast):
     try:

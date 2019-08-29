@@ -160,6 +160,15 @@ class DatabaseAccessor:
         except Exception:
             return False
 
+    def add_episode(self, episode):
+        try:
+            self.session.add(episode)
+            self.session.commit()
+            return True
+        except expression as identifier:
+            return False
+            pass
+
     def delete_episodes_by_podcast_id(self, podcast):
         try:
             self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
