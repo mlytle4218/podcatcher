@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from sql_alchemy_setup import Podcast, Episode, Category, Base
+import config
 
     # database = 'pc_database.db'
 
@@ -62,7 +63,7 @@ class DatabaseAccessor:
  
 
     def log(self,input):
-        with open("test.txt", "a") as myfile:
+        with open(config.log_location, "a") as myfile:
             string=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
             string=string+ ' - ' +input + '\n'
             myfile.write(string)

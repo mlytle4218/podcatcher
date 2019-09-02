@@ -62,6 +62,9 @@ def main_menu():
                 add_category()
             elif result == 9:
                 search_by_category()
+            elif result == 20:
+                for pod in download_queue:
+                    sql.log( str( pod ) )
 
                 
         except ValueError:
