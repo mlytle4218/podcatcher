@@ -30,6 +30,7 @@ class Backend:
         html_string = html_string.replace('<p><br /> ','')
         html_string = html_string.replace('<p> ','\n')
         html_string = html_string.replace('<br /> ','\n')
+        html_string = html_string.replace('/','-')
         html_string = ''.join([i if ord(i) < 128 else '' for i in html_string])
         return html_string
 

@@ -69,11 +69,12 @@ class DatabaseAccessor:
             myfile.write(string)
 
     def add_new_category(self, category):
-        existing_cat =  self.session.query(Category).filter(Category.category == category).all()
+        existing_cat =  self.session.query(Category).filter(Category.category == category.category).all()
         if (len(existing_cat)) == 0:
             try:
-                temp_cat = Category(category)
-                self.session.add(temp_cat)
+                # temp_cat = Category(category)
+                # self.session.add(temp_cat)
+                self.session.add(category)
                 self.session.commit()
                 return True
             except Exception:
@@ -158,7 +159,8 @@ class DatabaseAccessor:
             self.session.query(Episode).filter(Episode.episode_id == episode.episode_id).delete()
             self.session.commit()
             return True
-        except Exception:
+        except Exception as e:
+            self.log( str( e ) )
             return False
 
     def add_episode(self, episode):
@@ -166,9 +168,9 @@ class DatabaseAccessor:
             self.session.add(episode)
             self.session.commit()
             return True
-        except expression as identifier:
+        except Exception as e:
+            self.log( str( e ) )
             return False
-            pass
 
     def delete_episodes_by_podcast_id(self, podcast):
         try:
