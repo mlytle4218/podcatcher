@@ -17,33 +17,33 @@ import re
 def main_menu():
     while True:
         os.system('clear')
-        print('number 1 add new podcast')
-        print('number 2 edit existing podcast')
-        print('number 3 delete existing podcast')
-        print('number 4 choose episodes to download')
-        print('number 5 start downloads')
-        print('number 6 search for podcasts')
-        print('number 7 list podcasts')
-        print('number 8 add category')
+        print('number 1 add category')
+        print('number 2 add new podcast')
+        print('number 3 edit existing podcast')
+        print('number 4 delete existing podcast')
+        print('number 5 choose episodes to download')
+        print('number 6 start downloads')
+        print('number 7 search for podcasts')
+        print('number 8 list podcasts')
         print('number 9 search by category')
         result = input('choice ')
         try:
             result = int( result )
-            if result == 1:
+            if result == 2:
                 add_new_podcast(Podcast())
-            elif result == 2:
-                podcasts = sql.get_all_podcasts()
-                choice = print_out_menu_options(podcasts, 'name', False, None, True)
-                if choice != None:
-                    edit_existing_podcast(choice)
             elif result == 3:
                 podcasts = sql.get_all_podcasts()
                 choice = print_out_menu_options(podcasts, 'name', False, None, True)
                 if choice != None:
-                    sql.delete_podcast2(choice)
+                    edit_existing_podcast(choice)
             elif result == 4:
-                choose_episodes_to_download()
+                podcasts = sql.get_all_podcasts()
+                choice = print_out_menu_options(podcasts, 'name', False, None, True)
+                if choice != None:
+                    sql.delete_podcast2(choice)
             elif result == 5:
+                choose_episodes_to_download()
+            elif result == 6:
                 start_downloads()
                 # t1 = threading.Thread(target=start_downloads)
                 # t1.start()
@@ -54,11 +54,11 @@ def main_menu():
                 #         print( "{}% {}".format(
                 #             each['percent'],each['title']
                 #         ) )
-            elif result == 6:
-                search()
             elif result == 7:
-                list_podcasts()
+                search()
             elif result == 8:
+                list_podcasts()
+            elif result == 1:
                 add_category()
             elif result == 9:
                 search_by_category()
