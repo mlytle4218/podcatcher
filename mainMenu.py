@@ -416,15 +416,15 @@ download_queue = []
 sql = DatabaseAccessor(config.database_location)
 backend = Backend(sql)
 # update podcasts
-podcasts = sql.get_all_podcasts()
-itx = 1
-for each in podcasts:
-    result = update_episodes(each)
-    if result:
-        print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
-        itx += 1
-    else:
-        print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
-time.sleep(1)
+# podcasts = sql.get_all_podcasts()
+# itx = 1
+# for each in podcasts:
+#     result = update_episodes(each)
+#     if result:
+#         print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
+#         itx += 1
+#     else:
+#         print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
+# time.sleep(1)
 
 main_menu()
