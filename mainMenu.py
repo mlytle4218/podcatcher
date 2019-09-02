@@ -18,32 +18,30 @@ def main_menu():
     while True:
         os.system('clear')
         print('number 1 add category')
-        print('number 2 add new podcast')
-        print('number 3 edit existing podcast')
-        print('number 4 delete existing podcast')
-        print('number 5 choose episodes to download')
-        print('number 6 start downloads')
-        print('number 7 search for podcasts')
-        print('number 8 list podcasts')
-        print('number 9 search by category')
+        print('number 2 edit category')
+        print('number 3 add new podcast')
+        print('number 4 edit existing podcast')
+        print('number 5 delete existing podcast')
+        print('number 6 choose episodes to download')
+        print('number 7 start downloads')
+        print('number 8 search for podcasts')
+        print('number 9 list podcasts')
+        print('number 10 search by category')
         result = input('choice ')
         try:
             result = int( result )
-            if result == 2:
+            if result == 3:
                 add_new_podcast(Podcast())
-            elif result == 3:
-                podcasts = sql.get_all_podcasts()
-                choice = print_out_menu_options(podcasts, 'name', False, None, True)
-                if choice != None:
-                    edit_existing_podcast(choice)
             elif result == 4:
+                edit_existing_podcast()
+            elif result == 5:
                 podcasts = sql.get_all_podcasts()
                 choice = print_out_menu_options(podcasts, 'name', False, None, True)
                 if choice != None:
                     sql.delete_podcast2(choice)
-            elif result == 5:
-                choose_episodes_to_download()
             elif result == 6:
+                choose_episodes_to_download()
+            elif result == 7:
                 start_downloads()
                 # t1 = threading.Thread(target=start_downloads)
                 # t1.start()
@@ -54,17 +52,19 @@ def main_menu():
                 #         print( "{}% {}".format(
                 #             each['percent'],each['title']
                 #         ) )
-            elif result == 7:
-                search()
             elif result == 8:
+                search()
+            elif result == 9:
                 list_podcasts()
             elif result == 1:
                 add_category()
-            elif result == 9:
+            elif result == 10:
                 search_by_category()
             elif result == 20:
                 for pod in download_queue:
-                    sql.log( str( pod ) )
+                    sql.log( str( pod ))
+            elif result == 2:
+                edit_category()
 
                 
         except ValueError:
@@ -74,16 +74,27 @@ def main_menu():
 def search_by_category():
     categories = sql.get_all_categories()
     choice = print_out_menu_options(categories, 'category', False, False, False)
-    sql.log( str( choice ) )
-    if choice != None:
+    if choice is not None:
         podcasts = sql.get_all_podcasts_with_category(choice)
         print_out_menu_options(podcasts, 'name', False, list_episodes, True)
+
+def edit_category():
+    categories = sql.get_all_categories()
+    choice = print_out_menu_options(categories, 'category', False, False, False)
+    sql.log( str( type( choice) ) )
+    if choice is not None:
+        choice.category = rlinput( 'category name: ', choice.category).strip()
+        # pass
+        # podcast.url =  rlinput( 'podcast url ', podcast.url ).strip()
+
 
 def add_category():
     try:
         os.system('clear')
         while True:
             category_name = input('Enter category name: ')
+            if len(category_name) == 0:
+                break
             category = Category(category_name)
             result = sql.add_new_category(category)
             if not result:
@@ -257,7 +268,20 @@ def add_new_podcast(podcast):
         episodes = backend.get_podcast_data_from_feed(podcast.url)
         sql.insert_podcast2(podcast,episodes)
 
-def edit_existing_podcast(podcast):
+def edit_existing_podcast():
+    try:
+        podcasts = sql.get_all_podcasts()
+        podcast = print_out_menu_options(podcasts, 'name', False, None, True)
+        if podcast != None:
+            enter_podcast_info(podcast)
+            if podcast != None:
+                episodes = backend.get_podcast_data_from_feed(podcast.url)
+                sql.delete_episodes_by_podcast_id(podcast)
+                sql.update_podcast2(podcast,episodes)
+    except KeyboardInterrupt as e:
+        sql.log( str( e ) )
+
+def edit_existing_podcast2(podcast):
     enter_podcast_info(podcast)
     if podcast != None:
         episodes = backend.get_podcast_data_from_feed(podcast.url)
