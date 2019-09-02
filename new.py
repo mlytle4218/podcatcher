@@ -38,17 +38,10 @@ class Backend:
 
     def get_podcast_data_from_feed(self,url):
         try:
-            resp = requests.get(url, timeout=20.0)
+            resp = requests.get(url, timeout=10.0)
         except requests.ReadTimeout:
             self.log(str("Timeout when reading RSS %s", url))
-            return
-
-        # Put it to memory stream object universal feedparser
-        # content = BytesIO(resp.content)
-
-        # Parse content
-        # feed = feedparser.parse(content)
-
+            return None
 
         f_parser = feedparser.parse(resp.content)
         episode_list = []
