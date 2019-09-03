@@ -349,7 +349,10 @@ def start_downloads():
                         done = int(100 * dl / total_length)
                         download_queue[i].percent = done
 
-            sql.update_episode_as_downloaded(each) 
+            updated = sql.update_episode_as_downloaded(each)
+            if updated:
+                download_queue.remove(each)
+                write_state_information() 
         except FileNotFoundError as e:
             sql.log( str( e ) )
             print("problem with saving {}".format(filename2))

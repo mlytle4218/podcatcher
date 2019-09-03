@@ -201,6 +201,11 @@ class DatabaseAccessor:
         # return self.result_proxy_to_dict( podcast )
     
     def update_episode_as_downloaded(self,episode):
-        epi_temp = self.session.query(Episode).filter(Episode.episode_id == episode.episode_id).one()
-        epi_temp.downloaded = 1
-        self.session.commit()
+        try:
+            epi_temp = self.session.query(Episode).filter(Episode.episode_id == episode.episode_id).one()
+            epi_temp.downloaded = 1
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.log( str( e ) )
+            return False
