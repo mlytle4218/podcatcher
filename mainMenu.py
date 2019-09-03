@@ -67,6 +67,7 @@ def main_menu():
                 if choice is not None:
                     for each in choice:
                         download_queue.remove(each)
+                write_state_information()
             elif result == 2:
                 edit_category()
 
@@ -366,6 +367,9 @@ def rlinput(prompt, prefill=''):
 
 
 def print_out_menu_options(options, attribute, multi_choice, func, sort):
+    os.system('clear')
+    if len(options) == 0:
+        print('no results found')
     if sort:
         options.sort(key=lambda x: getattr(x, attribute))
     if len(options) < 2:
@@ -395,7 +399,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
     page_itr = 0
 
     while True:
-        os.system('clear')
         for each in display_control[page_itr]:
             print( 'number {} {}'.format( each + 1, getattr(options[ each ], attribute) ))
 
