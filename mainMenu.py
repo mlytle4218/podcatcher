@@ -28,6 +28,7 @@ def main_menu():
         print('number 8 search for podcasts')
         print('number 9 list podcasts')
         print('number 10 search by category')
+        print('number 11 delete from download queue')
         result = input('choice ')
         try:
             result = int( result )
@@ -61,13 +62,11 @@ def main_menu():
                 add_category()
             elif result == 10:
                 search_by_category()
-            elif result == 20:
-                os.system('clear')
-                for pod in download_queue:
-                    print(pod)
-
-                time.sleep(5)
-                #     sql.log( str( pod ))
+            elif result == 11:
+                choice = print_out_menu_options(download_queue, 'title',True,False,True)
+                if choice is not None:
+                    for each in choice:
+                        download_queue.remove(each)
             elif result == 2:
                 edit_category()
 
@@ -332,20 +331,24 @@ def start_downloads():
 
         print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
         
-        with open(dl_location + '/' + filename2, 'wb')as f:
-            r = requests.get(each.href, stream=True)
-            total_length = int( r.headers.get('content-length') )
-            dl = 0
-            if total_length is None: # no content length header
-                f.write(r.content)
-            else:
-                for chunk in r.iter_content(1024):
-                    dl += len(chunk)
-                    f.write(chunk)
-                    done = int(100 * dl / total_length)
-                    download_queue[i].percent = done
+        try:
+            with open(dl_location + '/' + filename2, 'wb')as f:
+                r = requests.get(each.href, stream=True)
+                total_length = int( r.headers.get('content-length') )
+                dl = 0
+                if total_length is None: # no content length header
+                    f.write(r.content)
+                else:
+                    for chunk in r.iter_content(1024):
+                        dl += len(chunk)
+                        f.write(chunk)
+                        done = int(100 * dl / total_length)
+                        download_queue[i].percent = done
 
-        sql.update_episode_as_downloaded(each) 
+            sql.update_episode_as_downloaded(each) 
+        except FileNotFoundError as e:
+            sql.log( str( e ) )
+            print("problem with saving {}".format(filename2))
     
     download_queue.clear()
 
