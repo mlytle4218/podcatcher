@@ -92,37 +92,48 @@ class DatabaseAccessor:
 
 
     def insert_episodes(self, episodes):
-        for each in episodes:
-            self.session.add(
-                Episode(
-                    each.title,
-                    each.published,
-                    each.summary,
-                    each.length,
-                    each.audio,
-                    each.podcast_id,
-                    each.href
+        try:
+            for each in episodes:
+                self.session.add(
+                    Episode(
+                        each.title,
+                        each.published,
+                        each.summary,
+                        each.length,
+                        each.audio,
+                        each.podcast_id,
+                        each.href
+                    )
                 )
-            )
-        self.session.commit()
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.log( str( e ) )
+            return False
         
     def insert_podcast2(self,podcast,episodes):
-        self.session.add(podcast)
-        self.session.commit()
-        for each in episodes:
-            each.podcast_id = podcast.podcast_id
-            self.session.add(
-                Episode(
-                    each.title, 
-                    each.published, 
-                    each.summary, 
-                    each.length,
-                    each.audio,
-                    each.podcast_id, 
-                    each.href )
-                )
+        try:
+            self.session.add(podcast)
+            self.session.commit()
+            for each in episodes:
+                each.podcast_id = podcast.podcast_id
+                self.session.add(
+                    Episode(
+                        each.title, 
+                        each.published, 
+                        each.summary, 
+                        each.length,
+                        each.audio,
+                        each.podcast_id, 
+                        each.href )
+                    )
 
-        self.session.commit()
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.log( str( e ) )
+            return False
+
 
     def get_first_podcast(self):
         return self.session.query(Podcast).first()
@@ -149,10 +160,15 @@ class DatabaseAccessor:
 
 
     def delete_podcast2(self,podcast):
-        self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
-        self.session.commit()
-        self.session.query(Podcast).filter(Podcast.podcast_id == podcast.podcast_id).delete()
-        self.session.commit()
+        try:
+            self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id ).delete()
+            self.session.commit()
+            self.session.query(Podcast).filter(Podcast.podcast_id == podcast.podcast_id).delete()
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.log( str( e ) )
+            return False
 
     def delete_episode(self, episode):
         try:
@@ -181,11 +197,16 @@ class DatabaseAccessor:
             return False
 
     def update_podcast2(self,podcast,episodes):
-        for each in episodes:
-            each.podcast_id = podcast.podcast_id
-            self.session.add(each)
+        try:
+            for each in episodes:
+                each.podcast_id = podcast.podcast_id
+                self.session.add(each)
 
-        self.session.commit()
+            self.session.commit()
+            return True
+        except Exception as e:
+            self.log( str( e ) )
+            return False
 
     def get_podcasts_with_downloads_available(self):
         podcasts =  self.session.query(Podcast).join(Episode).filter(Episode.downloaded == 0).all()
