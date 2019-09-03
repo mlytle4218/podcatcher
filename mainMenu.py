@@ -65,8 +65,11 @@ def main_menu():
             elif result == 11:
                 choice = print_out_menu_options(download_queue, 'title',True,False,True)
                 if choice is not None:
-                    for each in choice:
-                        download_queue.remove(each)
+                    if isinstance(choice, Episode):
+                        download_queue.remove(choice)
+                    else:
+                        for each in choice:
+                            download_queue.remove(each)
                 write_state_information()
             elif result == 2:
                 edit_category()
