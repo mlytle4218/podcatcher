@@ -307,8 +307,7 @@ def add_to_download_queue(episode):
 
 def write_state_information():
     state = open(config.pickled_file_location, 'wb')
-    down_queue = []
-    pickle.dump(down_queue, state)
+    pickle.dump(download_queue, state)
 
 def read_state_information():
     state = open(config.pickled_file_location, 'rb') 
