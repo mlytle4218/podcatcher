@@ -13,6 +13,7 @@ from sql_alchemy_setup import Podcast, Episode, Category
 import operator
 import json
 import re
+import pickle
 
 def main_menu():
     while True:
@@ -61,8 +62,12 @@ def main_menu():
             elif result == 10:
                 search_by_category()
             elif result == 20:
+                os.system('clear')
                 for pod in download_queue:
-                    sql.log( str( pod ))
+                    print(pod)
+
+                time.sleep(5)
+                #     sql.log( str( pod ))
             elif result == 2:
                 edit_category()
 
@@ -298,6 +303,16 @@ def list_episodes(podcast):
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
+    write_state_information()
+
+def write_state_information():
+    state = open(config.pickled_file_location, 'wb')
+    # d = Category('tom')
+    pickle.dump(download_queue, state)
+
+def read_state_information():
+    state = open(config.pickled_file_location, 'rb') 
+    return pickle.load(state)
 
 def start_downloads():
     for each in download_queue:
@@ -438,19 +453,19 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
 width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
-download_queue = []
+download_queue = read_state_information()
 sql = DatabaseAccessor(config.database_location)
 backend = Backend(sql)
 # update podcasts
-podcasts = sql.get_all_podcasts()
-itx = 1
-for each in podcasts:
-    result = update_episodes(each)
-    if result:
-        print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
-        itx += 1
-    else:
-        print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
-time.sleep(1)
+# podcasts = sql.get_all_podcasts()
+# itx = 1
+# for each in podcasts:
+#     result = update_episodes(each)
+#     if result:
+#         print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
+#         itx += 1
+#     else:
+#         print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
+# time.sleep(1)
 
 main_menu()
