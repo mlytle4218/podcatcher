@@ -87,7 +87,7 @@ class DatabaseAccessor:
         return categories
 
     def get_all_podcasts_with_category(self, category):
-        podcasts = self.session.query(Podcast).filter(Podcast.category == category.category).all()
+        podcasts = self.session.query(Podcast).filter(Podcast.category == category.category_id).all()
         return podcasts
 
 

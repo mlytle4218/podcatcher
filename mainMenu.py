@@ -244,7 +244,7 @@ def enter_podcast_info(podcast):
             # else assume either no entry, q for quit, or the new category
             try:
                 result = int(result)
-                podcast.category = categories[result-1].category
+                podcast.category = categories[result-1].category_id
                 break
             except  ValueError:
                 if len(result) == 0:
