@@ -26,9 +26,7 @@ def main_menu():
         print('number 6 choose episodes to download')
         print('number 7 start downloads')
         print('number 8 search for podcasts')
-        print('number 9 list podcasts')
-        print('number 10 search by category')
-        print('number 11 delete from download queue')
+        print('number 9 delete from download queue')
         result = input('choice ')
         try:
             result = int( result )
@@ -42,7 +40,24 @@ def main_menu():
                 if choice != None:
                     sql.delete_podcast2(choice)
             elif result == 6:
-                choose_episodes_to_download()
+                try:
+                    os.system('clear')
+                    print('number 1 by name')
+                    print('number 2 by category')
+                    choice = input('choice: ')
+                    if choice == 'q':
+                        break
+                    choice = int(choice)
+                    if choice == 1:
+                        choose_episodes_to_download()
+                    elif choice == 2:
+                        search_by_category()
+                    else:
+                        break
+                except ValueError:
+                    break
+                except KeyboardInterrupt:
+                    break
             elif result == 7:
                 start_downloads()
                 # t1 = threading.Thread(target=start_downloads)
@@ -56,13 +71,9 @@ def main_menu():
                 #         ) )
             elif result == 8:
                 search()
-            elif result == 9:
-                list_podcasts()
             elif result == 1:
                 add_category()
-            elif result == 10:
-                search_by_category()
-            elif result == 11:
+            elif result == 9:
                 choice = print_out_menu_options(download_queue, 'title',True,False,True)
                 if choice is not None:
                     if isinstance(choice, Episode):
