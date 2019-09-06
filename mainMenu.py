@@ -84,6 +84,8 @@ def main_menu():
                 write_state_information()
             elif result == 2:
                 edit_category()
+            elif result == 20:
+                sql.log(download_queue)
 
                 
         except ValueError:
@@ -320,53 +322,77 @@ def add_to_download_queue(episode):
     write_state_information()
 
 def write_state_information():
+    episode_ids = []
+    for each in download_queue:
+        episode_ids.append(each.episode_id)
     state = open(config.pickled_file_location, 'wb')
-    pickle.dump(download_queue, state)
+    pickle.dump(episode_ids, state)
 
 def read_state_information():
+    download_queue_local = []
     state = open(config.pickled_file_location, 'rb') 
-    return pickle.load(state)
+    episode_ids = pickle.load(state)
+    for each in episode_ids:
+        epi = sql.get_episode_by_id(each)
+        if epi:
+            download_queue_local.append(epi)
+        else:
+            sql.log("could not read episode with episode_id:{}".format(each))
+    return download_queue_local
+
 
 def start_downloads():
     for each in download_queue:
         each.percent = 0
     for i,each in enumerate(download_queue):
-        filename =  each.href.split('/')[-1]
-        extension_start = filename.split('.')
-        extension = extension_start[len(extension_start)-1]
-        dl_location = ''
-        podcast = sql.get_podcast_by_id2(each) 
-        filename2 = podcast.name
-        if each.audio == 1:
-            dl_location = podcast.audio #[0]['audio']
-        else:
-            dl_location = podcast.video #[0]['video']
-        
-        filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
-
-        print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
-        
         try:
-            with open(dl_location + '/' + filename2, 'wb')as f:
-                r = requests.get(each.href, stream=True)
-                total_length = int( r.headers.get('content-length') )
-                dl = 0
-                if total_length is None: # no content length header
-                    f.write(r.content)
-                else:
-                    for chunk in r.iter_content(1024):
-                        dl += len(chunk)
-                        f.write(chunk)
-                        done = int(100 * dl / total_length)
-                        download_queue[i].percent = done
+            filename =  each.href.split('/')[-1]
+            extension_start = filename.split('.')
+            extension = extension_start[len(extension_start)-1]
+            dl_location = ''
+            podcast = sql.get_podcast_by_id2(each) 
+            filename2 = podcast.name
+            if each.audio == 1:
+                dl_location = podcast.audio #[0]['audio']
+            else:
+                dl_location = podcast.video #[0]['video']
+            
+            filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
-            updated = sql.update_episode_as_downloaded(each)
-            if updated:
-                download_queue.remove(each)
-                write_state_information() 
-        except FileNotFoundError as e:
-            sql.log( str( e ) )
-            print("problem with saving {}".format(filename2))
+            print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
+            dl_location = '/home/marc/Desktop'
+            
+            try:
+                with open(dl_location + '/' + filename2, 'wb')as f:
+                    sql.log("trying to access {}".format(each.href))
+                    r = requests.get(each.href, stream=True)
+                    total_length = int( r.headers.get('content-length') )
+                    dl = 0
+                    sql.log('got here')
+                    if total_length is None: # no content length header
+                        f.write(r.content)
+                    else:
+                        for chunk in r.iter_content(1024):
+                            dl += len(chunk)
+                            f.write(chunk)
+                            done = int(100 * dl / total_length)
+                            # if (done != download_queue[i].percent):
+                            #     print(done)
+                            download_queue[i].percent = done
+
+                updated = sql.update_episode_as_downloaded(each)
+                sql.log(updated)
+                if updated:
+                    download_queue.remove(each)
+                    write_state_information() 
+            except FileNotFoundError as e:
+                string = "problem with saving {}".format(filename2)
+                sql.log(string)
+                sql.log( str( e ) )
+                # print(string)
+        except Exception as e:
+            sql.log(e)
+            # print('had a problem with this file')
     
     download_queue.clear()
 
@@ -384,6 +410,13 @@ def rlinput(prompt, prefill=''):
 
 
 def print_out_menu_options(options, attribute, multi_choice, func, sort):
+    # sql.log(options)
+    for each in options:
+        try:
+            print(each)
+        except Exception as e:
+            print(e)
+            print(each)
     if sort:
         options.sort(key=lambda x: getattr(x, attribute))
     if len(options) < 2:
@@ -475,8 +508,9 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
 width = int( subprocess.check_output(['tput','cols']) )
 height = int( subprocess.check_output(['tput','lines']) ) -1
 
-download_queue = read_state_information()
+
 sql = DatabaseAccessor(config.database_location)
+download_queue = read_state_information()
 backend = Backend(sql)
 # update podcasts
 # podcasts = sql.get_all_podcasts()

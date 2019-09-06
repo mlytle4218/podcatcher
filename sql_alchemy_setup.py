@@ -60,7 +60,7 @@ class Episode(Base):
     def log(self,input):
         with open("test.txt", "a") as myfile:
             string=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
-            string=string+ ' - ' +input + '\n'
+            string=string+ ' - ' + str(input) + '\n'
             myfile.write(string)
 
     def __init__(self,title='', published='', summary='',length='',audio='',podcast_id='',href=''):
