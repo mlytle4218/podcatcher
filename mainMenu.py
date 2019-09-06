@@ -360,7 +360,7 @@ def start_downloads():
             
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
-            print('saving {} - {} of {}'.format(filename2, i+1, len(total_length)))
+            print('saving {} - {} of {}'.format(filename2, i+1, total_length))
             # dl_location = '/home/marc/Desktop'
             
             try:
@@ -390,6 +390,8 @@ def start_downloads():
                 sql.log(string)
                 sql.log( str( e ) )
                 # print(string)
+            except Exception as e:
+                sql.log(e)
         except Exception as e:
             sql.log(e)
             # print('had a problem with this file')
