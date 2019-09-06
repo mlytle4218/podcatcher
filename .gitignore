@@ -1,5 +1,7 @@
 pc_database.db
 test.txt
 config.py
+state.obj
 
 ./vscode/
+./htmlcov/

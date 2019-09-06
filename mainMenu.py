@@ -364,11 +364,10 @@ def start_downloads():
             
             try:
                 with open(dl_location + '/' + filename2, 'wb')as f:
-                    sql.log("trying to access {}".format(each.href))
+                    # sql.log("trying to access {}".format(each.href))
                     r = requests.get(each.href, stream=True)
                     total_length = int( r.headers.get('content-length') )
                     dl = 0
-                    sql.log('got here')
                     if total_length is None: # no content length header
                         f.write(r.content)
                     else:
