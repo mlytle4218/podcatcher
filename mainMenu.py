@@ -342,7 +342,7 @@ def read_state_information():
 
 
 def start_downloads():
-    total_length = len(download_queue)
+    total_queue_length = len(download_queue)
     for each in download_queue:
         each.percent = 0
     for i,each in enumerate(download_queue):
@@ -360,7 +360,7 @@ def start_downloads():
             
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
-            print('saving {} - {} of {}'.format(filename2, i+1, total_length))
+            print('saving {} - {} of {}'.format(filename2, i+1, total_queue_length))
             # dl_location = '/home/marc/Desktop'
             
             try:
