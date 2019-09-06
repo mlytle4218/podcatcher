@@ -342,6 +342,7 @@ def read_state_information():
 
 
 def start_downloads():
+    total_length = len(download_queue)
     for each in download_queue:
         each.percent = 0
     for i,each in enumerate(download_queue):
@@ -359,8 +360,8 @@ def start_downloads():
             
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
-            print('saving {} - {} of {}'.format(filename2, i+1, len(download_queue)))
-            dl_location = '/home/marc/Desktop'
+            print('saving {} - {} of {}'.format(filename2, i+1, len(total_length)))
+            # dl_location = '/home/marc/Desktop'
             
             try:
                 with open(dl_location + '/' + filename2, 'wb')as f:
