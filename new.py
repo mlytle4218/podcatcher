@@ -24,15 +24,23 @@ class Backend:
 
 
     def remove_tags(self,html_string):
-        html_string = html_string.replace("'", "")
-        html_string = html_string.replace('"', '')
-        html_string = html_string.lstrip("\'")
-        html_string = html_string.rstrip("\'")
         html_string = html_string.replace('<p><br /> ','')
         html_string = html_string.replace('<p> ','\n')
         html_string = html_string.replace('<br /> ','\n')
         html_string = html_string.replace('/','-')
         html_string = ''.join([i if ord(i) < 128 else '' for i in html_string])
+        whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
+        html_string = ''.join(filter(whitelist.__contains__, html_string))
+        html_string = html_string.replace(' ','-').lower()
+        # html_string = html_string.replace("'", "")
+        # html_string = html_string.replace('"', '')
+        # html_string = html_string.lstrip("\'")
+        # html_string = html_string.rstrip("\'")
+        # html_string = html_string.replace('<p><br /> ','')
+        # html_string = html_string.replace('<p> ','\n')
+        # html_string = html_string.replace('<br /> ','\n')
+        # html_string = html_string.replace('/','-')
+        # html_string = ''.join([i if ord(i) < 128 else '' for i in html_string])
         return html_string
 
 

@@ -46,18 +46,18 @@ def main_menu():
                     print('number 2 by category')
                     choice = input('choice: ')
                     if choice == 'q':
-                        break
+                        main_menu()
                     choice = int(choice)
                     if choice == 1:
                         choose_episodes_to_download()
                     elif choice == 2:
                         search_by_category()
                     else:
-                        break
+                        main_menu()
                 except ValueError:
-                    break
+                    main_menu()
                 except KeyboardInterrupt:
-                    break
+                    main_menu()
             elif result == 7:
                 start_downloads()
                 # t1 = threading.Thread(target=start_downloads)
@@ -322,11 +322,15 @@ def add_to_download_queue(episode):
     write_state_information()
 
 def write_state_information():
-    episode_ids = []
-    for each in download_queue:
-        episode_ids.append(each.episode_id)
-    state = open(config.pickled_file_location, 'wb')
-    pickle.dump(episode_ids, state)
+    try:
+        episode_ids = []
+        for each in download_queue:
+            episode_ids.append(each.episode_id)
+        state = open(config.pickled_file_location, 'wb')
+        pickle.dump(episode_ids, state)
+        sql.log('write_state_information')
+    except Exception as e:
+        sql.log(e)
 
 def read_state_information():
     download_queue_local = []
@@ -343,6 +347,7 @@ def read_state_information():
 
 def start_downloads():
     total_queue_length = len(download_queue)
+    download_queue_removed = []
     for each in download_queue:
         each.percent = 0
     for i,each in enumerate(download_queue):
@@ -352,7 +357,7 @@ def start_downloads():
             extension = extension_start[len(extension_start)-1]
             dl_location = ''
             podcast = sql.get_podcast_by_id2(each) 
-            filename2 = podcast.name
+            filename2 = podcast.name.replace(" ","-").lower()
             if each.audio == 1:
                 dl_location = podcast.audio #[0]['audio']
             else:
@@ -361,7 +366,7 @@ def start_downloads():
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
             print('saving {} - {} of {}'.format(filename2, i+1, total_queue_length))
-            # dl_location = '/home/marc/Desktop'
+            dl_location = '/home/marc/Desktop'
             
             try:
                 with open(dl_location + '/' + filename2, 'wb')as f:
@@ -381,22 +386,21 @@ def start_downloads():
                             download_queue[i].percent = done
 
                 updated = sql.update_episode_as_downloaded(each)
-                sql.log(updated)
                 if updated:
-                    download_queue.remove(each)
-                    write_state_information() 
+                    download_queue_removed.append(each)
             except FileNotFoundError as e:
                 string = "problem with saving {}".format(filename2)
                 sql.log(string)
                 sql.log( str( e ) )
-                # print(string)
             except Exception as e:
                 sql.log(e)
         except Exception as e:
             sql.log(e)
-            # print('had a problem with this file')
     
-    download_queue.clear()
+    for each in download_queue_removed:
+        download_queue.remove(each)
+
+    write_state_information()
 
 
 
