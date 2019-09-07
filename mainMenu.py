@@ -384,7 +384,7 @@ def start_downloads():
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
             print('saving {} - {} of {}'.format(filename2, i+1, total_queue_length))
-            dl_location = '/home/marc/Desktop'
+            # dl_location = '/home/marc/Desktop'
             
             try:
                 with open(dl_location + '/' + filename2, 'wb')as f:
