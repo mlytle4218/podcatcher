@@ -417,12 +417,12 @@ def rlinput(prompt, prefill=''):
 
 def print_out_menu_options(options, attribute, multi_choice, func, sort):
     # sql.log(options)
-    for each in options:
-        try:
-            print(each)
-        except Exception as e:
-            print(e)
-            print(each)
+    # for each in options:
+    #     try:
+    #         print(each)
+    #     except Exception as e:
+    #         print(e)
+    #         print(each)
     if sort:
         options.sort(key=lambda x: getattr(x, attribute))
     if len(options) < 2:
@@ -469,6 +469,9 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
             if len(choices) > 0:
                 return choices
             break
+        # elif result == 'a':
+        #     # sql.log(options)
+        #     return options[:]
         else: 
             # this is looking for entries that are in the form 1-4 to represent 
             # choices 1,2,3,4 - requested option
