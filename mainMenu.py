@@ -7,10 +7,10 @@ from sql import DatabaseAccessor
 import readline
 import requests
 import time
-import threading
+# import threading
 import config
 from sql_alchemy_setup import Podcast, Episode, Category
-import operator
+# import operator
 import json
 import re
 import pickle
@@ -190,6 +190,9 @@ def update_episodes(podcast):
         temp_existing_episodes = existing_episodes[:]
         retreived_episodes = backend.get_podcast_data_from_feed(podcast.url)
 
+        # This next section is super inefficient needs to be adjusted to not suck
+        
+
         # this take each retrieved episode and tries to remove it from the 
         # local data. If it fails, then the local data doesn't have it and it
         # needs to added
@@ -199,7 +202,6 @@ def update_episodes(podcast):
             except Exception:
                 each.podcast_id = podcast.podcast_id
                 result = sql.add_episode(each)
-
 
         # this takes each existing episode and tries to remove it from the 
         # retrieved episodes. If it fails, then the retrieved data doesn't have it
@@ -213,6 +215,7 @@ def update_episodes(podcast):
 
         return True
     except Exception as e:
+        # sql.log('main exception {}'.format(podcast))
         sql.log( str( e ) )
         return False
 
@@ -344,7 +347,6 @@ def write_state_information():
             episode_ids.append(each.episode_id)
         state = open(config.pickled_file_location, 'wb')
         pickle.dump(episode_ids, state)
-        sql.log('write_state_information')
     except Exception as e:
         sql.log(e)
 
@@ -404,6 +406,7 @@ def start_downloads():
                 updated = sql.update_episode_as_downloaded(each)
                 if updated:
                     download_queue_removed.append(each)
+                    sql.log("downloaded {}".format(each))
             except FileNotFoundError as e:
                 string = "problem with saving {}".format(filename2)
                 sql.log(string)

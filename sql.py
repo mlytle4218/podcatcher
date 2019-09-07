@@ -175,6 +175,8 @@ class DatabaseAccessor:
             self.session.commit()
             return True
         except Exception as e:
+            self.log('delete_episode')
+            self.log(episode)
             self.log(str(e))
             return False
 
@@ -184,6 +186,8 @@ class DatabaseAccessor:
             self.session.commit()
             return True
         except Exception as e:
+            self.log('add_episode')
+            self.log(episode)
             self.log(str(e))
             return False
 

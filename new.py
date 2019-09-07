@@ -45,17 +45,19 @@ class Backend:
 
 
     def get_podcast_data_from_feed(self,url):
+        self.log('in get_podcast_data_from_feed')
         try:
             resp = requests.get(url, timeout=10.0)
         except requests.ReadTimeout:
             self.log(str("Timeout when reading RSS %s", url))
             return None
-
+            
         f_parser = feedparser.parse(resp.content)
         episode_list = []
         for entry in f_parser['entries']:
             episode = Episode()
             for sub_entry in entry:
+                self.log("in sub_entry for {}".format(entry))
                 if(sub_entry == 'title'):
                     episode.title = self.remove_tags(entry['title'])#.encode('utf-8')
                 elif (sub_entry == 'summary'):
@@ -88,6 +90,7 @@ class Backend:
                         else:
                             episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z')
                     except Exception as e:
+                        self.log('published')
                         self.log( str( e ) )
                 elif ( sub_entry == 'pubDate'):
                     try: 
@@ -97,6 +100,7 @@ class Backend:
                         else:
                             episode.published = datetime.datetime.strptime(entry['pubDate'], '%a, %W %b %Y %H:%M:%S %z')
                     except Exception as e:
+                        self.log('pubDate')
                         self.log( str( e ) )
             episode_list.append(episode)
         return episode_list
