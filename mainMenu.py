@@ -27,6 +27,7 @@ def main_menu():
         print('number 7 start downloads')
         print('number 8 search for podcasts')
         print('number 9 delete from download queue')
+        print('number 10 update all podcasts')
         result = input('choice ')
         try:
             result = int( result )
@@ -84,6 +85,8 @@ def main_menu():
                 write_state_information()
             elif result == 2:
                 edit_category()
+            elif result == 10:
+                update_all_episodes()
             elif result == 20:
                 sql.log(download_queue)
 
@@ -91,6 +94,19 @@ def main_menu():
         except ValueError:
             if result == 'q':
                 break
+
+def update_all_episodes():
+    # update podcasts
+    podcasts = sql.get_all_podcasts()
+    itx = 1
+    for each in podcasts:
+        result = update_episodes(each)
+        if result:
+            print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
+            itx += 1
+        else:
+            print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
+    time.sleep(1)
 
 def search_by_category():
     categories = sql.get_all_categories()
@@ -521,16 +537,6 @@ height = int( subprocess.check_output(['tput','lines']) ) -1
 sql = DatabaseAccessor(config.database_location)
 download_queue = read_state_information()
 backend = Backend(sql)
-# update podcasts
-# podcasts = sql.get_all_podcasts()
-# itx = 1
-# for each in podcasts:
-#     result = update_episodes(each)
-#     if result:
-#         print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
-#         itx += 1
-#     else:
-#         print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
-# time.sleep(1)
+
 
 main_menu()
