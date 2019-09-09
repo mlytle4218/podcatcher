@@ -173,7 +173,7 @@ def search():
 
 def update_episodes_old(podcast):
     ep = sql.get_episodes_by_podcast_id(podcast) 
-    ep2 = backend.get_podcast_data_from_feed(podcast.url)
+    ep2 = backend.get_episodes_from_feed(podcast.url)
 
     
     for each in ep:
@@ -190,7 +190,7 @@ def update_episodes_old(podcast):
 def update_episodes_fix():
     pods = sql.get_all_podcasts()
     for pod in pods:
-        retreived_episodes = backend.get_podcast_data_from_feed(pod.url)
+        retreived_episodes = backend.get_episodes_from_feed(pod.url)
         sql.update_episodes_fix(retreived_episodes, pod)
 
 
@@ -198,7 +198,7 @@ def update_episodes(podcast):
     try:
         existing_episodes = sql.get_episodes_by_podcast_id(podcast)
         temp_existing_episodes = existing_episodes[:]
-        retreived_episodes = backend.get_podcast_data_from_feed(podcast.url)
+        retreived_episodes = backend.get_episodes_from_feed(podcast.url)
 
         # This next section is super inefficient needs to be adjusted to not suck
         
@@ -315,7 +315,7 @@ def enter_podcast_info(podcast):
 def add_new_podcast(podcast):
     podcast = enter_podcast_info(podcast)
     if podcast != None:
-        episodes = backend.get_podcast_data_from_feed(podcast.url)
+        episodes = backend.get_episodes_from_feed(podcast.url)
         sql.insert_podcast2(podcast,episodes)
 
 def edit_existing_podcast():
@@ -325,7 +325,7 @@ def edit_existing_podcast():
         if podcast != None:
             enter_podcast_info(podcast)
             if podcast != None:
-                episodes = backend.get_podcast_data_from_feed(podcast.url)
+                episodes = backend.get_episodes_from_feed(podcast.url)
                 sql.delete_episodes_by_podcast_id(podcast)
                 sql.update_podcast2(podcast,episodes)
     except KeyboardInterrupt as e:
@@ -334,7 +334,7 @@ def edit_existing_podcast():
 def edit_existing_podcast2(podcast):
     enter_podcast_info(podcast)
     if podcast != None:
-        episodes = backend.get_podcast_data_from_feed(podcast.url)
+        episodes = backend.get_episodes_from_feed(podcast.url)
         sql.delete_episodes_by_podcast_id(podcast)
         sql.update_podcast2(podcast,episodes)
 

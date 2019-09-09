@@ -108,7 +108,7 @@ class Backend:
             episode_list.append(episode)
         return episode_list
 
-    def get_podcast_data_from_feed(self,url):
+    def get_episodes_from_feed(self,url):
         try:
             resp = requests.get(url, timeout=10.0)
         except requests.ReadTimeout:
@@ -117,51 +117,95 @@ class Backend:
         except requests.ConnectTimeout as e:
             self.log('ConnectTimeout for {}'.format(url))
             self.log(str(e))
+            return None
+
         except Exception as e:
             self.log('Unknown Exception for {}'.format(url))
             self.log(str(e))
+            return None
 
 
             
         f_parser = feedparser.parse(resp.content)
         episode_list = []
         for entry in f_parser['entries']:
-            try:
-                if 'links' in entry:
-                    episode = Episode()
-                    episode.title = self.remove_tags(entry.title)
-                    episode.summary = self.remove_tags(entry.summary)
-                    episode.href = None
-                    episode.audio = -1
-                    for link in entry.links:
-                        if 'audio' in link.type:
-                            episode.href = link.href
-                            episode.audio = 1
-                        if 'video' in link.type:
-                            episode.href = link.href
-                            episode.audio = 0
-                    episode.length = -1
-                    if 'itunes_duration' in entry:
-                        episode.length = entry.itunes_duration
-                    try: 
-                        if 'CDT'  in entry.published:
-                            entry.published = re.sub('CDT', '', entry.published).strip()
-                            episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
-                        elif 'GMT' in entry.published:
-                            entry.published = re.sub('GMT', '', entry.published).strip()
-                            episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
+            result = self.get_episode_from_feed_parser(entry)
+            if result:
+                episode_list.append(result)
+            # try:
+            #     if 'links' in entry:
+            #         episode = Episode()
+            #         episode.title = self.remove_tags(entry.title)
+            #         episode.summary = self.remove_tags(entry.summary)
+            #         episode.href = None
+            #         episode.audio = -1
+            #         for link in entry.links:
+            #             if 'audio' in link.type:
+            #                 episode.href = link.href
+            #                 episode.audio = 1
+            #             if 'video' in link.type:
+            #                 episode.href = link.href
+            #                 episode.audio = 0
+            #         episode.length = -1
+            #         if 'itunes_duration' in entry:
+            #             episode.length = entry.itunes_duration
+            #         try: 
+            #             if 'CDT'  in entry.published:
+            #                 entry.published = re.sub('CDT', '', entry.published).strip()
+            #                 episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
+            #             elif 'GMT' in entry.published:
+            #                 entry.published = re.sub('GMT', '', entry.published).strip()
+            #                 episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
 
-                        else:
-                            episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S %z')
-                    except Exception as e:
-                        self.log('published')
-                        self.log( str( e ) )
+            #             else:
+            #                 episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S %z')
+            #         except Exception as e:
+            #             self.log('published')
+            #             self.log( str( e ) )
 
-                    episode_list.append(episode)
-            except Exception as e:
-                self.log('Error parsing entry {}'.format(str(entry)))
-                self.log(str(e))
+            #         episode_list.append(episode)
+            # except Exception as e:
+            #     self.log('Error parsing entry {}'.format(str(entry)))
+            #     self.log(str(e))
         return episode_list
+
+    def get_episode_from_feed_parser(self, entry):
+        try:
+            if 'links' in entry:
+                episode = Episode()
+                episode.title = self.remove_tags(entry.title)
+                episode.summary = self.remove_tags(entry.summary)
+                episode.href = None
+                episode.audio = -1
+                for link in entry.links:
+                    if 'audio' in link.type:
+                        episode.href = link.href
+                        episode.audio = 1
+                    if 'video' in link.type:
+                        episode.href = link.href
+                        episode.audio = 0
+                episode.length = -1
+                if 'itunes_duration' in entry:
+                    episode.length = entry.itunes_duration
+                try: 
+                    if 'CDT'  in entry.published:
+                        entry.published = re.sub('CDT', '', entry.published).strip()
+                        episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
+                    elif 'GMT' in entry.published:
+                        entry.published = re.sub('GMT', '', entry.published).strip()
+                        episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
+
+                    else:
+                        episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S %z')
+                except Exception as e:
+                    self.log('published')
+                    self.log( str( e ) )
+
+                return episode
+        except Exception as e:
+            self.log('Error parsing entry {}'.format(str(entry)))
+            self.log(str(e))
+            return None
 
 
     def check_feed(self,input):
@@ -175,7 +219,7 @@ class Backend:
 
 
 # bk = Backend(config.database_location)
-# results = bk.get_podcast_data_from_feed(sys.argv[1])
+# results = bk.get_episodes_from_feed(sys.argv[1])
 # for each in results:
 #     print( each )
 

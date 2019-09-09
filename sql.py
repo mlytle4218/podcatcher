@@ -199,8 +199,12 @@ class DatabaseAccessor:
         return self.result_proxy_to_dict(episodes)
 
     def get_episode_by_id(self, id):
-        episode = self.session.query(Episode).filter(Episode.episode_id == id).one()
-        return episode
+        try:
+            episode = self.session.query(Episode).filter(Episode.episode_id == id).one()
+            return episode
+        except Exception as e:
+            self.log(str(e))
+            return None
 
     def update_all_episodes(self):
         episodes = self.session.query(Episode).all()
