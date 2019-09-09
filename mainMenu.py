@@ -111,12 +111,7 @@ def update_all_episodes():
             print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
     time.sleep(1)
 
-def search_by_category():
-    categories = sql.get_all_categories()
-    choice = print_out_menu_options(categories, 'category', False, False, False)
-    if choice is not None:
-        podcasts = sql.get_all_podcasts_with_category(choice)
-        print_out_menu_options(podcasts, 'name', False, list_episodes, True)
+
 
 def edit_category():
     categories = sql.get_all_categories()
@@ -346,6 +341,15 @@ def choose_episodes_to_download():
     podcasts  = sql.get_podcasts_with_downloads_available()
     print_out_menu_options(podcasts, 'name', False, list_episodes, True)
 
+def search_by_category():
+    categories = sql.get_all_categories()
+    choice = print_out_menu_options(categories, 'category', False, False, False)
+    if choice is not None:
+        podcasts = sql.get_all_podcasts_with_category(choice)
+        for each in podcasts:
+            sql.log(str(vars(each)))
+        print_out_menu_options(podcasts, 'name', False, list_episodes, True)
+
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
     print_out_menu_options(episodes, 'title', True, add_to_download_queue, False, True)
@@ -492,7 +496,13 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_al
         if len(options) == 0:
             print('no results found')
         for each in display_control[page_itr]:
-            print( 'number {} {}'.format( each + 1, getattr(options[ each ], attribute) ))
+            if isinstance(options[each], Podcast ):
+                number = sql.get_number_of_available_episodes_by_podcast(options[each])
+            #This is put the number of available downloads after the podcast listing. Pasta!
+            # if hasattr(options[each], 'num'):
+                print( 'number {} {} - {}'.format( each + 1, getattr(options[ each ], attribute), number  ))
+            else:
+                print( 'number {} {}'.format( each + 1, getattr(options[ each ], attribute) ))
 
         result = input('choice ')     
         if result == 'n':
@@ -506,7 +516,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_al
                 return choices
             break
         elif result == 'c' and clear_all:
-            sql.log('catchup')
             sql.update_episodes_as_viewed(options)
             break
         # elif result == 'a':

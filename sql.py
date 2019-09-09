@@ -61,6 +61,13 @@ class DatabaseAccessor:
             string = string + ' - ' + str(input) + '\n'
             myfile.write(string)
 
+
+    def get_number_of_available_episodes_by_podcast(self,podcast):
+        try:
+            return self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).filter(Episode.downloaded==0).count()
+        except Exception as e:
+            return 0
+
     def add_new_category(self, category):
         existing_cat = self.session.query(Category).filter(
             Category.category == category.category).all()
@@ -80,29 +87,28 @@ class DatabaseAccessor:
         categories = self.session.query(Category).all()
         return categories
 
-    def get_all_podcasts_with_category(self, category):
-        podcasts = self.session.query(Podcast).filter(
-            Podcast.category == category.category_id).all()
-        return podcasts
+
 
     def update_episodes_as_viewed(self, episodes):
         if episodes is not None:
             for episode in episodes:
                 try:
-                    result = self.session.query(Episode).get(episode.episode_id)
+                    result = self.session.query(
+                        Episode).get(episode.episode_id)
                     result.veiwed = 1
                     self.session.commit()
                 except Exception as e:
                     self.log("update_episodes_as_viewed for {}".format(episode))
                     self.log(str(e))
 
-    def update_episodes_fix(self,episodes, podcast):
+    def update_episodes_fix(self, episodes, podcast):
         # self.log(str(podcast))
         # self.log(str(vars(episodes[0])))
         if episodes is not None:
             for each in episodes:
                 try:
-                    result = self.session.query(Episode).filter(Episode.title == each.title).filter(Episode.published == each.published).first()
+                    result = self.session.query(Episode).filter(Episode.title == each.title).filter(
+                        Episode.published == each.published).first()
                     if result is None:
                         result = self.insert_single_episode(each)
                         # if result:
@@ -132,9 +138,8 @@ class DatabaseAccessor:
                         #     self.log('each.href')
                         #     self.log(podcast.name)
 
-
-                        result.audio=each.audio
-                        result.href=each.href
+                        result.audio = each.audio
+                        result.href = each.href
                         self.session.commit()
                         # self.log(str("{} updated".format(result)))
                 except Exception as e:
@@ -142,27 +147,24 @@ class DatabaseAccessor:
         else:
             return False
 
-
-
     def insert_single_episode(self, episode):
         try:
             self.session.add(
-                        Episode(
-                            episode.title,
-                            episode.published,
-                            episode.summary,
-                            episode.length,
-                            episode.audio,
-                            episode.podcast_id,
-                            episode.href
-                        )
-                    )
+                Episode(
+                    episode.title,
+                    episode.published,
+                    episode.summary,
+                    episode.length,
+                    episode.audio,
+                    episode.podcast_id,
+                    episode.href
+                )
+            )
             self.session.commit()
             return True
         except Exception as e:
             self.log(str(e))
             return False
-
 
     def insert_episodes(self, episodes):
         for each in episodes:
@@ -219,7 +221,8 @@ class DatabaseAccessor:
 
     def get_episode_by_id(self, id):
         try:
-            episode = self.session.query(Episode).filter(Episode.episode_id == id).one()
+            episode = self.session.query(Episode).filter(
+                Episode.episode_id == id).one()
             return episode
         except Exception as e:
             self.log(str(e))
@@ -232,7 +235,6 @@ class DatabaseAccessor:
     def get_all_podcasts(self):
         podcasts = self.session.query(Podcast).all()
         return self.result_proxy_to_dict(podcasts)
-
 
     def result_proxy_to_dict(self, input):
         results = []
@@ -298,15 +300,38 @@ class DatabaseAccessor:
             self.log(str(e))
             return False
 
-    def get_podcasts_with_downloads_available(self):
-        podcasts = self.session.query(Podcast).join(
-            Episode).filter(Episode.downloaded == 0).all()
-        return self.result_proxy_to_dict(podcasts)
+
 
     def get_episodes_with_downloads_available(self, podcast):
         episodes = self.session.query(Episode).filter(
             Episode.podcast_id == podcast.podcast_id).filter(Episode.downloaded == 0).filter(Episode.veiwed == 0).all()
         return self.result_proxy_to_dict(episodes)
+
+    def get_podcasts_with_downloads_available(self):
+        podcasts = self.session.query(Podcast).join(
+            Episode).filter(Episode.downloaded == 0).all()
+        for podcast in podcasts:
+            try:
+                rows = self.session.query(Episode).filter(
+                    Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).count()
+                podcast.num = rows
+            except Exception as e:
+                self.log(str(e))
+                podcast.num = 0
+        return self.result_proxy_to_dict(podcasts)
+
+    def get_all_podcasts_with_category(self, category):
+        podcasts = self.session.query(Podcast).filter(
+            Podcast.category == category.category_id).all()
+        for podcast in podcasts:
+            try:
+                rows = self.session.query(Episode).filter(
+                    Episode.podcast_id == podcast.podcast_id).count()
+                podcast.num = rows
+            except Exception as e:
+                self.log(str(e))
+                podcast.num = 0
+        return podcasts
 
     def get_podcast_by_id2(self, episode):
         podcast = self.session.query(Podcast).filter(
