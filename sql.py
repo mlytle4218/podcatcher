@@ -86,43 +86,49 @@ class DatabaseAccessor:
         return podcasts
 
     def update_episodes_fix(self,episodes, podcast):
+        self.log(str(podcast))
         # self.log(str(vars(episodes[0])))
-        for each in episodes:
-            try:
-                # self.log(str( each.title ))
-                result = self.session.query(Episode).filter(Episode.title == each.title).filter(Episode.published == each.published).first()
-                # result = self.session.query(Episode).filter(Episode.title.like(each.title))
-                if result == None:
-                   self.insert_single_episode(each)
-                   self.session.commit()
-                else:
-                    # try:
-                    #     print(result.audio)
-                    # except AttributeError:
-                    #     self.log('result.audio')
-                    #     self.log(podcast.name)
-                    # try:
-                    #     print(each.audio)
-                    # except AttributeError:
-                    #     self.log('each.audio')
-                    #     self.log(podcast.name)
-                    # try:
-                    #     print(result.href)
-                    # except AttributeError:
-                    #     self.log('result.href')
-                    #     self.log(podcast.name)
-                    # try:
-                    #     print(each.href)
-                    # except AttributeError:
-                    #     self.log('each.href')
-                    #     self.log(podcast.name)
+        if episodes is not None:
+            for each in episodes:
+                try:
+                    result = self.session.query(Episode).filter(Episode.title == each.title).filter(Episode.published == each.published).first()
+                    if result is None:
+                        self.insert_single_episode(each)
+                        self.session.commit()
+                        return True
+                    else:
+                        # try:
+                        #     print(result.audio)
+                        # except AttributeError:
+                        #     self.log('result.audio')
+                        #     self.log(podcast.name)
+                        # try:
+                        #     print(each.audio)
+                        # except AttributeError:
+                        #     self.log('each.audio')
+                        #     self.log(podcast.name)
+                        # try:
+                        #     print(result.href)
+                        # except AttributeError:
+                        #     self.log('result.href')
+                        #     self.log(podcast.name)
+                        # try:
+                        #     print(each.href)
+                        # except AttributeError:
+                        #     self.log('each.href')
+                        #     self.log(podcast.name)
 
 
-                    result.audio=each.audio
-                    result.href=each.href
-                    self.session.commit()
-            except Exception as e:
-                self.log(str(e))
+                        result.audio=each.audio
+                        result.href=each.href
+                        self.session.commit()
+                        return True
+                except Exception as e:
+                    self.log(str(e))
+                    return False
+        else:
+            return False
+
 
 
     def insert_single_episode(self, episode):

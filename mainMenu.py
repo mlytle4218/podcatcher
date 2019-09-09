@@ -90,7 +90,7 @@ def main_menu():
             elif result == 20:
                 for each in download_queue:
                     sql.log(vars(each))
-            elif result == 11:
+            elif result == 21:
                 update_episodes_fix()
 
                 
@@ -212,6 +212,8 @@ def update_episodes(podcast):
             except Exception:
                 each.podcast_id = podcast.podcast_id
                 result = sql.add_episode(each)
+                if not result:
+                    sql.log("problem adding {}".format(each))
 
         # this takes each existing episode and tries to remove it from the 
         # retrieved episodes. If it fails, then the retrieved data doesn't have it
@@ -394,7 +396,7 @@ def start_downloads():
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
             print('saving {} - {} of {}'.format(filename2, i+1, total_queue_length))
-            # dl_location = '/home/marc/Desktop'
+            dl_location = '/home/marc/Desktop'
             
             try:
                 with open(dl_location + '/' + filename2, 'wb')as f:

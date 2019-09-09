@@ -32,15 +32,6 @@ class Backend:
         whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
         html_string = ''.join(filter(whitelist.__contains__, html_string))
         html_string = html_string.replace(' ','-').lower()
-        # html_string = html_string.replace("'", "")
-        # html_string = html_string.replace('"', '')
-        # html_string = html_string.lstrip("\'")
-        # html_string = html_string.rstrip("\'")
-        # html_string = html_string.replace('<p><br /> ','')
-        # html_string = html_string.replace('<p> ','\n')
-        # html_string = html_string.replace('<br /> ','\n')
-        # html_string = html_string.replace('/','-')
-        # html_string = ''.join([i if ord(i) < 128 else '' for i in html_string])
         return html_string
 
 
@@ -81,7 +72,6 @@ class Backend:
                                     episode.audio = 0
 
                 elif ( sub_entry == 'published'):
-                    # print(entry['published'])
                     try: 
                         if 'CDT'  in entry['published']:
                             entry['published'] = re.sub('CDT', '', entry['published']).strip()

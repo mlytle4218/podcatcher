@@ -75,7 +75,7 @@ class Episode(Base):
     
     def __str__(self):
         # return str(vars(self))
-        return self.href
+        return self.title
 
     def __hash__(self):
         return hash((self.title, self.published))
