@@ -85,25 +85,87 @@ class DatabaseAccessor:
             Podcast.category == category.category_id).all()
         return podcasts
 
-    def insert_episodes(self, episodes):
+    def update_episodes_fix(self,episodes, podcast):
+        # self.log(str(vars(episodes[0])))
+        for each in episodes:
+            try:
+                # self.log(str( each.title ))
+                result = self.session.query(Episode).filter(Episode.title == each.title).filter(Episode.published == each.published).first()
+                # result = self.session.query(Episode).filter(Episode.title.like(each.title))
+                if result == None:
+                   self.insert_single_episode(each)
+                   self.session.commit()
+                else:
+                    # try:
+                    #     print(result.audio)
+                    # except AttributeError:
+                    #     self.log('result.audio')
+                    #     self.log(podcast.name)
+                    # try:
+                    #     print(each.audio)
+                    # except AttributeError:
+                    #     self.log('each.audio')
+                    #     self.log(podcast.name)
+                    # try:
+                    #     print(result.href)
+                    # except AttributeError:
+                    #     self.log('result.href')
+                    #     self.log(podcast.name)
+                    # try:
+                    #     print(each.href)
+                    # except AttributeError:
+                    #     self.log('each.href')
+                    #     self.log(podcast.name)
+
+
+                    result.audio=each.audio
+                    result.href=each.href
+                    self.session.commit()
+            except Exception as e:
+                self.log(str(e))
+
+
+    def insert_single_episode(self, episode):
         try:
-            for each in episodes:
-                self.session.add(
-                    Episode(
-                        each.title,
-                        each.published,
-                        each.summary,
-                        each.length,
-                        each.audio,
-                        each.podcast_id,
-                        each.href
+            self.session.add(
+                        Episode(
+                            episode.title,
+                            episode.published,
+                            episode.summary,
+                            episode.length,
+                            episode.audio,
+                            episode.podcast_id,
+                            episode.href
+                        )
                     )
-                )
             self.session.commit()
             return True
         except Exception as e:
             self.log(str(e))
             return False
+
+
+    def insert_episodes(self, episodes):
+        for each in episodes:
+            return self.insert_single_episode(each)
+        # try:
+        #     for each in episodes:
+        #         self.session.add(
+        #             Episode(
+        #                 each.title,
+        #                 each.published,
+        #                 each.summary,
+        #                 each.length,
+        #                 each.audio,
+        #                 each.podcast_id,
+        #                 each.href
+        #             )
+        #         )
+        #     self.session.commit()
+        #     return True
+        # except Exception as e:
+        #     self.log(str(e))
+        #     return False
 
     def insert_podcast2(self, podcast, episodes):
         try:
@@ -147,6 +209,7 @@ class DatabaseAccessor:
     def get_all_podcasts(self):
         podcasts = self.session.query(Podcast).all()
         return self.result_proxy_to_dict(podcasts)
+
 
     def result_proxy_to_dict(self, input):
         results = []

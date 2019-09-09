@@ -88,7 +88,10 @@ def main_menu():
             elif result == 10:
                 update_all_episodes()
             elif result == 20:
-                sql.log(download_queue)
+                for each in download_queue:
+                    sql.log(vars(each))
+            elif result == 11:
+                update_episodes_fix()
 
                 
         except ValueError:
@@ -183,6 +186,13 @@ def update_episodes_old(podcast):
         each.podcast_id = podcast.podcast_id
 
     sql.insert_episodes(ep2)
+
+def update_episodes_fix():
+    pods = sql.get_all_podcasts()
+    for pod in pods:
+        retreived_episodes = backend.get_podcast_data_from_feed(pod.url)
+        sql.update_episodes_fix(retreived_episodes, pod)
+
 
 def update_episodes(podcast):
     try:
@@ -412,8 +422,11 @@ def start_downloads():
                 sql.log(string)
                 sql.log( str( e ) )
             except Exception as e:
+                string = "problem with {}".format(filename2)
+                sql.log(string)
                 sql.log(e)
         except Exception as e:
+            string = "problem with Episode data"
             sql.log(e)
     
     for each in download_queue_removed:
