@@ -85,17 +85,31 @@ class DatabaseAccessor:
             Podcast.category == category.category_id).all()
         return podcasts
 
+    def update_episodes_as_viewed(self, episodes):
+        if episodes is not None:
+            for episode in episodes:
+                try:
+                    result = self.session.query(Episode).get(episode.episode_id)
+                    result.veiwed = 1
+                    self.session.commit()
+                except Exception as e:
+                    self.log("update_episodes_as_viewed for {}".format(episode))
+                    self.log(str(e))
+
     def update_episodes_fix(self,episodes, podcast):
-        self.log(str(podcast))
+        # self.log(str(podcast))
         # self.log(str(vars(episodes[0])))
         if episodes is not None:
             for each in episodes:
                 try:
                     result = self.session.query(Episode).filter(Episode.title == each.title).filter(Episode.published == each.published).first()
                     if result is None:
-                        self.insert_single_episode(each)
-                        self.session.commit()
-                        return True
+                        result = self.insert_single_episode(each)
+                        # if result:
+                        #     self.log(str("{} was added".format(each)))
+                        # else:
+                        #     self.log(str("{} didn't add".format(each)))
+                        # self.session.commit()
                     else:
                         # try:
                         #     print(result.audio)
@@ -122,10 +136,9 @@ class DatabaseAccessor:
                         result.audio=each.audio
                         result.href=each.href
                         self.session.commit()
-                        return True
+                        # self.log(str("{} updated".format(result)))
                 except Exception as e:
                     self.log(str(e))
-                    return False
         else:
             return False
 
@@ -292,7 +305,7 @@ class DatabaseAccessor:
 
     def get_episodes_with_downloads_available(self, podcast):
         episodes = self.session.query(Episode).filter(
-            Episode.podcast_id == podcast.podcast_id).filter(Episode.downloaded == 0).all()
+            Episode.podcast_id == podcast.podcast_id).filter(Episode.downloaded == 0).filter(Episode.veiwed == 0).all()
         return self.result_proxy_to_dict(episodes)
 
     def get_podcast_by_id2(self, episode):

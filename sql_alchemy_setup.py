@@ -56,6 +56,7 @@ class Episode(Base):
     downloaded = Column(Integer)
     podcast_id = Column(Integer, ForeignKey('podcasts.podcast_id'))
     podcast = relationship(Podcast)
+    veiwed = Column(Integer)
 
     def log(self,input):
         with open("test.txt", "a") as myfile:
@@ -72,6 +73,7 @@ class Episode(Base):
         self.downloaded = 0
         self.podcast_id = podcast_id
         self.href = href
+        self.veiwed = 0
     
     def __str__(self):
         # return str(vars(self))

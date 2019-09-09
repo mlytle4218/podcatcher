@@ -191,7 +191,9 @@ def update_episodes_fix():
     pods = sql.get_all_podcasts()
     for pod in pods:
         retreived_episodes = backend.get_episodes_from_feed(pod.url)
-        sql.update_episodes_fix(retreived_episodes, pod)
+        if retreived_episodes:
+            # sql.log("{} has {} episodes".format(pod,len(retreived_episodes)))
+            sql.update_episodes_fix(retreived_episodes, pod)
 
 
 def update_episodes(podcast):
@@ -346,7 +348,7 @@ def choose_episodes_to_download():
 
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
-    print_out_menu_options(episodes, 'title', True, add_to_download_queue, False)
+    print_out_menu_options(episodes, 'title', True, add_to_download_queue, False, True)
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
@@ -449,7 +451,7 @@ def rlinput(prompt, prefill=''):
     
 
 
-def print_out_menu_options(options, attribute, multi_choice, func, sort):
+def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_all=False):
     # sql.log(options)
     # for each in options:
     #     try:
@@ -502,6 +504,10 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort):
         elif result =='q':
             if len(choices) > 0:
                 return choices
+            break
+        elif result == 'c' and clear_all:
+            sql.log('catchup')
+            sql.update_episodes_as_viewed(options)
             break
         # elif result == 'a':
         #     # sql.log(options)
