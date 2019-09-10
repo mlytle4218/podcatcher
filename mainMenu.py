@@ -412,7 +412,7 @@ def start_downloads():
             filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
 
             print('saving {} - {} of {}'.format(filename2, i+1, total_queue_length))
-            dl_location = '/home/marc/Desktop'
+            # dl_location = '/home/marc/Desktop'
             
             try:
                 with open(dl_location + '/' + filename2, 'wb')as f:
@@ -528,9 +528,10 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_al
         elif result == 'c' and clear_all:
             sql.update_episodes_as_viewed(options)
             break
-        # elif result == 'a':
-        #     # sql.log(options)
-        #     return options[:]
+        elif result == 'a':
+            # sql.log(options)
+            for each in options:
+                func(each)
         else: 
             # this is looking for entries that are in the form 1-4 to represent 
             # choices 1,2,3,4 - requested option
