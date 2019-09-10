@@ -32,7 +32,11 @@ def main_menu():
         result = input('choice ')
         try:
             result = int( result )
-            if result == 3:
+            if result == 1:
+                add_category()
+            elif result == 2:
+                edit_category()
+            elif result == 3:
                 add_new_podcast(Podcast())
             elif result == 4:
                 edit_existing_podcast()
@@ -44,12 +48,8 @@ def main_menu():
                 start_downloads()
             elif result == 8:
                 search()
-            elif result == 1:
-                add_category()
             elif result == 9:
                 delete_from_download_queue()
-            elif result == 2:
-                edit_category()
             elif result == 10:
                 update_all_episodes()
             elif result == 11:
@@ -529,9 +529,12 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_al
             sql.update_episodes_as_viewed(options)
             break
         elif result == 'a':
-            # sql.log(options)
-            for each in options:
-                func(each)
+            try:
+                for each in options:
+                    func(each)
+                break
+            except Exception:
+                pass
         else: 
             # this is looking for entries that are in the form 1-4 to represent 
             # choices 1,2,3,4 - requested option
