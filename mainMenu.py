@@ -434,7 +434,7 @@ def start_downloads():
                 
                 try:
                     with open(dl_location + '/' + basename, 'wb')as f:
-                        r = requests.get(each.href, stream=True)
+                        r = requests.get(each.href, stream=True, verify=False)
                         total_length = int( r.headers.get('content-length') )
                         dl = 0
                         if total_length is None: # no content length header
