@@ -396,56 +396,63 @@ def start_downloads():
     download_queue_removed = []
     for each in download_queue:
         each.percent = 0
-    for i,each in enumerate(download_queue):
-        try:
-            filename =  each.href.split('/')[-1]
-            extension_start = filename.split('.')
-            extension = extension_start[len(extension_start)-1]
-            dl_location = ''
-            podcast = sql.get_podcast_by_id2(each) 
-            filename2 = podcast.name.replace(" ","-").lower()
-            if each.audio == 1:
-                dl_location = podcast.audio #[0]['audio']
-            else:
-                dl_location = podcast.video #[0]['video']
-            
-            filename2 += "-" + each.title.replace(" ", "-").lower() +"."+extension
-
-            print('saving {} - {} of {}'.format(filename2, i+1, total_queue_length))
-            # dl_location = '/home/marc/Desktop'
-            
+    try:
+        for i,each in enumerate(download_queue):
             try:
-                with open(dl_location + '/' + filename2, 'wb')as f:
-                    # sql.log("trying to access {}".format(each.href))
-                    r = requests.get(each.href, stream=True)
-                    total_length = int( r.headers.get('content-length') )
-                    dl = 0
-                    if total_length is None: # no content length header
-                        f.write(r.content)
-                    else:
-                        for chunk in r.iter_content(1024):
-                            dl += len(chunk)
-                            f.write(chunk)
-                            done = int(100 * dl / total_length)
-                            # if (done != download_queue[i].percent):
-                            #     print(done)
-                            download_queue[i].percent = done
+                filename =  each.href.split('/')[-1]
+                extension_start = filename.split('.')
+                extension = extension_start[len(extension_start)-1]
+                dl_location = ''
+                podcast = sql.get_podcast_by_id2(each) 
+                filename2 = podcast.name.replace(" ","-").replace("/","-").lower()
+                if each.audio == 1:
+                    dl_location = podcast.audio #[0]['audio']
+                else:
+                    dl_location = podcast.video #[0]['video']
+                
+                basename = filename2 + "-" + each.title.replace(" ", "-").lower()# +"."+extension
+                basename = (basename[:240]) if len(basename) > 240 else basename
+                basename +="-"+each.published.strftime("%Y%m%d")+ "."+extension
 
-                updated = sql.update_episode_as_downloaded(each)
-                if updated:
-                    download_queue_removed.append(each)
-                    sql.log("downloaded {}".format(each))
-            except FileNotFoundError as e:
-                string = "problem with saving {}".format(filename2)
-                sql.log(string)
-                sql.log( str( e ) )
+
+                print('saving {} of {} - {}'.format(i+1, total_queue_length, basename))
+                dl_location = '/home/marc/Desktop'
+                
+                try:
+                    with open(dl_location + '/' + basename, 'wb')as f:
+                        # sql.log("trying to access {}".format(each.href))
+                        r = requests.get(each.href, stream=True)
+                        total_length = int( r.headers.get('content-length') )
+                        dl = 0
+                        if total_length is None: # no content length header
+                            f.write(r.content)
+                        else:
+                            for chunk in r.iter_content(1024):
+                                dl += len(chunk)
+                                f.write(chunk)
+                                done = int(100 * dl / total_length)
+                                # if (done != download_queue[i].percent):
+                                #     print(done)
+                                download_queue[i].percent = done
+
+                    updated = sql.update_episode_as_downloaded(each)
+                    if updated:
+                        download_queue_removed.append(each)
+                        sql.log("downloaded {}".format(each))
+                except FileNotFoundError as e:
+                    string = "problem with saving {}".format(filename2)
+                    sql.log(string)
+                    sql.log( str( e ) )
+                except Exception as e:
+                    string = "problem with {}".format(filename2)
+                    sql.log(string)
+                    sql.log(e)
             except Exception as e:
-                string = "problem with {}".format(filename2)
-                sql.log(string)
+                string = "problem with Episode data"
                 sql.log(e)
-        except Exception as e:
-            string = "problem with Episode data"
-            sql.log(e)
+    except KeyboardInterrupt:
+        for each in download_queue_removed:
+            sql.log(each)
     
     for each in download_queue_removed:
         download_queue.remove(each)
