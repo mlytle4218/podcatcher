@@ -84,6 +84,9 @@ def delete_from_download_queue():
     write_state_information()
 
 def list_archived_episodes():
+    podcasts = sql.get_all_podcasts()
+    print_out_menu_options(podcasts, 'name', False, list_episodes_arch, True)
+
     pass
 
 def update_all_episodes():
@@ -356,13 +359,20 @@ def choose_episode_to_download_by_category():
     choice = print_out_menu_options(categories, 'category', False, False, False)
     if choice is not None:
         podcasts = sql.get_all_podcasts_with_category(choice)
-        for each in podcasts:
-            sql.log(str(vars(each)))
+        # for each in podcasts:
+            # sql.log(str(vars(each)))
         print_out_menu_options(podcasts, 'name', False, list_episodes, True)
 
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
     print_out_menu_options(episodes, 'title', True, add_to_download_queue, False, True)
+
+def list_episodes_arch(podcast):
+    episodes = sql.get_all_episodes(podcast)
+    if episodes:
+        print_out_menu_options(episodes, 'title', True, add_to_download_queue, False, True)
+    else:
+        sql.log('Something went horribly wrong with gettin all the episodes')
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
@@ -444,17 +454,22 @@ def start_downloads():
                         download_queue_removed.append(each)
                         sql.log("downloaded {}".format(each))
                 except FileNotFoundError as e:
-                    string = "problem saving {}".format(basename)
+                    string = "FileNotFoundError problem saving {}".format(basename)
                     print(string)
                     sql.log(string)
                     sql.log( str( e ) )
+                except ConnectionError as e:
+                    string = "ConnectionError problem saving {}".format(basename)
+                    print(string)
+                    sql.log(string)
+                    sql.log(e)
                 except OSError as e:
-                    string = "problem saving {}".format(basename)
+                    string = "OSError problem saving {}".format(basename)
                     print(string)
                     sql.log(string)
                     sql.log(e)
                 except Exception as e:
-                    string = "problem saving {}".format(basename)
+                    string = "Exception problem saving {}".format(basename)
                     print(string)
                     sql.log(string)
                     sql.log(e)
@@ -471,8 +486,9 @@ def start_downloads():
         input('return to continue ')
 
     except KeyboardInterrupt:
-        for each in download_queue_removed:
-            sql.log(each)
+        pass
+        # for each in download_queue_removed:
+        #     sql.log(each)
 
 
 

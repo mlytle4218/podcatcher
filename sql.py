@@ -171,6 +171,14 @@ class DatabaseAccessor:
         episodes = self.session.query(Episode).filter(
             Episode.podcast_id == podcast.podcast_id).all()
         return self.result_proxy_to_dict(episodes)
+    
+    def get_all_episodes(self, podcast):
+        try:
+            episodes = self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).all()
+            return episodes
+        except Exception as e:
+            self.log(str(e))
+            return None
 
     def get_episode_by_id(self, id):
         try:
@@ -181,9 +189,11 @@ class DatabaseAccessor:
             self.log(str(e))
             return None
 
-    def update_all_episodes(self):
-        episodes = self.session.query(Episode).all()
-        return episodes
+    # def update_all_episodes(self):
+    #     episodes = self.session.query(Episode).all()
+    #     return episodes
+
+    
 
     def get_all_podcasts(self):
         podcasts = self.session.query(Podcast).all()
