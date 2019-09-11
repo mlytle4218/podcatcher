@@ -416,7 +416,10 @@ def start_downloads():
 
 
                 print('saving {} of {} - {}'.format(i+1, total_queue_length, basename))
-                dl_location = '/home/marc/Desktop'
+                # dl_location = '/home/marc/Desktop'
+                if config.dl_location_file_location:
+                    dl_location = config.dl_location_file_location
+                
                 
                 try:
                     with open(dl_location + '/' + basename, 'wb')as f:
