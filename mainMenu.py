@@ -392,11 +392,12 @@ def read_state_information():
 
 
 def start_downloads():
-    total_queue_length = len(download_queue)
-    download_queue_removed = []
-    for each in download_queue:
-        each.percent = 0
     try:
+        print('starting downloads...')
+        total_queue_length = len(download_queue)
+        download_queue_removed = []
+        for each in download_queue:
+            each.percent = 0
         for i,each in enumerate(download_queue):
             try:
                 filename =  each.href.split('/')[-1]
@@ -415,15 +416,14 @@ def start_downloads():
                 basename +="-"+each.published.strftime("%Y%m%d")+ "."+extension
 
 
-                print('saving {} of {} - {}'.format(i+1, total_queue_length, basename))
+               
                 # dl_location = '/home/marc/Desktop'
-                if config.dl_location_file_location:
+                if hasattr(config, "dl_location_file_location"):
                     dl_location = config.dl_location_file_location
                 
                 
                 try:
                     with open(dl_location + '/' + basename, 'wb')as f:
-                        # sql.log("trying to access {}".format(each.href))
                         r = requests.get(each.href, stream=True)
                         total_length = int( r.headers.get('content-length') )
                         dl = 0
@@ -440,27 +440,39 @@ def start_downloads():
 
                     updated = sql.update_episode_as_downloaded(each)
                     if updated:
+                        print('saved {} of {} - {}'.format(i+1, total_queue_length, basename))
                         download_queue_removed.append(each)
                         sql.log("downloaded {}".format(each))
                 except FileNotFoundError as e:
-                    string = "problem with saving {}".format(filename2)
+                    string = "problem saving {}".format(basename)
+                    print(string)
                     sql.log(string)
                     sql.log( str( e ) )
+                except OSError as e:
+                    string = "problem saving {}".format(basename)
+                    print(string)
+                    sql.log(string)
+                    sql.log(e)
                 except Exception as e:
-                    string = "problem with {}".format(filename2)
+                    string = "problem saving {}".format(basename)
+                    print(string)
                     sql.log(string)
                     sql.log(e)
             except Exception as e:
                 string = "problem with Episode data"
                 sql.log(e)
+    
+    
+        for each in download_queue_removed:
+            download_queue.remove(each)
+
+        write_state_information()
+
+        input('return to continue ')
+
     except KeyboardInterrupt:
         for each in download_queue_removed:
             sql.log(each)
-    
-    for each in download_queue_removed:
-        download_queue.remove(each)
-
-    write_state_information()
 
 
 
