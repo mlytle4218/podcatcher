@@ -3,6 +3,7 @@ test.txt
 config.py
 state.obj
 test.txt.old
+*.pyc
 
 ./vscode/
 ./htmlcov/
