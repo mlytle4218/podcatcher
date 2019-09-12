@@ -430,6 +430,8 @@ def start_downloads():
                 # dl_location = '/home/marc/Desktop'
                 if hasattr(config, "dl_location_file_location"):
                     dl_location = config.dl_location_file_location
+                else:
+                    dl_location = config.download_pre_location + dl_location
                 
                 
                 try:
