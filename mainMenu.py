@@ -85,7 +85,7 @@ def delete_from_download_queue():
 
 def list_archived_episodes():
     podcasts = sql.get_all_podcasts()
-    print_out_menu_options(podcasts, 'name', False, list_episodes_arch, True)
+    print_out_menu_options(podcasts, 'name', False, list_episodes_arch, True, True)
 
     pass
 
@@ -365,12 +365,12 @@ def choose_episode_to_download_by_category():
 
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
-    print_out_menu_options(episodes, 'title', True, add_to_download_queue, False, True)
+    print_out_menu_options(episodes, 'title', True, add_to_download_queue, False)
 
 def list_episodes_arch(podcast):
     episodes = sql.get_all_episodes(podcast)
     if episodes:
-        print_out_menu_options(episodes, 'title', True, add_to_download_queue, False, True)
+        print_out_menu_options(episodes, 'title', True, add_to_download_queue, False)
     else:
         sql.log('Something went horribly wrong with gettin all the episodes')
 
@@ -505,7 +505,7 @@ def rlinput(prompt, prefill=''):
     
 
 
-def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_all=False):
+def print_out_menu_options(options, attribute, multi_choice, func, sort,archived=False):
     # sql.log(options)
     # for each in options:
     #     try:
@@ -547,7 +547,8 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_al
             print('no results found')
         for each in display_control[page_itr]:
             if isinstance(options[each], Podcast ):
-                number = sql.get_number_of_available_episodes_by_podcast(options[each])
+                sql.log(archived)
+                number = sql.get_number_of_available_episodes_by_podcast(options[each], archived)
             #This is put the number of available downloads after the podcast listing. Pasta!
             # if hasattr(options[each], 'num'):
                 print( 'number {} {} - {}'.format( each + 1, getattr(options[ each ], attribute), number  ))
@@ -565,9 +566,11 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,clear_al
             if len(choices) > 0:
                 return choices
             break
-        elif result == 'c' and clear_all:
-            sql.update_episodes_as_viewed(options)
-            break
+        elif result == 'c':
+            if isinstance(options[0], Episode):
+                sql.update_episodes_as_viewed(options)
+                break
+
         elif result == 'a':
             try:
                 for each in options:

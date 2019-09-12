@@ -62,11 +62,15 @@ class DatabaseAccessor:
             myfile.write(string)
 
 
-    def get_number_of_available_episodes_by_podcast(self,podcast):
+    def get_number_of_available_episodes_by_podcast(self,podcast, archived=False):
         try:
-            return self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).filter(Episode.downloaded==0).count()
+            if archived:
+                return self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).count()
+            else:
+                return self.session.query(Episode).filter(Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).filter(Episode.downloaded==0).count()
         except Exception:
             return 0
+
 
     def add_new_category(self, category):
         existing_cat = self.session.query(Category).filter(
