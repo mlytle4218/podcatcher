@@ -7,3 +7,4 @@ test.txt.old
 
 ./vscode/
 ./htmlcov/
+./__pycache__/
