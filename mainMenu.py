@@ -402,10 +402,10 @@ def read_state_information():
 
 
 def start_downloads():
+    download_queue_removed = []
     try:
         print('starting downloads...')
         total_queue_length = len(download_queue)
-        download_queue_removed = []
         for each in download_queue:
             each.percent = 0
         for i,each in enumerate(download_queue):
@@ -489,8 +489,8 @@ def start_downloads():
 
     except KeyboardInterrupt:
         pass
-        # for each in download_queue_removed:
-        #     sql.log(each)
+        for each in download_queue_removed:
+            download_queue.remove(each)
 
 
 
