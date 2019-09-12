@@ -2,6 +2,7 @@ pc_database.db
 test.txt
 config.py
 state.obj
+test.txt.old
 
 ./vscode/
 ./htmlcov/
