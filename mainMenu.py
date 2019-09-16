@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 import subprocess
-import math 
+import math
 from new import Backend
 from sql import DatabaseAccessor
 import readline
@@ -14,6 +14,7 @@ from sql_alchemy_setup import Podcast, Episode, Category
 import json
 import re
 import pickle
+
 
 def main_menu():
     while True:
@@ -31,7 +32,7 @@ def main_menu():
         print('number 11 archive')
         result = input('choice ')
         try:
-            result = int( result )
+            result = int(result)
             if result == 1:
                 add_category()
             elif result == 2:
@@ -55,17 +56,17 @@ def main_menu():
             elif result == 11:
                 list_archived_episodes()
 
-            #hidden    
+            # hidden
             elif result == 20:
                 for each in download_queue:
                     sql.log(vars(each))
             elif result == 21:
                 update_episodes_fix()
 
-                
         except ValueError:
             if result == 'q':
                 break
+
 
 def delete_existing_podcast():
     podcasts = sql.get_all_podcasts()
@@ -73,8 +74,9 @@ def delete_existing_podcast():
     if choice != None:
         sql.delete_podcast2(choice)
 
+
 def delete_from_download_queue():
-    choice = print_out_menu_options(download_queue, 'title',True,False,True)
+    choice = print_out_menu_options(download_queue, 'title', True, False, True)
     if choice is not None:
         if isinstance(choice, Episode):
             download_queue.remove(choice)
@@ -83,11 +85,14 @@ def delete_from_download_queue():
                 download_queue.remove(each)
     write_state_information()
 
+
 def list_archived_episodes():
     podcasts = sql.get_all_podcasts()
-    print_out_menu_options(podcasts, 'name', False, list_episodes_arch, True, True)
+    print_out_menu_options(podcasts, 'name', False,
+                           list_episodes_arch, True, True)
 
     pass
+
 
 def update_all_episodes():
     # update podcasts
@@ -96,20 +101,22 @@ def update_all_episodes():
     for each in podcasts:
         result = update_episodes(each)
         if result:
-            print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
+            print('updated {} : {} of {}'.format(
+                each.name, itx, len(podcasts)))
             itx += 1
         else:
-            print('problem updating {} : {}  of {}'.format( each.name, itx, len(podcasts)  ))
+            print('problem updating {} : {}  of {}'.format(
+                each.name, itx, len(podcasts)))
     time.sleep(1)
-
 
 
 def edit_category():
     categories = sql.get_all_categories()
-    choice = print_out_menu_options(categories, 'category', False, False, False)
-    sql.log( str( type( choice) ) )
+    choice = print_out_menu_options(
+        categories, 'category', False, False, False)
+    sql.log(str(type(choice)))
     if choice is not None:
-        choice.category = rlinput( 'category name: ', choice.category).strip()
+        choice.category = rlinput('category name: ', choice.category).strip()
         # pass
         # podcast.url =  rlinput( 'podcast url ', podcast.url ).strip()
 
@@ -131,7 +138,6 @@ def add_category():
         pass
 
 
-
 # def list_podcasts():
 #     podcasts = sql.get_all_podcasts()
 #     print_out_menu_options(podcasts, 'name', False, None, True)
@@ -139,14 +145,16 @@ def add_category():
 def search():
     os.system('clear')
     terms = input('Enter search terms: ')
-    url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
+    url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(
+        terms)
     response = requests.get(url)
     data = json.loads(response.content)
     results = []
     for each in data['results']:
         if 'feedUrl' in each:
-            podcast = Podcast(each['artistName'].lower() + "-" +each['collectionName'].lower() ,each['feedUrl'],config.audio_default_location, config.video_default_location)
-            
+            podcast = Podcast(each['artistName'].lower() + "-" + each['collectionName'].lower(
+            ), each['feedUrl'], config.audio_default_location, config.video_default_location)
+
             results.append(podcast)
 
     choices = print_out_menu_options(results, 'name', True, None, True)
@@ -155,13 +163,12 @@ def search():
     elif choices is not None:
         for each in choices:
             add_new_podcast(each)
-    
+
 
 def update_episodes_old(podcast):
-    ep = sql.get_episodes_by_podcast_id(podcast) 
+    ep = sql.get_episodes_by_podcast_id(podcast)
     ep2 = backend.get_episodes_from_feed(podcast.url)
 
-    
     for each in ep:
         try:
             ep2.remove(each)
@@ -172,6 +179,7 @@ def update_episodes_old(podcast):
         each.podcast_id = podcast.podcast_id
 
     sql.insert_episodes(ep2)
+
 
 def update_episodes_fix():
     pods = sql.get_all_podcasts()
@@ -189,9 +197,8 @@ def update_episodes(podcast):
         retreived_episodes = backend.get_episodes_from_feed(podcast.url)
 
         # This next section is super inefficient needs to be adjusted to not suck
-        
 
-        # this take each retrieved episode and tries to remove it from the 
+        # this take each retrieved episode and tries to remove it from the
         # local data. If it fails, then the local data doesn't have it and it
         # needs to added
         for each in retreived_episodes:
@@ -203,7 +210,7 @@ def update_episodes(podcast):
                 if not result:
                     sql.log("problem adding {}".format(each))
 
-        # this takes each existing episode and tries to remove it from the 
+        # this takes each existing episode and tries to remove it from the
         # retrieved episodes. If it fails, then the retrieved data doesn't have it
         # which means it is no longer available. I therefore has to be removed from the
         # local data.
@@ -216,8 +223,9 @@ def update_episodes(podcast):
         return True
     except Exception as e:
         # sql.log('main exception {}'.format(podcast))
-        sql.log( str( e ) )
+        sql.log(str(e))
         return False
+
 
 def enter_podcast_info(podcast):
     try:
@@ -225,24 +233,24 @@ def enter_podcast_info(podcast):
         # add a check for names to this section
         # podcast.name = re.sub(r'(\s)+', '-', podcast.name)
         while True:
-            podcast.name = rlinput( 'podcast name ', podcast.name )
+            podcast.name = rlinput('podcast name ', podcast.name)
             if len(podcast.name) > 0:
                 break
             else:
                 print('nothing entered')
-        # check the url works 
+        # check the url works
         while True:
-            podcast.url =  rlinput( 'podcast url ', podcast.url ).strip()
+            podcast.url = rlinput('podcast url ', podcast.url).strip()
             if backend.check_feed(podcast.url):
                 break
             else:
                 print('that url did not work')
-        
+
         # check the audio path
         while True:
             if len(podcast.audio) == 0:
                 podcast.audio = config.audio_default_location
-            podcast.audio = rlinput( 'podcast audio directory ', podcast.audio )
+            podcast.audio = rlinput('podcast audio directory ', podcast.audio)
             if os.path.isdir(podcast.audio):
                 break
             else:
@@ -252,7 +260,7 @@ def enter_podcast_info(podcast):
         while True:
             if len(podcast.video) == 0:
                 podcast.video = config.video_default_location
-            podcast.video = rlinput( 'podcast video directory ', podcast.video )
+            podcast.video = rlinput('podcast video directory ', podcast.video)
             if os.path.isdir(podcast.video):
                 break
             else:
@@ -261,13 +269,13 @@ def enter_podcast_info(podcast):
         # check categories
         while True:
             # check if the category is set - print it if it is
-            if podcast.category:# and  len(podcast.category) != 0:
+            if podcast.category:  # and  len(podcast.category) != 0:
                 print("category: {}".format(podcast.category))
             # retrieve all the categories
             categories = sql.get_all_categories()
             # if there are categories - show them - if not ask for a category
             if len(categories) > 0:
-                for i,cat in enumerate(categories):
+                for i, cat in enumerate(categories):
                     print("number {} for {}".format(i+1, cat))
                 result = input('choice: ')
             else:
@@ -278,7 +286,7 @@ def enter_podcast_info(podcast):
                 result = int(result)
                 podcast.category = categories[result-1].category_id
                 break
-            except  ValueError:
+            except ValueError:
                 if len(result) == 0:
                     break
                 if result == 'q':
@@ -291,7 +299,6 @@ def enter_podcast_info(podcast):
                 else:
                     print("could not add that category")
 
-        
         return podcast
     except KeyboardInterrupt:
         podcast = None
@@ -300,13 +307,12 @@ def enter_podcast_info(podcast):
         raise
 
 
-
-
 def add_new_podcast(podcast):
     podcast = enter_podcast_info(podcast)
     if podcast != None:
         episodes = backend.get_episodes_from_feed(podcast.url)
-        sql.insert_podcast(podcast,episodes)
+        sql.insert_podcast(podcast, episodes)
+
 
 def edit_existing_podcast():
     try:
@@ -317,9 +323,9 @@ def edit_existing_podcast():
             if podcast != None:
                 episodes = backend.get_episodes_from_feed(podcast.url)
                 sql.delete_episodes_by_podcast_id(podcast)
-                sql.update_podcast2(podcast,episodes)
+                sql.update_podcast2(podcast, episodes)
     except KeyboardInterrupt as e:
-        sql.log( str( e ) )
+        sql.log(str(e))
 
 # def edit_existing_podcast2(podcast):
 #     enter_podcast_info(podcast)
@@ -351,32 +357,40 @@ def choose_episodes_to_download():
 
 
 def choose_episodes_to_download_by_name():
-    podcasts  = sql.get_podcasts_with_downloads_available()
+    podcasts = sql.get_podcasts_with_downloads_available()
     print_out_menu_options(podcasts, 'name', False, list_episodes, True)
+
 
 def choose_episode_to_download_by_category():
     categories = sql.get_all_categories()
-    choice = print_out_menu_options(categories, 'category', False, False, False)
+    choice = print_out_menu_options(
+        categories, 'category', False, False, False)
     if choice is not None:
         podcasts = sql.get_all_podcasts_with_category(choice)
         # for each in podcasts:
-            # sql.log(str(vars(each)))
+        # sql.log(str(vars(each)))
         print_out_menu_options(podcasts, 'name', False, list_episodes, True)
+
 
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
-    print_out_menu_options(episodes, 'title', True, add_to_download_queue, False)
+    print_out_menu_options(episodes, 'title', True,
+                           add_to_download_queue, False)
+
 
 def list_episodes_arch(podcast):
     episodes = sql.get_all_episodes(podcast)
     if episodes:
-        print_out_menu_options(episodes, 'title', True, add_to_download_queue, False)
+        print_out_menu_options(episodes, 'title', True,
+                               add_to_download_queue, False)
     else:
         sql.log('Something went horribly wrong with gettin all the episodes')
+
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
     write_state_information()
+
 
 def write_state_information():
     try:
@@ -388,9 +402,10 @@ def write_state_information():
     except Exception as e:
         sql.log(e)
 
+
 def read_state_information():
     download_queue_local = []
-    state = open(config.pickled_file_location, 'rb') 
+    state = open(config.pickled_file_location, 'rb')
     episode_ids = pickle.load(state)
     for each in episode_ids:
         epi = sql.get_episode_by_id(each)
@@ -408,38 +423,39 @@ def start_downloads():
         total_queue_length = len(download_queue)
         for each in download_queue:
             each.percent = 0
-        for i,each in enumerate(download_queue):
+        for i, each in enumerate(download_queue):
             try:
-                filename =  each.href.split('/')[-1]
+                filename = each.href.split('/')[-1]
                 extension_start = filename.split('.')
                 extension = extension_start[len(extension_start)-1]
                 dl_location = ''
-                podcast = sql.get_podcast_by_id2(each) 
-                filename2 = podcast.name.replace(" ","-").replace("/","-").lower()
+                podcast = sql.get_podcast_by_id2(each)
+                filename2 = podcast.name.replace(
+                    " ", "-").replace("/", "-").lower()
                 if each.audio == 1:
-                    dl_location = podcast.audio #[0]['audio']
+                    dl_location = podcast.audio  # [0]['audio']
                 else:
-                    dl_location = podcast.video #[0]['video']
-                
-                basename = filename2 + "-" + each.title.replace(" ", "-").lower()# +"."+extension
-                basename = (basename[:240]) if len(basename) > 240 else basename
-                basename +="-"+each.published.strftime("%Y%m%d")+ "."+extension
+                    dl_location = podcast.video  # [0]['video']
 
+                basename = filename2 + "-" + \
+                    each.title.replace(" ", "-").lower()  # +"."+extension
+                basename = (basename[:240]) if len(
+                    basename) > 240 else basename
+                basename += "-" + \
+                    each.published.strftime("%Y%m%d") + "."+extension
 
-               
                 # dl_location = '/home/marc/Desktop'
                 if hasattr(config, "dl_location_file_location"):
                     dl_location = config.dl_location_file_location
                 else:
                     dl_location = config.download_pre_location + dl_location
-                
-                
+
                 try:
                     with open(dl_location + '/' + basename, 'wb')as f:
                         r = requests.get(each.href, stream=True)
-                        total_length = int( r.headers.get('content-length') )
+                        total_length = int(r.headers.get('content-length'))
                         dl = 0
-                        if total_length is None: # no content length header
+                        if total_length is None:  # no content length header
                             f.write(r.content)
                         else:
                             for chunk in r.iter_content(1024):
@@ -452,16 +468,19 @@ def start_downloads():
 
                     updated = sql.update_episode_as_downloaded(each)
                     if updated:
-                        print('saved {} of {} - {}'.format(i+1, total_queue_length, basename))
+                        print('saved {} of {} - {}'.format(i +
+                                                           1, total_queue_length, basename))
                         download_queue_removed.append(each)
                         sql.log("downloaded {}".format(each))
                 except FileNotFoundError as e:
-                    string = "FileNotFoundError problem saving {}".format(basename)
+                    string = "FileNotFoundError problem saving {}".format(
+                        basename)
                     print(string)
                     sql.log(string)
-                    sql.log( str( e ) )
+                    sql.log(str(e))
                 except ConnectionError as e:
-                    string = "ConnectionError problem saving {}".format(basename)
+                    string = "ConnectionError problem saving {}".format(
+                        basename)
                     print(string)
                     sql.log(string)
                     sql.log(e)
@@ -478,8 +497,7 @@ def start_downloads():
             except Exception as e:
                 string = "problem with Episode data"
                 sql.log(e)
-    
-    
+
         for each in download_queue_removed:
             download_queue.remove(each)
 
@@ -493,19 +511,15 @@ def start_downloads():
             download_queue.remove(each)
 
 
-
-
-
 def rlinput(prompt, prefill=''):
-   readline.set_startup_hook(lambda: readline.insert_text(prefill))
-   try:
-      return input(prompt)  # or raw_input in Python 2
-   finally:
-      readline.set_startup_hook()
-    
+    readline.set_startup_hook(lambda: readline.insert_text(prefill))
+    try:
+        return input(prompt)  # or raw_input in Python 2
+    finally:
+        readline.set_startup_hook()
 
 
-def print_out_menu_options(options, attribute, multi_choice, func, sort,archived=False):
+def print_out_menu_options(options, attribute, multi_choice, func, sort, archived=False):
     # sql.log(options)
     # for each in options:
     #     try:
@@ -519,9 +533,8 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
         multi_choice = False
 
     choices = []
-    full = int( math.floor(len(options) / height ) )
+    full = int(math.floor(len(options) / height))
     remainder = len(options) - (full * height)
-
 
     display_control = []
     counter = 0
@@ -529,16 +542,16 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
         temp = []
         for itr in range(height):
             temp.append(counter)
-            counter+=1
+            counter += 1
 
         display_control.append(temp)
     temp = []
     for each in range(remainder):
         temp.append(counter)
-        counter+=1
-    
+        counter += 1
+
     display_control.append(temp)
-    
+
     page_itr = 0
 
     while True:
@@ -546,23 +559,26 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
         if len(options) == 0:
             print('no results found')
         for each in display_control[page_itr]:
-            if isinstance(options[each], Podcast ):
+            if isinstance(options[each], Podcast):
                 sql.log("episode is archived:{}".format(archived))
-                number = sql.get_number_of_available_episodes_by_podcast(options[each], archived)
-            #This is put the number of available downloads after the podcast listing. Pasta!
+                number = sql.get_number_of_available_episodes_by_podcast(
+                    options[each], archived)
+            # This is put the number of available downloads after the podcast listing. Pasta!
             # if hasattr(options[each], 'num'):
-                print( 'number {} {} - {}'.format( each + 1, getattr(options[ each ], attribute), number  ))
+                print('number {} {} - {}'.format(each + 1,
+                                                 getattr(options[each], attribute), number))
             else:
-                print( 'number {} {}'.format( each + 1, getattr(options[ each ], attribute) ))
+                print('number {} {}'.format(
+                    each + 1, getattr(options[each], attribute)))
 
-        result = input('choice ')     
+        result = input('choice ')
         if result == 'n':
-            if page_itr < len(display_control) -1:
-                page_itr +=1
-        elif result =='p':
+            if page_itr < len(display_control) - 1:
+                page_itr += 1
+        elif result == 'p':
             if page_itr > 0:
-                page_itr -=1
-        elif result =='q':
+                page_itr -= 1
+        elif result == 'q':
             if len(choices) > 0:
                 return choices
             break
@@ -578,13 +594,14 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
                 break
             except Exception:
                 pass
-        else: 
-            # this is looking for entries that are in the form 1-4 to represent 
+        else:
+            # this is looking for entries that are in the form 1-4 to represent
             # choices 1,2,3,4 - requested option
             # first separate out the 1-4 options whether they have spaces in betweeen
             # the numbers and dashes or not
-            dashed_option_choices = re.findall(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', result)
-            result = re.sub(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}','', result)
+            dashed_option_choices = re.findall(
+                r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', result)
+            result = re.sub(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', '', result)
             result_list = result.split(' ')
 
             for each in dashed_option_choices:
@@ -596,7 +613,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
                     pass
 
             result_list2 = []
-            
+
             for each in result_list:
                 if isinstance(each, str):
                     if len(each) > 0:
@@ -609,19 +626,19 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
                     item = int(item)
                     if item <= len(options):
                         if multi_choice and func:
-                            func( options[ item - 1 ] )
+                            func(options[item - 1])
                         elif multi_choice:
                             choices.append(options[item-1])
                         elif func:
-                            func( options[ item-1 ] )
+                            func(options[item-1])
                         else:
                             return options[item-1]
                 except ValueError:
                     pass
 
 
-width = int( subprocess.check_output(['tput','cols']) )
-height = int( subprocess.check_output(['tput','lines']) ) -1
+width = int(subprocess.check_output(['tput', 'cols']))
+height = int(subprocess.check_output(['tput', 'lines'])) - 1
 
 
 sql = DatabaseAccessor(config.database_location)
