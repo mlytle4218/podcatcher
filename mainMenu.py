@@ -229,19 +229,19 @@ def update_episodes(podcast):
 
 
 def enter_podcast_info(podcast):
-    for root_here, dirs_here, files_here in os.walk(os.getcwd()):
-        # for name in files:
-        #     sql.log(str(os.path.join(root, name)))
-        for name_here in dirs_here:
-            try:
-                print(str(os.path.join(root_here, name_here)))
-            except Exception as e:
-                sql.log(e) 
+    # for root_here, dirs_here, files_here in os.walk(os.getcwd()):
+    #     # for name in files:
+    #     #     sql.log(str(os.path.join(root, name)))
+    #     for name_here in dirs_here:
+    #         try:
+    #             print(str(os.path.join(root_here, name_here)))
+    #         except Exception as e:
+    #             sql.log(e) 
 
-    sql.log('enter_podcast_info')
-    result1 = os.path.isdir('/home/chime')
-    result2 = os.path.isdir(config.audio_default_location)
-    sql.log(".audio: {} and {}".format(result1,result2))
+    # sql.log('enter_podcast_info')
+    # result1 = os.path.isdir('/home/chime')
+    # result2 = os.path.isdir(config.audio_default_location)
+    # sql.log(".audio: {} and {}".format(result1,result2))
     
     try:
         os.system('clear')
@@ -263,14 +263,14 @@ def enter_podcast_info(podcast):
 
         # check the audio path
         while True:
-            sql.log('podcast.audio')
-            sql.log(podcast.audio)
+            # sql.log('podcast.audio')
+            # sql.log(podcast.audio)
 
             if len(podcast.audio) == 0:
                 podcast.audio = config.audio_default_location
             podcast.audio = rlinput('podcast audio directory ', podcast.audio)
-            result = os.path.isdir(podcast.audio)
-            print(result)
+            # result = os.path.isdir(podcast.audio)
+            # print(result)
             if os.path.isdir(podcast.audio):
                 break
             else:
