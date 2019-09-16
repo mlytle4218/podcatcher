@@ -547,7 +547,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort,archived
             print('no results found')
         for each in display_control[page_itr]:
             if isinstance(options[each], Podcast ):
-                sql.log(archived)
+                sql.log("episode is archived:{}".format(archived))
                 number = sql.get_number_of_available_episodes_by_podcast(options[each], archived)
             #This is put the number of available downloads after the podcast listing. Pasta!
             # if hasattr(options[each], 'num'):

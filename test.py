@@ -3,6 +3,17 @@ import config
 import pickle
 from pprint import pprint
 import sys
+
+import requests
+from bs4 import BeautifulSoup
+import os
+import subprocess
+import math
+import json
+import pprint as pp
+import time
+import sys
+import urllib.parse
 # pprint(vars(your_object))
 
 # result = 'Mon, 24 Jun 2019 15:30:00 -0400'
@@ -45,3 +56,27 @@ import sys
 #     count+=1
 
 # print(count)
+
+
+def get_script(url):
+    page = requests.get( url )
+    soup = BeautifulSoup(page.content, 'html.parser')
+    scripts = soup.find_all('script')
+    res2 = ''
+    for each in scripts:
+        if 'window.__IPLAYER_REDUX_STATE__ = ' in each.text:
+            res2 = each.text.replace('window.__IPLAYER_REDUX_STATE__ = ','')
+            res2 = res2.replace(';','')
+
+    # pp.pprint(res2)
+    # time.sleep(5)
+    return soup
+    return json.loads(res2)
+
+
+
+u = "https://abcnews.go.com/Live"
+
+result = get_script(u)
+
+pprint(result)
