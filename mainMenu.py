@@ -559,18 +559,21 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
         if len(options) == 0:
             print('no results found')
         for each in display_control[page_itr]:
-            if isinstance(options[each], Podcast):
-                sql.log("episode is archived:{}".format(archived))
-                number = sql.get_number_of_available_episodes_by_podcast(
-                    options[each], archived)
-            # This is put the number of available downloads after the podcast listing. Pasta!
-            # if hasattr(options[each], 'num'):
-                print('number {} {} - {}'.format(each + 1,
-                                                 getattr(options[each], attribute), number))
-            else:
-                print('number {} {}'.format(
-                    each + 1, getattr(options[each], attribute)))
-
+            try:
+                if isinstance(options[each], Podcast):
+                    sql.log("episode is archived:{}".format(archived))
+                    number = sql.get_number_of_available_episodes_by_podcast(
+                        options[each], archived)
+                # This is put the number of available downloads after the podcast listing. Pasta!
+                # if hasattr(options[each], 'num'):
+                    print('number {} {} - {}'.format(each + 1,
+                                                    getattr(options[each], attribute), number))
+                else:
+                    print('number {} {}'.format(
+                        each + 1, getattr(options[each], attribute)))
+            except Exception as e:
+                sql.log(e)
+        sql.log('before input')
         result = input('choice ')
         if result == 'n':
             if page_itr < len(display_control) - 1:
