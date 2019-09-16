@@ -152,8 +152,9 @@ def search():
     results = []
     for each in data['results']:
         if 'feedUrl' in each:
-            podcast = Podcast(each['artistName'].lower() + "-" + each['collectionName'].lower(
-            ), each['feedUrl'], config.audio_default_location, config.video_default_location)
+            newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
+            newvariable486 = backend.remove_tags(newvariable486)
+            podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
 
             results.append(podcast)
 
