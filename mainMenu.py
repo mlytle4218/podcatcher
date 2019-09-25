@@ -229,19 +229,19 @@ def update_episodes(podcast):
 
 
 def enter_podcast_info(podcast):
-    # for root_here, dirs_here, files_here in os.walk(os.getcwd()):
-    #     # for name in files:
-    #     #     sql.log(str(os.path.join(root, name)))
-    #     for name_here in dirs_here:
-    #         try:
-    #             print(str(os.path.join(root_here, name_here)))
-    #         except Exception as e:
-    #             sql.log(e) 
+    for root_here, dirs_here, files_here in os.walk(os.getcwd()):
+        # for name in files:
+        #     sql.log(str(os.path.join(root, name)))
+        for name_here in dirs_here:
+            try:
+                print(str(os.path.join(root_here, name_here)))
+            except Exception as e:
+                sql.log(e) 
 
-    # sql.log('enter_podcast_info')
-    # result1 = os.path.isdir('/home/chime')
-    # result2 = os.path.isdir(config.audio_default_location)
-    # sql.log(".audio: {} and {}".format(result1,result2))
+    sql.log('enter_podcast_info')
+    result1 = os.path.isdir('/home/chime')
+    result2 = os.path.isdir(config.audio_default_location)
+    sql.log(".audio: {} and {}".format(result1,result2))
     
     try:
         os.system('clear')
@@ -558,19 +558,44 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
 
     display_control = []
     counter = 0
-    for each in range(full):
+    line_counter = 0
+    temp = []
+    if isinstance(options[0], Episode):
+        for each in options:
+            possible_length = float(len('number {} {}'.format("00000", getattr(each, attribute))))
+            each.lines = int(math.ceil(possible_length/width))
+        # total_number_of_episodes = len(options)
+        # total_number_of_episodes_added = 0
+        for itr,opt in enumerate(options):
+            if line_counter + opt.lines >= height:
+                display_control.append(temp.copy())
+                temp.clear()
+                line_counter = 0
+                temp.append(itr)
+                line_counter += opt.lines
+            else:
+                temp.append(itr)
+                line_counter += opt.lines
+            sql.log("{}:{}".format(itr,len(display_control)))
+        display_control.append(temp)
+
+            # total_number_of_episodes_added+=1
+            # sql.log(len(display_control))
+            
+    else:
+        for each in range(full):
+            temp = []
+            for itr in range(height):
+                temp.append(counter)
+                counter += 1
+
+            display_control.append(temp)
         temp = []
-        for itr in range(height):
+        for each in range(remainder):
             temp.append(counter)
             counter += 1
 
         display_control.append(temp)
-    temp = []
-    for each in range(remainder):
-        temp.append(counter)
-        counter += 1
-
-    display_control.append(temp)
 
     page_itr = 0
 
@@ -581,7 +606,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
         for each in display_control[page_itr]:
             try:
                 if isinstance(options[each], Podcast):
-                    sql.log("episode is archived:{}".format(archived))
+                    # sql.log("episode is archived:{}".format(archived))
                     number = sql.get_number_of_available_episodes_by_podcast(
                         options[each], archived)
                 # This is put the number of available downloads after the podcast listing. Pasta!
@@ -593,7 +618,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
                         each + 1, getattr(options[each], attribute)))
             except Exception as e:
                 sql.log(e)
-        sql.log('before input')
+        # sql.log('before input')
         result = input('choice ')
         if result == 'n':
             if page_itr < len(display_control) - 1:
