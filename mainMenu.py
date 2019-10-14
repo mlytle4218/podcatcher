@@ -463,7 +463,7 @@ def start_downloads():
                 try:
                     # Adding download prefix to dl_location to address the difference of
                     # being in the docker container
-                    with open(config.dl_prefix + dl_location + '/' + basename, 'wb')as f:
+                    with open(dl_location + '/' + basename, 'wb')as f:
                         r = requests.get(each.href, stream=True)
                         total_length = int(r.headers.get('content-length'))
                         dl = 0
