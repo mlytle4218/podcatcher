@@ -277,7 +277,7 @@ def enter_podcast_info(podcast):
             if len(podcast.video) == 0:
                 podcast.video = config.video_default_location
             podcast.video = rlinput('podcast video directory ', podcast.video)
-            if os.path.isdir(podcast.video):
+            if os.path.isdir(config.dl_prefix + podcast.video):
                 break
             else:
                 print('{} does not exist'.format(podcast.video))
