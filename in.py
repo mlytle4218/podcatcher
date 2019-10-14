@@ -17,6 +17,10 @@ import pickle
 import sql
 
 
+print(os.path.isdir('/home'))
+print(os.path.isdir('/bell'))
+
+
 
 
 
@@ -27,13 +31,13 @@ import sql
 #result = os.path.isdir(directory)
 
 #print(result)
-for root_here, dirs_here, files_here in os.walk('/'):
-        # for name in files:
-        #     sql.log(str(os.path.join(root, name)))
-        for name_here in dirs_here:
-            try:
-                 #print(str(os.path.join(root_here, name_here)))
-                 if name_here:
-                     pass
-            except Exception as e:
-                print(e)
+# for root_here, dirs_here, files_here in os.walk('/'):
+#         # for name in files:
+#         #     sql.log(str(os.path.join(root, name)))
+#         for name_here in dirs_here:
+#             try:
+#                  #print(str(os.path.join(root_here, name_here)))
+#                  if name_here:
+#                      pass
+#             except Exception as e:
+#                 print(e)
