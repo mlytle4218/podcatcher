@@ -19,6 +19,7 @@ import sql
 
 print(os.path.isdir('/home'))
 print(os.path.isdir('/bell'))
+print(os.path.isdir(config.audio_default_location))
 
 
 
