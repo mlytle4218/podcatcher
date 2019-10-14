@@ -265,11 +265,12 @@ def enter_podcast_info(podcast):
         while True:
             if len(podcast.audio) == 0:
                 podcast.audio = config.audio_default_location
-            podcast.audio = rlinput('podcast audio directory ', podcast.audio) + config.dl_prefix
-            if os.path.isdir(podcast.audio):
+            podcast.audio = rlinput('podcast audio directory ', podcast.audio)
+
+            if os.path.isdir(config.dl_prefix + podcast.audio):
                 break
             else:
-                print('that directory does not exist')
+                print('{} does not exist'.format(podcast.audio))
 
         # check the video path
         while True:
@@ -279,7 +280,7 @@ def enter_podcast_info(podcast):
             if os.path.isdir(podcast.video):
                 break
             else:
-                print('that directory does not exist')
+                print('{} does not exist'.format(podcast.video))
 
         # check categories
         while True:
