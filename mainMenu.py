@@ -267,6 +267,9 @@ def enter_podcast_info(podcast):
                 podcast.audio = config.audio_default_location
             podcast.audio = rlinput('podcast audio directory ', podcast.audio)
             print("'{}'".format(podcast.audio))
+            result = os.listdir(podcast.audio)
+            for each in result:
+                print(each)
             if os.path.isdir(podcast.audio):
                 break
             else:
