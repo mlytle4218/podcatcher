@@ -175,21 +175,23 @@ def add_category():
 def search():
     os.system('clear')
     data = search_retrieval()
-    results = []
-    for each in data['results']:
-        if 'feedUrl' in each:
-            newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
-            newvariable486 = backend.remove_tags(newvariable486)
-            podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
+    if data != None:
+        results = []
+        for each in data['results']:
+            if 'feedUrl' in each:
+                newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
+                newvariable486 = backend.remove_tags(newvariable486)
+                podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
 
-            results.append(podcast)
+                results.append(podcast)
 
-    choices = print_out_menu_options(results, 'name', True, None, True)
-    if choices is not None and isinstance(choices, Podcast):
-        add_new_podcast(choices)
-    elif choices is not None:
-        for each in choices:
-            add_new_podcast(each)
+        choices = print_out_menu_options(results, 'name', True, None, True)
+        if choices is not None and isinstance(choices, Podcast):
+            add_new_podcast(choices)
+        elif choices is not None:
+            for each in choices:
+                add_new_podcast(each)
+
 
 def search_retrieval():
     try:
@@ -203,7 +205,7 @@ def search_retrieval():
                 return data
             print('{} results for: {}'.format(length, terms))
     except KeyboardInterrupt:
-        pass
+        return None
 
 
 def update_episodes_old(podcast):
