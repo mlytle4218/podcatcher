@@ -142,13 +142,36 @@ def add_category():
 #     podcasts = sql.get_all_podcasts()
 #     print_out_menu_options(podcasts, 'name', False, None, True)
 
+def search2():
+    os.system('clear')
+    try:
+        terms = input('Enter search terms: ')
+        url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
+        response = requests.get(url)
+        data = json.loads(response.content)
+        results = []
+        print(len(data['results']))
+        time.sleep(2)
+        for each in data['results']:
+            if 'feedUrl' in each:
+                newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
+                newvariable486 = backend.remove_tags(newvariable486)
+                podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
+
+                results.append(podcast)
+
+        choices = print_out_menu_options(results, 'name', True, None, True)
+        if choices is not None and isinstance(choices, Podcast):
+            add_new_podcast(choices)
+        elif choices is not None:
+            for each in choices:
+                add_new_podcast(each)
+    except KeyboardInterrupt:
+        pass
+
 def search():
     os.system('clear')
-    terms = input('Enter search terms: ')
-    url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(
-        terms)
-    response = requests.get(url)
-    data = json.loads(response.content)
+    data = search_retrieval()
     results = []
     for each in data['results']:
         if 'feedUrl' in each:
@@ -164,6 +187,20 @@ def search():
     elif choices is not None:
         for each in choices:
             add_new_podcast(each)
+
+def search_retrieval():
+    try:
+        while  True:
+            terms  = input('Enter search terms: ')
+            url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
+            response = requests.get(url)
+            data = json.loads(response.content)
+            length = len(data['results'])
+            if length > 0:
+                return data
+            print('{} results for: {}'.format(length, terms))
+    except KeyboardInterrupt:
+        pass
 
 
 def update_episodes_old(podcast):
@@ -532,149 +569,152 @@ def rlinput(prompt, prefill=''):
 
 
 def print_out_menu_options(options, attribute, multi_choice, func, sort, archived=False):
-    # sql.log(options)
-    # for each in options:
-    #     try:
-    #         print(each)
-    #     except Exception as e:
-    #         print(e)
-    #         print(each)
-    if sort:
-        options.sort(key=lambda x: getattr(x, attribute))
-    if len(options) < 2:
-        multi_choice = False
+    try:
+        # sql.log(options)
+        # for each in options:
+        #     try:
+        #         print(each)
+        #     except Exception as e:
+        #         print(e)
+        #         print(each)
+        if sort:
+            options.sort(key=lambda x: getattr(x, attribute))
+        if len(options) < 2:
+            multi_choice = False
 
-    choices = []
-    full = int(math.floor(len(options) / height))
-    remainder = len(options) - (full * height)
+        choices = []
+        full = int(math.floor(len(options) / height))
+        remainder = len(options) - (full * height)
 
-    display_control = []
-    counter = 0
-    line_counter = 0
-    temp = []
-    if isinstance(options[0], Episode):
-        for each in options:
-            possible_length = float(len('number {} {}'.format("00000", getattr(each, attribute))))
-            each.lines = int(math.ceil(possible_length/width))
-        # total_number_of_episodes = len(options)
-        # total_number_of_episodes_added = 0
-        for itr,opt in enumerate(options):
-            if line_counter + opt.lines >= height:
-                display_control.append(temp.copy())
-                temp.clear()
-                line_counter = 0
-                temp.append(itr)
-                line_counter += opt.lines
-            else:
-                temp.append(itr)
-                line_counter += opt.lines
-            sql.log("{}:{}".format(itr,len(display_control)))
-        display_control.append(temp)
+        display_control = []
+        counter = 0
+        line_counter = 0
+        temp = []
+        if isinstance(options[0], Episode):
+            for each in options:
+                possible_length = float(len('number {} {}'.format("00000", getattr(each, attribute))))
+                each.lines = int(math.ceil(possible_length/width))
+            # total_number_of_episodes = len(options)
+            # total_number_of_episodes_added = 0
+            for itr,opt in enumerate(options):
+                if line_counter + opt.lines >= height:
+                    display_control.append(temp.copy())
+                    temp.clear()
+                    line_counter = 0
+                    temp.append(itr)
+                    line_counter += opt.lines
+                else:
+                    temp.append(itr)
+                    line_counter += opt.lines
+                sql.log("{}:{}".format(itr,len(display_control)))
+            display_control.append(temp)
 
-            # total_number_of_episodes_added+=1
-            # sql.log(len(display_control))
-            
-    else:
-        for each in range(full):
+                # total_number_of_episodes_added+=1
+                # sql.log(len(display_control))
+                
+        else:
+            for each in range(full):
+                temp = []
+                for itr in range(height):
+                    temp.append(counter)
+                    counter += 1
+
+                display_control.append(temp)
             temp = []
-            for itr in range(height):
+            for each in range(remainder):
                 temp.append(counter)
                 counter += 1
 
             display_control.append(temp)
-        temp = []
-        for each in range(remainder):
-            temp.append(counter)
-            counter += 1
 
-        display_control.append(temp)
+        page_itr = 0
 
-    page_itr = 0
-
-    while True:
-        os.system('clear')
-        if len(options) == 0:
-            print('no results found')
-        for each in display_control[page_itr]:
-            try:
-                if isinstance(options[each], Podcast):
-                    # sql.log("episode is archived:{}".format(archived))
-                    number = sql.get_number_of_available_episodes_by_podcast(
-                        options[each], archived)
-                # This is put the number of available downloads after the podcast listing. Pasta!
-                # if hasattr(options[each], 'num'):
-                    print('number {} {} - {}'.format(each + 1,
-                                                    getattr(options[each], attribute), number))
-                else:
-                    print('number {} {}'.format(
-                        each + 1, getattr(options[each], attribute)))
-            except Exception as e:
-                sql.log(e)
-        # sql.log('before input')
-        result = input('choice ')
-        if result == 'n':
-            if page_itr < len(display_control) - 1:
-                page_itr += 1
-        elif result == 'p':
-            if page_itr > 0:
-                page_itr -= 1
-        elif result == 'q':
-            if len(choices) > 0:
-                return choices
-            break
-        elif result == 'c':
-            if isinstance(options[0], Episode):
-                sql.update_episodes_as_viewed(options)
-                break
-
-        elif result == 'a':
-            try:
-                for each in options:
-                    func(each)
-                break
-            except Exception:
-                pass
-        else:
-            # this is looking for entries that are in the form 1-4 to represent
-            # choices 1,2,3,4 - requested option
-            # first separate out the 1-4 options whether they have spaces in betweeen
-            # the numbers and dashes or not
-            dashed_option_choices = re.findall(
-                r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', result)
-            result = re.sub(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', '', result)
-            result_list = result.split(' ')
-
-            for each in dashed_option_choices:
-                each_list = each.split('-')
+        while True:
+            os.system('clear')
+            if len(options) == 0:
+                print('no results found')
+            for each in display_control[page_itr]:
                 try:
-                    for i in range(int(each_list[0]), int(each_list[1])+1):
-                        result_list.append(i)
-                except ValueError:
+                    if isinstance(options[each], Podcast):
+                        # sql.log("episode is archived:{}".format(archived))
+                        number = sql.get_number_of_available_episodes_by_podcast(
+                            options[each], archived)
+                    # This is put the number of available downloads after the podcast listing. Pasta!
+                    # if hasattr(options[each], 'num'):
+                        print('number {} {} - {}'.format(each + 1,
+                                                        getattr(options[each], attribute), number))
+                    else:
+                        print('number {} {}'.format(
+                            each + 1, getattr(options[each], attribute)))
+                except Exception as e:
+                    sql.log(e)
+            # sql.log('before input')
+            result = input('choice ')
+            if result == 'n':
+                if page_itr < len(display_control) - 1:
+                    page_itr += 1
+            elif result == 'p':
+                if page_itr > 0:
+                    page_itr -= 1
+            elif result == 'q':
+                if len(choices) > 0:
+                    return choices
+                break
+            elif result == 'c':
+                if isinstance(options[0], Episode):
+                    sql.update_episodes_as_viewed(options)
+                    break
+
+            elif result == 'a':
+                try:
+                    for each in options:
+                        func(each)
+                    break
+                except Exception:
                     pass
+            else:
+                # this is looking for entries that are in the form 1-4 to represent
+                # choices 1,2,3,4 - requested option
+                # first separate out the 1-4 options whether they have spaces in betweeen
+                # the numbers and dashes or not
+                dashed_option_choices = re.findall(
+                    r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', result)
+                result = re.sub(r'[0-9]{1,2}\ ?\-\ ?[0-9]{1,2}', '', result)
+                result_list = result.split(' ')
 
-            result_list2 = []
+                for each in dashed_option_choices:
+                    each_list = each.split('-')
+                    try:
+                        for i in range(int(each_list[0]), int(each_list[1])+1):
+                            result_list.append(i)
+                    except ValueError:
+                        pass
 
-            for each in result_list:
-                if isinstance(each, str):
-                    if len(each) > 0:
+                result_list2 = []
+
+                for each in result_list:
+                    if isinstance(each, str):
+                        if len(each) > 0:
+                            result_list2.append(each)
+                    else:
                         result_list2.append(each)
-                else:
-                    result_list2.append(each)
 
-            for item in result_list:
-                try:
-                    item = int(item)
-                    if item <= len(options):
-                        if multi_choice and func:
-                            func(options[item - 1])
-                        elif multi_choice:
-                            choices.append(options[item-1])
-                        elif func:
-                            func(options[item-1])
-                        else:
-                            return options[item-1]
-                except ValueError:
-                    pass
+                for item in result_list:
+                    try:
+                        item = int(item)
+                        if item <= len(options):
+                            if multi_choice and func:
+                                func(options[item - 1])
+                            elif multi_choice:
+                                choices.append(options[item-1])
+                            elif func:
+                                func(options[item-1])
+                            else:
+                                return options[item-1]
+                    except ValueError:
+                        pass
+    except KeyboardInterrupt:
+        pass
 
 
 width = int(subprocess.check_output(['tput', 'cols']))
