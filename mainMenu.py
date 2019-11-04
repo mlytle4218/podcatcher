@@ -17,55 +17,58 @@ import pickle
 
 
 def main_menu():
-    while True:
-        os.system('clear')
-        print('number 1 add category')
-        print('number 2 edit category')
-        print('number 3 add new podcast')
-        print('number 4 edit existing podcast')
-        print('number 5 delete existing podcast')
-        print('number 6 choose episodes to download')
-        print('number 7 start downloads')
-        print('number 8 search for podcasts')
-        print('number 9 delete from download queue')
-        print('number 10 update all podcasts')
-        print('number 11 archive')
-        result = input('choice ')
-        try:
-            result = int(result)
-            if result == 1:
-                add_category()
-            elif result == 2:
-                edit_category()
-            elif result == 3:
-                add_new_podcast(Podcast())
-            elif result == 4:
-                edit_existing_podcast()
-            elif result == 5:
-                delete_existing_podcast()
-            elif result == 6:
-                choose_episodes_to_download()
-            elif result == 7:
-                start_downloads()
-            elif result == 8:
-                search()
-            elif result == 9:
-                delete_from_download_queue()
-            elif result == 10:
-                update_all_episodes()
-            elif result == 11:
-                list_archived_episodes()
+    try:
+        while True:
+            os.system('clear')
+            print('number 1 add category')
+            print('number 2 edit category')
+            print('number 3 add new podcast')
+            print('number 4 edit existing podcast')
+            print('number 5 delete existing podcast')
+            print('number 6 choose episodes to download')
+            print('number 7 start downloads')
+            print('number 8 search for podcasts')
+            print('number 9 delete from download queue')
+            print('number 10 update all podcasts')
+            print('number 11 archive')
+            result = input('choice ')
+            try:
+                result = int(result)
+                if result == 1:
+                    add_category()
+                elif result == 2:
+                    edit_category()
+                elif result == 3:
+                    add_new_podcast(Podcast())
+                elif result == 4:
+                    edit_existing_podcast()
+                elif result == 5:
+                    delete_existing_podcast()
+                elif result == 6:
+                    choose_episodes_to_download()
+                elif result == 7:
+                    start_downloads()
+                elif result == 8:
+                    search()
+                elif result == 9:
+                    delete_from_download_queue()
+                elif result == 10:
+                    update_all_episodes()
+                elif result == 11:
+                    list_archived_episodes()
 
-            # hidden
-            elif result == 20:
-                for each in download_queue:
-                    sql.log(vars(each))
-            elif result == 21:
-                update_episodes_fix()
+                # hidden
+                elif result == 20:
+                    for each in download_queue:
+                        sql.log(vars(each))
+                elif result == 21:
+                    update_episodes_fix()
 
-        except ValueError:
-            if result == 'q':
-                break
+            except ValueError:
+                if result == 'q':
+                    break
+    except KeyboardInterrupt:
+        pass
 
 
 def delete_existing_podcast():
@@ -142,32 +145,32 @@ def add_category():
 #     podcasts = sql.get_all_podcasts()
 #     print_out_menu_options(podcasts, 'name', False, None, True)
 
-def search2():
-    os.system('clear')
-    try:
-        terms = input('Enter search terms: ')
-        url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
-        response = requests.get(url)
-        data = json.loads(response.content)
-        results = []
-        print(len(data['results']))
-        time.sleep(2)
-        for each in data['results']:
-            if 'feedUrl' in each:
-                newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
-                newvariable486 = backend.remove_tags(newvariable486)
-                podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
+# def search2():
+#     os.system('clear')
+#     try:
+#         terms = input('Enter search terms: ')
+#         url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
+#         response = requests.get(url)
+#         data = json.loads(response.content)
+#         results = []
+#         print(len(data['results']))
+#         time.sleep(2)
+#         for each in data['results']:
+#             if 'feedUrl' in each:
+#                 newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
+#                 newvariable486 = backend.remove_tags(newvariable486)
+#                 podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
 
-                results.append(podcast)
+#                 results.append(podcast)
 
-        choices = print_out_menu_options(results, 'name', True, None, True)
-        if choices is not None and isinstance(choices, Podcast):
-            add_new_podcast(choices)
-        elif choices is not None:
-            for each in choices:
-                add_new_podcast(each)
-    except KeyboardInterrupt:
-        pass
+#         choices = print_out_menu_options(results, 'name', True, None, True)
+#         if choices is not None and isinstance(choices, Podcast):
+#             add_new_podcast(choices)
+#         elif choices is not None:
+#             for each in choices:
+#                 add_new_podcast(each)
+#     except KeyboardInterrupt:
+#         pass
 
 def search():
     os.system('clear')
