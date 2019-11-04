@@ -94,8 +94,6 @@ def list_archived_episodes():
     print_out_menu_options(podcasts, 'name', False,
                            list_episodes_arch, True, True)
 
-    pass
-
 
 def update_all_episodes():
     # update podcasts
@@ -141,36 +139,6 @@ def add_category():
         pass
 
 
-# def list_podcasts():
-#     podcasts = sql.get_all_podcasts()
-#     print_out_menu_options(podcasts, 'name', False, None, True)
-
-# def search2():
-#     os.system('clear')
-#     try:
-#         terms = input('Enter search terms: ')
-#         url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
-#         response = requests.get(url)
-#         data = json.loads(response.content)
-#         results = []
-#         print(len(data['results']))
-#         time.sleep(2)
-#         for each in data['results']:
-#             if 'feedUrl' in each:
-#                 newvariable486 = each['artistName'].lower() + "-" + each['collectionName'].lower( )
-#                 newvariable486 = backend.remove_tags(newvariable486)
-#                 podcast = Podcast(newvariable486, each['feedUrl'], config.audio_default_location, config.video_default_location)
-
-#                 results.append(podcast)
-
-#         choices = print_out_menu_options(results, 'name', True, None, True)
-#         if choices is not None and isinstance(choices, Podcast):
-#             add_new_podcast(choices)
-#         elif choices is not None:
-#             for each in choices:
-#                 add_new_podcast(each)
-#     except KeyboardInterrupt:
-#         pass
 
 def search():
     os.system('clear')
@@ -229,7 +197,6 @@ def update_episodes_fix():
     for pod in pods:
         retreived_episodes = backend.get_episodes_from_feed(pod.url)
         if retreived_episodes:
-            # sql.log("{} has {} episodes".format(pod,len(retreived_episodes)))
             sql.update_episodes_fix(retreived_episodes, pod)
 
 
@@ -265,25 +232,11 @@ def update_episodes(podcast):
 
         return True
     except Exception as e:
-        # sql.log('main exception {}'.format(podcast))
         sql.log(str(e))
         return False
 
 
 def enter_podcast_info(podcast):
-    # for root_here, dirs_here, files_here in os.walk(os.getcwd()):
-    #     # for name in files:
-    #     #     sql.log(str(os.path.join(root, name)))
-    #     for name_here in dirs_here:
-    #         try:
-    #             print(str(os.path.join(root_here, name_here)))
-    #         except Exception as e:
-    #             sql.log(e) 
-
-    # sql.log('enter_podcast_info')
-    # result1 = os.path.isdir('/home/chime')
-    # result2 = os.path.isdir(config.audio_default_location)
-    # sql.log(".audio: {} and {}".format(result1,result2))
     
     try:
         os.system('clear')
@@ -419,8 +372,6 @@ def choose_episode_to_download_by_category():
         categories, 'category', False, False, False)
     if choice is not None:
         podcasts = sql.get_all_podcasts_with_category(choice)
-        # for each in podcasts:
-        # sql.log(str(vars(each)))
         print_out_menu_options(podcasts, 'name', False, list_episodes, True)
 
 
@@ -495,8 +446,6 @@ def start_downloads():
                     basename) > 240 else basename
                 basename += "-" + \
                     each.published.strftime("%Y%m%d") + "."+extension
-
-                # dl_location = '/home/marc/Desktop'
                 if hasattr(config, "dl_location_file_location"):
                     dl_location = config.dl_location_file_location
                 else:
@@ -568,20 +517,13 @@ def start_downloads():
 def rlinput(prompt, prefill=''):
     readline.set_startup_hook(lambda: readline.insert_text(prefill))
     try:
-        return input(prompt)  # or raw_input in Python 2
+        return input(prompt)
     finally:
         readline.set_startup_hook()
 
 
 def print_out_menu_options(options, attribute, multi_choice, func, sort, archived=False):
     try:
-        # sql.log(options)
-        # for each in options:
-        #     try:
-        #         print(each)
-        #     except Exception as e:
-        #         print(e)
-        #         print(each)
         if sort:
             options.sort(key=lambda x: getattr(x, attribute))
         if len(options) < 2:
@@ -599,8 +541,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
             for each in options:
                 possible_length = float(len('number {} {}'.format("00000", getattr(each, attribute))))
                 each.lines = int(math.ceil(possible_length/width))
-            # total_number_of_episodes = len(options)
-            # total_number_of_episodes_added = 0
             for itr,opt in enumerate(options):
                 if line_counter + opt.lines >= height:
                     display_control.append(temp.copy())
@@ -613,9 +553,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
                     line_counter += opt.lines
                 sql.log("{}:{}".format(itr,len(display_control)))
             display_control.append(temp)
-
-                # total_number_of_episodes_added+=1
-                # sql.log(len(display_control))
                 
         else:
             for each in range(full):
@@ -641,7 +578,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
             for each in display_control[page_itr]:
                 try:
                     if isinstance(options[each], Podcast):
-                        # sql.log("episode is archived:{}".format(archived))
                         number = sql.get_number_of_available_episodes_by_podcast(
                             options[each], archived)
                     # This is put the number of available downloads after the podcast listing. Pasta!
@@ -653,7 +589,6 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
                             each + 1, getattr(options[each], attribute)))
                 except Exception as e:
                     sql.log(e)
-            # sql.log('before input')
             result = input('choice ')
             if result == 'n':
                 if page_itr < len(display_control) - 1:
