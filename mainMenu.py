@@ -465,8 +465,6 @@ def start_downloads():
                                 dl += len(chunk)
                                 f.write(chunk)
                                 done = int(100 * dl / total_length)
-                                # if (done != download_queue[i].percent):
-                                #     print(done)
                                 download_queue[i].percent = done
 
                     updated = sql.update_episode_as_downloaded(each)
