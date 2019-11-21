@@ -377,8 +377,9 @@ def choose_episode_to_download_by_category():
 
 def list_episodes(podcast):
     episodes = sql.get_episodes_with_downloads_available(podcast)
-    print_out_menu_options(episodes, 'title', True,
-                           add_to_download_queue, False)
+    if (len(episodes) > 0):
+        print_out_menu_options(episodes, 'title', True,
+                            add_to_download_queue, False)
 
 
 def list_episodes_arch(podcast):
