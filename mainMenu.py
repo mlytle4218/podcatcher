@@ -74,7 +74,7 @@ def main_menu():
 def delete_existing_podcast():
     podcasts = sql.get_all_podcasts()
     choice = print_out_menu_options(podcasts, 'name', False, None, True)
-    if choice != None:
+    if choice is not None:
         sql.delete_podcast2(choice)
 
 
@@ -115,7 +115,7 @@ def edit_category():
     categories = sql.get_all_categories()
     choice = print_out_menu_options(
         categories, 'category', False, False, False)
-    sql.log(str(type(choice)))
+    # sql.log(str(type(choice)))
     if choice is not None:
         choice.category = rlinput('category name: ', choice.category).strip()
         # pass
@@ -329,7 +329,7 @@ def edit_existing_podcast():
     try:
         podcasts = sql.get_all_podcasts()
         podcast = print_out_menu_options(podcasts, 'name', False, None, True)
-        if podcast != None:
+        if podcast is not None:
             enter_podcast_info(podcast)
             if podcast != None:
                 episodes = backend.get_episodes_from_feed(podcast.url)
@@ -522,6 +522,10 @@ def rlinput(prompt, prefill=''):
 
 
 def print_out_menu_options(options, attribute, multi_choice, func, sort, archived=False):
+    if len(options) == 0:
+        print('Zero results')
+        time.sleep(2)
+        return None
     try:
         if sort:
             options.sort(key=lambda x: getattr(x, attribute))

@@ -12,6 +12,8 @@ from sqlalchemy.orm import sessionmaker
 from sql_alchemy_setup import Podcast, Episode, Category, Base
 import config
 
+from new import Backend
+
 # database = 'pc_database.db'
 
 
@@ -43,16 +45,6 @@ class DatabaseAccessor:
         # revert all of them back to the last commit by calling
         # session.rollback()
         self.session = self.DBSession()
-
-        # # Insert a Person in the person table
-        # new_person = Person(name='new person')
-        # session.add(new_person)
-        # session.commit()
-
-        # # Insert an Address in the address table
-        # new_address = Address(post_code='00000', person=new_person)
-        # session.add(new_address)
-        # session.commit()
 
     def log(self, input):
         with open(config.log_location, "a") as myfile:
@@ -174,7 +166,8 @@ class DatabaseAccessor:
     def get_episodes_by_podcast_id(self, podcast):
         episodes = self.session.query(Episode).filter(
             Episode.podcast_id == podcast.podcast_id).all()
-        return self.result_proxy_to_dict(episodes)
+        # return self.result_proxy_to_dict(episodes)
+        return episodes
     
     def get_all_episodes(self, podcast):
         try:
@@ -200,13 +193,14 @@ class DatabaseAccessor:
     
 
     def get_all_podcasts(self):
-        podcasts = self.session.query(Podcast).all()
-        return self.result_proxy_to_dict(podcasts)
+        # podcasts = self.session.query(Podcast).all()
+        # return self.result_proxy_to_dict(podcasts)
+        return self.session.query(Podcast).all()
 
     def result_proxy_to_dict(self, input):
-        results = []
-        for each in input:
-            results.append(each.__dict__)
+        # results = []
+        # for each in input:
+        #     results.append(each.__dict__)
         # return results
         return input
 
@@ -272,33 +266,43 @@ class DatabaseAccessor:
     def get_episodes_with_downloads_available(self, podcast):
         episodes = self.session.query(Episode).filter(
             Episode.podcast_id == podcast.podcast_id).filter(Episode.downloaded == 0).filter(Episode.veiwed == 0).all()
-        return self.result_proxy_to_dict(episodes)
+        # return self.result_proxy_to_dict(episodes)
+        return episodes
 
     def get_podcasts_with_downloads_available(self):
+        results = []
         podcasts = self.session.query(Podcast).join(
             Episode).filter(Episode.downloaded == 0).all()
         for podcast in podcasts:
             try:
                 rows = self.session.query(Episode).filter(
-                    Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).count()
+                    Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).filter(Episode.downloaded == 0).count()
                 podcast.num = rows
+                if podcast.num > 0:
+                    results.append(podcast)
             except Exception as e:
                 self.log(str(e))
                 podcast.num = 0
-        return self.result_proxy_to_dict(podcasts)
+        # return self.result_proxy_to_dict(podcasts)
+        return results
+
 
     def get_all_podcasts_with_category(self, category):
+        results = []
         podcasts = self.session.query(Podcast).filter(
             Podcast.category == category.category_id).all()
         for podcast in podcasts:
             try:
                 rows = self.session.query(Episode).filter(
-                    Episode.podcast_id == podcast.podcast_id).count()
+                    Episode.podcast_id == podcast.podcast_id).filter(Episode.veiwed == 0).filter(Episode.downloaded == 0).count()
                 podcast.num = rows
+                if podcast.num > 0:
+                    results.append(podcast)
+                    self.log(podcast.num)
             except Exception as e:
                 self.log(str(e))
                 podcast.num = 0
-        return podcasts
+        return results
 
     def get_podcast_by_id2(self, episode):
         podcast = self.session.query(Podcast).filter(
@@ -316,3 +320,16 @@ class DatabaseAccessor:
         except Exception as e:
             self.log(str(e))
             return False
+
+
+if __name__ == "__main__":
+    sql = DatabaseAccessor(config.database_location)
+    backend = Backend(sql)
+    # podcasts = sql.get_podcasts_with_downloads_available()
+    podcasts = sql.session.query(Podcast).filter(
+            Podcast.category == 2).all()
+    print(len(podcasts))
+    # cats = sql.get_all_categories()
+    # for cat in cats:
+    #     podcasts2 = sql.get_all_podcasts_with_category(cat)
+    #     print(len(podcasts2))
