@@ -100,15 +100,15 @@ def update_all_episodes():
     podcasts = sql.get_all_podcasts()
     itx = 1
     for each in podcasts:
-        result = update_episodes(each)
-        if result:
-            print('updated {} : {} of {}'.format(
-                each.name, itx, len(podcasts)))
-            itx += 1
-        else:
-            print('problem updating {} : {}  of {}'.format(
-                each.name, itx, len(podcasts)))
-    time.sleep(1)
+        try:
+            update_episodes(each)
+            print('updated {} : {} of {}'.format(each.name, itx, len(podcasts)))
+        except Exception as e:
+            sql.log(e)
+            print('problem updating {}'.format(each.name))
+            time.sleep(1)
+        itx += 1
+    
 
 
 def edit_category():
@@ -660,13 +660,14 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
         pass
 
 
-width = int(subprocess.check_output(['tput', 'cols']))
-height = int(subprocess.check_output(['tput', 'lines'])) - 1
+if __name__ == "__main__":
+    width = int(subprocess.check_output(['tput', 'cols']))
+    height = int(subprocess.check_output(['tput', 'lines'])) - 1
 
 
-sql = DatabaseAccessor(config.database_location)
-download_queue = read_state_information()
-backend = Backend(sql)
+    sql = DatabaseAccessor(config.database_location)
+    download_queue = read_state_information()
+    backend = Backend(sql)
 
 
-main_menu()
+    main_menu()
