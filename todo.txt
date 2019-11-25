@@ -1,6 +1,6 @@
 to do 
 
 1. make sure when the podcasts have no results does not traceback X
-2. don't show podcasts with 0 results
-3. look into display of name verse category
+2. don't show podcasts with 0 results X
+3. look into display of name verse category X
 4. update for cron job or daemon

@@ -7,66 +7,69 @@ from sql import DatabaseAccessor
 import readline
 import requests
 import time
-# import threading
 import config
 from sql_alchemy_setup import Podcast, Episode, Category
-# import operator
 import json
 import re
 import pickle
+import click
 
-
-def main_menu():
+@click.command()
+@click.option('--update', '-u', is_flag=True, help="update podcast data")
+def main_menu(update):
     try:
-        while True:
-            os.system('clear')
-            print('number 1 add category')
-            print('number 2 edit category')
-            print('number 3 add new podcast')
-            print('number 4 edit existing podcast')
-            print('number 5 delete existing podcast')
-            print('number 6 choose episodes to download')
-            print('number 7 start downloads')
-            print('number 8 search for podcasts')
-            print('number 9 delete from download queue')
-            print('number 10 update all podcasts')
-            print('number 11 archive')
-            result = input('choice ')
-            try:
-                result = int(result)
-                if result == 1:
-                    add_category()
-                elif result == 2:
-                    edit_category()
-                elif result == 3:
-                    add_new_podcast(Podcast())
-                elif result == 4:
-                    edit_existing_podcast()
-                elif result == 5:
-                    delete_existing_podcast()
-                elif result == 6:
-                    choose_episodes_to_download()
-                elif result == 7:
-                    start_downloads()
-                elif result == 8:
-                    search()
-                elif result == 9:
-                    delete_from_download_queue()
-                elif result == 10:
-                    update_all_episodes()
-                elif result == 11:
-                    list_archived_episodes()
+        if update:
+            update_all_episodes()
+        else:
+            while True:
+                os.system('clear')
+                print('number 1 add category')
+                print('number 2 edit category')
+                print('number 3 add new podcast')
+                print('number 4 edit existing podcast')
+                print('number 5 delete existing podcast')
+                print('number 6 choose episodes to download')
+                print('number 7 start downloads')
+                print('number 8 search for podcasts')
+                print('number 9 delete from download queue')
+                print('number 10 update all podcasts')
+                print('number 11 archive')
+                result = input('choice ')
+                try:
+                    result = int(result)
+                    if result == 1:
+                        add_category()
+                    elif result == 2:
+                        edit_category()
+                    elif result == 3:
+                        add_new_podcast(Podcast())
+                    elif result == 4:
+                        edit_existing_podcast()
+                    elif result == 5:
+                        delete_existing_podcast()
+                    elif result == 6:
+                        choose_episodes_to_download()
+                    elif result == 7:
+                        start_downloads()
+                    elif result == 8:
+                        search()
+                    elif result == 9:
+                        delete_from_download_queue()
+                    elif result == 10:
+                        update_all_episodes()
+                    elif result == 11:
+                        list_archived_episodes()
 
-                # hidden
-                elif result == 20:
-                    for each in download_queue:
-                        sql.log(vars(each))
-                elif result == 21:
-                    update_episodes_fix()
+                    # hidden
+                    elif result == 20:
+                        for each in download_queue:
+                            sql.log(vars(each))
+                    elif result == 21:
+                        update_episodes_fix()
 
-            except ValueError:
-                if result == 'q':
-                    break
+                except ValueError:
+                    if result == 'q':
+                        break
     except KeyboardInterrupt:
         pass
 
