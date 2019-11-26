@@ -12,15 +12,16 @@ from sql_alchemy_setup import Podcast, Episode, Category
 import json
 import re
 import pickle
-import click
+# import click
 
-@click.command()
-@click.option('--update', '-u', is_flag=True, help="update podcast data")
-def main_menu(update):
+# @click.command()
+# @click.option('--update', '-u', is_flag=True, help="update podcast data")
+# def main_menu(update):
+def main_menu():
     try:
-        if update:
-            update_all_episodes()
-        else:
+        # if update:
+        #     update_all_episodes()
+        # else:
             while True:
                 os.system('clear')
                 print('number 1 add category')
