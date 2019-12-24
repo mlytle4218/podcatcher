@@ -17,6 +17,7 @@ import sys
 def main_menu():
     try:
         if len(sys.argv) >1 and sys.argv[1] == '-u':
+            sql.log('tried to update')
             update_all_episodes()
 
         else:
