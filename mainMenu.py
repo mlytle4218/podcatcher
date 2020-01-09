@@ -98,6 +98,7 @@ def list_archived_episodes():
 
 
 def update_all_episodes():
+    sql.log('update all episodes')
     # update podcasts
     podcasts = sql.get_all_podcasts()
     itx = 1
@@ -111,7 +112,6 @@ def update_all_episodes():
             time.sleep(1)
         itx += 1
     
-
 
 def edit_category():
     categories = sql.get_all_categories()
@@ -139,7 +139,6 @@ def add_category():
                 break
     except KeyboardInterrupt:
         pass
-
 
 
 def search():
