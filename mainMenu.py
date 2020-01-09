@@ -434,6 +434,7 @@ def start_downloads():
                 filename = each.href.split('/')[-1]
                 extension_start = filename.split('.')
                 extension = extension_start[len(extension_start)-1]
+                extension = extension.split('?', 1)[0]
                 dl_location = ''
                 podcast = sql.get_podcast_by_id2(each)
                 filename2 = podcast.name.replace(
