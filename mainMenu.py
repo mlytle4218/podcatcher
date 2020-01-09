@@ -463,6 +463,7 @@ def start_downloads():
                         r = requests.get(each.href, stream=True)
                         total_length = int(r.headers.get('content-length'))
                         dl = 0
+                        sql.log('here')
                         if total_length is None:  # no content length header
                             f.write(r.content)
                         else:
