@@ -460,17 +460,26 @@ def start_downloads():
                     # being in the docker container
                     with open(dl_location + '/' + basename, 'wb')as f:
                         r = requests.get(each.href, stream=True)
-                        total_length = int(r.headers.get('content-length'))
-                        dl = 0
-                        sql.log('here')
-                        if total_length is None:  # no content length header
-                            f.write(r.content)
-                        else:
+                        total_length = None
+                        dl=0
+                        try:
+                            total_length = int(r.headers.get('content-length'))
                             for chunk in r.iter_content(1024):
                                 dl += len(chunk)
                                 f.write(chunk)
                                 done = int(100 * dl / total_length)
                                 download_queue[i].percent = done
+                        except Exception as e:
+                            f.write(r.content)
+                        # dl = 0
+                        # if total_length is None:  # no content length header
+                        #     f.write(r.content)
+                        # else:
+                        #     for chunk in r.iter_content(1024):
+                        #         dl += len(chunk)
+                        #         f.write(chunk)
+                        #         done = int(100 * dl / total_length)
+                        #         download_queue[i].percent = done
 
                     updated = sql.update_episode_as_downloaded(each)
                     if updated:
