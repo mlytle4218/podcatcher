@@ -34,70 +34,6 @@ class Backend:
         html_string = html_string.replace(' ','-').lower()
         return html_string
 
-
-    def get_podcast_data_from_feed2(self,url):
-        self.log('in get_podcast_data_from_feed')
-        try:
-            resp = requests.get(url, timeout=20.0)
-        except requests.ReadTimeout:
-            self.log(str("Timeout when reading RSS %s", url))
-            return None
-        except requests.ConnectTimeout as e:
-            self.log(str(e))
-            return None
-            
-        f_parser = feedparser.parse(resp.content)
-        episode_list = []
-        for entry in f_parser['entries']:
-            episode = Episode()
-            for sub_entry in entry:
-                self.log("in sub_entry for {}".format(entry))
-                if(sub_entry == 'title'):
-                    episode.title = self.remove_tags(entry['title'])#.encode('utf-8')
-                elif (sub_entry == 'summary'):
-                    episode.summary =  self.remove_tags(entry['summary'])#.encode('utf-8')
-                elif ( sub_entry == 'links' ):
-                    for link in entry['links']:
-                            if 'text' not in link['type']:
-
-                                episode.href = link['href']
-                                if link.has_key('length'):
-                                    episode.length = link['length']
-                                else: 
-                                    episode.length = -1
-                                
-                                if 'audio' in link['type']:
-                                    episode.audio = 1
-                                else: 
-                                    episode.audio = 0
-
-                elif ( sub_entry == 'published'):
-                    try: 
-                        if 'CDT'  in entry['published']:
-                            entry['published'] = re.sub('CDT', '', entry['published']).strip()
-                            episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S')
-                        elif 'GMT' in entry['published']:
-                            entry['published'] = re.sub('GMT', '', entry['published']).strip()
-                            episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S')
-
-                        else:
-                            episode.published = datetime.datetime.strptime(entry['published'], '%a, %W %b %Y %H:%M:%S %z')
-                    except Exception as e:
-                        self.log('published')
-                        self.log( str( e ) )
-                elif ( sub_entry == 'pubDate'):
-                    try: 
-                        if 'CDT'  in entry['pubDate']:
-                            entry['pubDate'] = re.sub('CDT', '', entry['pubDate']).strip()
-                            episode.published = datetime.datetime.strptime(entry['pubDate'], '%a, %W %b %Y %H:%M:%S')
-                        else:
-                            episode.published = datetime.datetime.strptime(entry['pubDate'], '%a, %W %b %Y %H:%M:%S %z')
-                    except Exception as e:
-                        self.log('pubDate')
-                        self.log( str( e ) )
-            episode_list.append(episode)
-        return episode_list
-
     def get_episodes_from_feed(self,url):
         try:
             resp = requests.get(url, timeout=10.0)
@@ -122,41 +58,6 @@ class Backend:
             result = self.get_episode_from_feed_parser(entry)
             if result:
                 episode_list.append(result)
-            # try:
-            #     if 'links' in entry:
-            #         episode = Episode()
-            #         episode.title = self.remove_tags(entry.title)
-            #         episode.summary = self.remove_tags(entry.summary)
-            #         episode.href = None
-            #         episode.audio = -1
-            #         for link in entry.links:
-            #             if 'audio' in link.type:
-            #                 episode.href = link.href
-            #                 episode.audio = 1
-            #             if 'video' in link.type:
-            #                 episode.href = link.href
-            #                 episode.audio = 0
-            #         episode.length = -1
-            #         if 'itunes_duration' in entry:
-            #             episode.length = entry.itunes_duration
-            #         try: 
-            #             if 'CDT'  in entry.published:
-            #                 entry.published = re.sub('CDT', '', entry.published).strip()
-            #                 episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
-            #             elif 'GMT' in entry.published:
-            #                 entry.published = re.sub('GMT', '', entry.published).strip()
-            #                 episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
-
-            #             else:
-            #                 episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S %z')
-            #         except Exception as e:
-            #             self.log('published')
-            #             self.log( str( e ) )
-
-            #         episode_list.append(episode)
-            # except Exception as e:
-            #     self.log('Error parsing entry {}'.format(str(entry)))
-            #     self.log(str(e))
         return episode_list
 
     def get_episode_from_feed_parser(self, entry):
@@ -178,15 +79,13 @@ class Backend:
                 if 'itunes_duration' in entry:
                     episode.length = entry.itunes_duration
                 try: 
-                    if 'CDT'  in entry.published:
-                        entry.published = re.sub('CDT', '', entry.published).strip()
-                        episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
-                    elif 'GMT' in entry.published:
-                        entry.published = re.sub('GMT', '', entry.published).strip()
-                        episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S')
-
+                    #using regex to find only what we want - getting rid of any extras that are causing a commotion
+                    p = re.compile('^[a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}')
+                    result = p.findall(entry['published'])
+                    if len(result) > 0:
+                        episode.published = datetime.datetime.strptime(result[0], '%a, %W %b %Y %H:%M:%S')
                     else:
-                        episode.published = datetime.datetime.strptime(entry.published, '%a, %W %b %Y %H:%M:%S %z')
+                        return None
                 except Exception as e:
                     self.log('published')
                     self.log( str( e ) )
@@ -207,11 +106,11 @@ class Backend:
 
 
 
-
-# bk = Backend(config.database_location)
-# results = bk.get_episodes_from_feed(sys.argv[1])
-# for each in results:
-#     print( each )
+if __name__ == "__main__":
+    bk = Backend(config.database_location)
+    results = bk.get_episodes_from_feed(sys.argv[1])
+    for each in results:
+        print( each )
 
 
 

@@ -44,7 +44,7 @@ class Podcast(Base):
 
 class Episode(Base):
     __tablename__ = 'episodes'
-    # Here we define columns for the table person
+    # Here we define columns for the table episodes
     # Notice that each column is also a normal Python instance attribute.
     episode_id = Column(Integer, primary_key = True)
     title = Column(String(100))
