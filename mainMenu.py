@@ -376,11 +376,18 @@ def choose_episode_to_download_by_category():
         print_out_menu_options(podcasts, 'name', False, list_episodes, True)
 
 
-def list_episodes(podcast):
+def list_episodes(podcast,mark_read=False):
     episodes = sql.get_episodes_with_downloads_available(podcast)
     if (len(episodes) > 0):
         print_out_menu_options(episodes, 'title', True,
                             add_to_download_queue, False)
+        # horrible horrible hack - checks to see if any of the episodes were
+        # added to the download queue. find all that were and mark the rest as 
+        # read
+        added_episodes = [value for value in download_queue if value in episodes]
+        not_added_episodes = [value for value in episodes if value not in added_episodes]
+        for ep in not_added_episodes:
+            sql.update_episode_as_downloaded(ep)
 
 
 def list_episodes_arch(podcast):
@@ -388,13 +395,15 @@ def list_episodes_arch(podcast):
     if episodes:
         print_out_menu_options(episodes, 'title', True,
                                add_to_download_queue, False)
+
+
     else:
         sql.log('Something went horribly wrong with gettin all the episodes')
 
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
-    write_state_information()
+    # write_state_information()
 
 
 def write_state_information():
