@@ -403,7 +403,7 @@ def list_episodes_arch(podcast):
 
 def add_to_download_queue(episode):
     download_queue.append(episode)
-    # write_state_information()
+    write_state_information()
 
 
 def write_state_information():
