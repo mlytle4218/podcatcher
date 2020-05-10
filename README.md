@@ -6,4 +6,5 @@ It begins with mainMennu.py.
 
 
 ## Requirements
-SQLAlchemy
+- [Python](https://www.python.org/) 3.6 or later.
+- SQLAlchemy
