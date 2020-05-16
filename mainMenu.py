@@ -168,7 +168,7 @@ def search_retrieval():
         while  True:
             terms  = input('Enter search terms: ')
             url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
-            response = requests.get(url)
+            response = requests.get(url, verify=False)
             data = json.loads(response.content)
             length = len(data['results'])
             if length > 0:
@@ -576,7 +576,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
                 else:
                     temp.append(itr)
                     line_counter += opt.lines
-                sql.log("{}:{}".format(itr,len(display_control)))
+                # sql.log("{}:{}".format(itr,len(display_control)))
             display_control.append(temp)
                 
         else:
