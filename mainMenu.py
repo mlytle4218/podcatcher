@@ -469,9 +469,9 @@ def start_downloads():
                     # Adding download prefix to dl_location to address the difference of
                     # being in the docker container
                     with open(dl_location + '/' + basename, 'wb')as f:
-                        episode_data = urllib.request.urlopen(each.href)
+                        # episode_data = urllib.request.urlopen(each.href)
 
-                        f.write(episode_data.read())
+                        # f.write(episode_data.read())
 
 
 
@@ -482,18 +482,18 @@ def start_downloads():
 
 
                         # r = requests.get(each.href)
-                        # # r = requests.get(each.href, stream=True)
-                        # total_length = None
-                        # dl=0
-                        # try:
-                        #     total_length = int(r.headers.get('content-length'))
-                        #     for chunk in r.iter_content(1024):
-                        #         dl += len(chunk)
-                        #         f.write(chunk)
-                        #         done = int(100 * dl / total_length)
-                        #         download_queue[i].percent = done
-                        # except Exception as e:
-                        #     f.write(r.content)
+                        r = requests.get(each.href, stream=True)
+                        total_length = None
+                        dl=0
+                        try:
+                            total_length = int(r.headers.get('content-length'))
+                            for chunk in r.iter_content(1024):
+                                dl += len(chunk)
+                                f.write(chunk)
+                                done = int(100 * dl / total_length)
+                                download_queue[i].percent = done
+                        except Exception as e:
+                            f.write(r.content)
 
 
 
