@@ -575,7 +575,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
                 else:
                     temp.append(itr)
                     line_counter += opt.lines
-                sql.log("{}:{}".format(itr,len(display_control)))
+                # sql.log("{}:{}".format(itr,len(display_control)))
             display_control.append(temp)
                 
         else:
