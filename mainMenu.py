@@ -167,7 +167,7 @@ def search_retrieval():
         while  True:
             terms  = input('Enter search terms: ')
             url = "https://itunes.apple.com/search?term={0}&entity=podcast&limit=200".format(terms)
-            response = requests.get(url, verify=False)
+            response = requests.get(url)
             data = json.loads(response.content)
             length = len(data['results'])
             if length > 0:
