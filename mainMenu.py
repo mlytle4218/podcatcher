@@ -13,6 +13,7 @@ import json
 import re
 import pickle
 import sys
+import urllib
 
 def main_menu():
     try:
@@ -467,19 +468,36 @@ def start_downloads():
                     # Adding download prefix to dl_location to address the difference of
                     # being in the docker container
                     with open(dl_location + '/' + basename, 'wb')as f:
-                        r = requests.get(each.href)
-                        # r = requests.get(each.href, stream=True)
-                        total_length = None
-                        dl=0
-                        try:
-                            total_length = int(r.headers.get('content-length'))
-                            for chunk in r.iter_content(1024):
-                                dl += len(chunk)
-                                f.write(chunk)
-                                done = int(100 * dl / total_length)
-                                download_queue[i].percent = done
-                        except Exception as e:
-                            f.write(r.content)
+                        episode_data = urllib.request.urlopen(each.href)
+
+                        f.write(episode_data.read())
+
+
+
+
+
+
+
+
+
+                        # r = requests.get(each.href)
+                        # # r = requests.get(each.href, stream=True)
+                        # total_length = None
+                        # dl=0
+                        # try:
+                        #     total_length = int(r.headers.get('content-length'))
+                        #     for chunk in r.iter_content(1024):
+                        #         dl += len(chunk)
+                        #         f.write(chunk)
+                        #         done = int(100 * dl / total_length)
+                        #         download_queue[i].percent = done
+                        # except Exception as e:
+                        #     f.write(r.content)
+
+
+
+
+
                         # dl = 0
                         # if total_length is None:  # no content length header
                         #     f.write(r.content)
