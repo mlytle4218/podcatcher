@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+
+database_location = '/podcatcher/pc_database.db'
+database_name = 'pc_database.db'
+
+download_pre_location = '/download'
+audio_default_location = '/bell/mp3/news'
+video_default_location = '/bell/videos/tv-news'
+
+log_location = '/podcatcher/test.txt'
+
+pickled_file_location = '/podcatcher/state.obj'
+dl_prefix = '/download'

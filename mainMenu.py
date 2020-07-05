@@ -436,15 +436,26 @@ def start_downloads():
     download_queue_removed = []
     try:
         print('starting downloads...')
+        sql.log('starting dowbloads...')
         total_queue_length = len(download_queue)
         for each in download_queue:
             each.percent = 0
         for i, each in enumerate(download_queue):
             try:
-                filename = each.href.split('/')[-1]
-                extension_start = filename.split('.')
-                extension = extension_start[len(extension_start)-1]
-                extension = extension.split('?', 1)[0]
+                sql.log(each.href)
+                filename = ""
+                if '/' in each.href:
+                  filename = each.href.split('/')[-1]
+                else:
+                  filename = each.href
+                #sql.log('here')
+                # filename = each.href.split('/')[-1]
+                extension = ""
+                if '.' in filename:
+                  extension_start = filename.split('.')
+                  extension = extension_start[len(extension_start)-1]
+                  extension = extension.split('?', 1)[0]
+                #sql.log('here')
                 dl_location = ''
                 podcast = sql.get_podcast_by_id2(each)
                 filename2 = podcast.name.replace(
@@ -493,6 +504,8 @@ def start_downloads():
                                 done = int(100 * dl / total_length)
                                 download_queue[i].percent = done
                         except Exception as e:
+                            sql.log("in start_downloads")
+                            sql.log(e)
                             f.write(r.content)
 
 
@@ -539,6 +552,7 @@ def start_downloads():
                     sql.log(e)
             except Exception as e:
                 string = "problem with Episode data"
+                sql.log(string)
                 sql.log(e)
 
         for each in download_queue_removed:
@@ -702,9 +716,13 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
 
 
 if __name__ == "__main__":
-    width = int(subprocess.check_output(['tput', 'cols']))
-    height = int(subprocess.check_output(['tput', 'lines'])) - 1
-
+    width = 0
+    height = 0
+    try:
+      width = int(subprocess.check_output(['tput', 'cols']))
+      height = int(subprocess.check_output(['tput', 'lines'])) - 1
+    except Exception as e:
+      sql.log(e)
 
     sql = DatabaseAccessor(config.database_location)
     download_queue = read_state_information()
