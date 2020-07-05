@@ -16,6 +16,7 @@ import sys
 import urllib
 
 def main_menu():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     try:
         if len(sys.argv) >1 and sys.argv[1] == '-u':
             sql.log('tried to update')
@@ -642,12 +643,10 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
                     # if hasattr(options[each], 'num'):
                         print('number {} {} - {}'.format(each + 1,
                                                         getattr(options[each], attribute), number))
-                    else:
-                        print('number {} {}'.format(
-                            each + 1, getattr(options[each], attribute)))
-                except Exception as e:
-                    sql.log(e)
-            result = input('choice ')
+                    else: print('number {} {}'.format( each + 1, getattr(options[each], attribute))) 
+                except Exception as e: 
+                    sql.log(e) 
+            result = input('choice ') 
             if result == 'n':
                 if page_itr < len(display_control) - 1:
                     page_itr += 1
@@ -716,6 +715,7 @@ def print_out_menu_options(options, attribute, multi_choice, func, sort, archive
 
 
 if __name__ == "__main__":
+    sql = DatabaseAccessor(config.database_location)
     width = 0
     height = 0
     try:
@@ -724,7 +724,7 @@ if __name__ == "__main__":
     except Exception as e:
       sql.log(e)
 
-    sql = DatabaseAccessor(config.database_location)
+    #sql = DatabaseAccessor(config.database_location)
     download_queue = read_state_information()
     backend = Backend(sql)
 

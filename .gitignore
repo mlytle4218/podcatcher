@@ -2,7 +2,7 @@ pc_database.db
 test.txt
 config.py
 state.obj
-test.txt.old
+test.txt.old*
 *.pyc
 
 ./vscode/
