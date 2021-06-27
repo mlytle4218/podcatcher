@@ -160,6 +160,11 @@ def search():
         choices = print_out_menu_options(results, 'name', True, None, True)
         if choices is not None and isinstance(choices, Podcast):
             add_new_podcast(choices)
+
+
+
+
+
         elif choices is not None:
             for each in choices:
                 add_new_podcast(each)
@@ -241,7 +246,6 @@ def update_episodes(podcast):
 
 
 def enter_podcast_info(podcast):
-    
     try:
         os.system('clear')
         # add a check for names to this section
@@ -726,6 +730,8 @@ if __name__ == "__main__":
 
     #sql = DatabaseAccessor(config.database_location)
     download_queue = read_state_information()
+    for each in download_queue:
+        sql.log(each)
     backend = Backend(sql)
 
 
